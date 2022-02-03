@@ -13,8 +13,8 @@
       "root"
     ],
     "siteRootDir": "docs",
-    "siteUrl": "https://dendronhq.github.io",
-    "assetsPrefix": "/template.publish.github",
+    "siteUrl": "https://ddab568.github.io",
+    "assetsPrefix": "/KnowledgeGarden",
     "usePrettyRefs": true,
     "title": "Dendron",
     "description": "Personal knowledge space",
@@ -43,7 +43,8 @@
         "confirmVaultOnCreate": false,
         "leaveTrace": false,
         "bubbleUpCreateNew": true,
-        "fuzzThreshold": 0.2
+        "fuzzThreshold": 0.2,
+        "vaultSelectionModeOnCreate": "smart"
       }
     },
     "insertNote": {
