@@ -1,0 +1,41 @@
+<h1 id="rendering"><a aria-hidden="true" class="anchor-heading" href="#rendering"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Rendering</h1>
+<h2 id="csr-ssr-ssg-spa"><a aria-hidden="true" class="anchor-heading" href="#csr-ssr-ssg-spa"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>CSR, SSR, SSG, SPA</h2>
+<p>React as-is client side renders single page applications.</p>
+<h2 id="csr--spa--client-side-rendering-single-page-application"><a aria-hidden="true" class="anchor-heading" href="#csr--spa--client-side-rendering-single-page-application"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>CSR / SPA- client-side rendering, single page application</h2>
+<p>Most common way of using frameworks such as React, vue, ember etc.</p>
+<p>Client-side rendering means that a website’s JavaScript is rendered in your browser, rather than on the website’s server.</p>
+<ul>
+<li>The server renders a blank page with a script tag pointing to the apps bundle</li>
+<li>blank page is sent to the clients browser which makes the relevant api calls and renders the contents of the page</li>
+</ul>
+<p>strengths:</p>
+<ul>
+<li>renders fast on the server</li>
+<li>supports SPAs</li>
+</ul>
+<p>weaknesses:</p>
+<ul>
+<li>
+<p>no initial render - customer/client has to render so if the app is big it could be a problem</p>
+</li>
+<li>
+<p>empty body - no content to crawl for a search engine - <strong> SEO is the biggest weak point </strong></p>
+</li>
+</ul>
+<h2 id="ssr---server-side-rendering"><a aria-hidden="true" class="anchor-heading" href="#ssr---server-side-rendering"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>SSR - server side rendering</h2>
+<p>When the user makes a requst to the webpage, the server prepares the html page and then sends it back.</p>
+<h2 id="ssg---static-site-generating"><a aria-hidden="true" class="anchor-heading" href="#ssg---static-site-generating"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>SSG - static-site generating</h2>
+<p>Page is also generated on the server however it is rendered at <strong>build time.</strong></p>
+<h2 id="when-to-use-what"><a aria-hidden="true" class="anchor-heading" href="#when-to-use-what"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>When to use what?</h2>
+<ul>
+<li>
+<p>Is your content dynamic or relatively static?</p>
+</li>
+<li>
+<p>is SEO important?</p>
+</li>
+</ul>
+<p>For a documentation page or a website that doesn;t need to fetch dynamic data, but SEO is important, you could use SSG</p>
+<p>For a blog, SEO is important but the content is dynamic. In this case, SSR would be a good candidate.</p>
+<p>For a CRM (Customer Relationship Manager), SEO is not a concern and the content is dynamic therefore an SPA would be a good choice.</p>
+<p>You could also use a mix of the above depending on specific pages or domains.</p>
