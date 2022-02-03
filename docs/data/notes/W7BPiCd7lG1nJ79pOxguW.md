@@ -1,9 +1,12 @@
+
 ---
+
 id: 1Fz07ioIPeUJxh90OClEp
 title: Rendering
 desc: ""
 updated: 1643768298165
 created: 1643170942151
+
 ---
 
 ## CSR, SSR, SSG, SPA

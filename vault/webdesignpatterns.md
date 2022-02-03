@@ -1,3 +1,20 @@
+---
+id: W7BPiCd7lG1nJ79pOxguW
+title: Web Design Patterns
+desc: ""
+updated: 1643888554116
+created: 1643888534600
+---
+
+---
+
+id: 1Fz07ioIPeUJxh90OClEp
+title: Rendering
+desc: ""
+updated: 1643768298165
+created: 1643170942151
+
+---
 
 ## CSR, SSR, SSG, SPA
 
