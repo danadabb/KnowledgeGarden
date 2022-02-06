@@ -2,7 +2,7 @@
 id: W7BPiCd7lG1nJ79pOxguW
 title: Web Design Patterns
 desc: ""
-updated: 1643888554116
+updated: 1644119028763
 created: 1643888534600
 ---
 
@@ -16,11 +16,7 @@ created: 1643170942151
 
 ---
 
-## CSR, SSR, SSG, SPA
-
-React as-is client side renders single page applications.
-
-## CSR / SPA- client-side rendering, single page application
+## CSR (Client-Side Rendering) / SPA (Single Page Application)
 
 Most common way of using frameworks such as React, vue, ember etc.
 
@@ -32,7 +28,6 @@ Client-side rendering means that a website’s JavaScript is rendered in your br
 strengths:
 
 - renders fast on the server
-- supports SPAs
 
 weaknesses:
 
@@ -40,11 +35,11 @@ weaknesses:
 
 - empty body - no content to crawl for a search engine - ** SEO is the biggest weak point **
 
-## SSR - server side rendering
+## SSR (Server Side Rendering)
 
 When the user makes a requst to the webpage, the server prepares the html page and then sends it back.
 
-## SSG - static-site generating
+## SSG (Static-Site Generating)
 
 Page is also generated on the server however it is rendered at **build time.**
 
@@ -54,10 +49,10 @@ Page is also generated on the server however it is rendered at **build time.**
 
 - is SEO important?
 
-For a documentation page or a website that doesn;t need to fetch dynamic data, but SEO is important, you could use SSG
+For a documentation page or a website that doesn't need to fetch dynamic data, but SEO is important, you could use SSG
 
-For a blog, SEO is important but the content is dynamic. In this case, SSR would be a good candidate.
+For a blog, SEO is important and the content is dynamic. In this case, SSR would be a good candidate.
 
-For a CRM (Customer Relationship Manager), SEO is not a concern and the content is dynamic therefore an SPA would be a good choice.
+For a CRM (Customer Relationship Manager), SEO is not a concern and the content is dynamic therefore an SPA/CSR would be a good choice.
 
 You could also use a mix of the above depending on specific pages or domains.
