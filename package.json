@@ -1,0 +1,27 @@
+{
+  "name": "KnowledgeGarden",
+  "version": "1.0.0",
+  "description": "- [View the Demo Website](https://dendronhq.github.io/template.publish.github/)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "@dendronhq/dendron-cli": "^0.80.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddab568/KnowledgeGarden.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ddab568/KnowledgeGarden/issues"
+  },
+  "homepage": "https://github.com/ddab568/KnowledgeGarden#readme"
+}
