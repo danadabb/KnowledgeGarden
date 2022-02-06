@@ -9,8 +9,8 @@
       "title": "This page has not yet sprouted",
       "schemaStub": false,
       "type": "note",
-      "updated": 1643888623892,
-      "created": 1643888623892,
+      "updated": 1644185639722,
+      "created": 1644185639722,
       "desc": "",
       "links": [],
       "anchors": {},
@@ -20,9 +20,9 @@
     },
     "wn8PE1RhG0znK1alrGFYv": {
       "id": "wn8PE1RhG0znK1alrGFYv",
-      "title": "Root",
+      "title": "Knowledge Garden",
       "desc": "",
-      "updated": 1640901290158,
+      "updated": 1644116275124,
       "created": 1631901573363,
       "custom": {
         "nav_order": 0,
@@ -33,69 +33,132 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "3edbef3e538b9314e9fb49854e0766b3",
+      "contentHash": "ae1897c5e907720acd7db1adf9dfd832",
       "links": [],
       "anchors": {
-        "welcome-to-dendron": {
+        "my-second-brain": {
           "type": "header",
-          "text": "Welcome to Dendron",
-          "value": "welcome-to-dendron",
-          "line": 7,
+          "text": "My Second Brain",
+          "value": "my-second-brain",
+          "line": 8,
           "column": 0,
-          "depth": 1
+          "depth": 4
         }
       },
       "children": [
-        "ENDcCZFjAW9h66eDoFg7I",
-        "W7BPiCd7lG1nJ79pOxguW"
+        "bwlvrHRccHBUBhHu7Mh1G",
+        "8HZ1TTh4HUtNFePL29cg7"
       ],
       "parent": null,
       "data": {}
     },
-    "W7BPiCd7lG1nJ79pOxguW": {
-      "id": "W7BPiCd7lG1nJ79pOxguW",
-      "title": "Web Design Patterns",
+    "8HZ1TTh4HUtNFePL29cg7": {
+      "id": "8HZ1TTh4HUtNFePL29cg7",
+      "title": "Web",
       "desc": "",
-      "updated": 1643888554116,
-      "created": 1643888534600,
+      "updated": 1644128234217,
+      "created": 1644128234217,
       "custom": {},
-      "fname": "webdesignpatterns",
+      "fname": "web",
       "type": "note",
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "ee9cdf1210979db14471c00b8473d4da",
+      "contentHash": "bcc5133a863bb7229f7049252c3dd00e",
+      "links": [],
+      "anchors": {},
+      "children": [
+        "RhPwsgMN0xuoggGXxjHXh"
+      ],
+      "parent": "wn8PE1RhG0znK1alrGFYv",
+      "data": {}
+    },
+    "RhPwsgMN0xuoggGXxjHXh": {
+      "id": "RhPwsgMN0xuoggGXxjHXh",
+      "title": "Frontend",
+      "desc": "",
+      "updated": 1644128249901,
+      "created": 1644128249901,
+      "custom": {},
+      "fname": "web.frontend",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "ecdaaaac46fbae1237f83d96885801b1",
+      "links": [],
+      "anchors": {},
+      "children": [
+        "KnACyiSV918ASnIeSH2TQ",
+        "7XijrYmKXAiV06wGj50MP"
+      ],
+      "parent": "8HZ1TTh4HUtNFePL29cg7",
+      "data": {}
+    },
+    "7XijrYmKXAiV06wGj50MP": {
+      "id": "7XijrYmKXAiV06wGj50MP",
+      "title": "Web Components",
+      "desc": "",
+      "updated": 1644129246630,
+      "created": 1644128329194,
+      "custom": {},
+      "fname": "web.frontend.webcomponents",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "e69b254ecf1d27cccf81695da328803d",
       "links": [],
       "anchors": {
-        "csr-ssr-ssg-spa": {
+        "web-components-vs-react": {
           "type": "header",
-          "text": "CSR, SSR, SSG, SPA",
-          "value": "csr-ssr-ssg-spa",
-          "line": 18,
+          "text": "Web Components vs React",
+          "value": "web-components-vs-react",
+          "line": 21,
+          "column": 0,
+          "depth": 3
+        }
+      },
+      "children": [],
+      "parent": "RhPwsgMN0xuoggGXxjHXh",
+      "data": {}
+    },
+    "KnACyiSV918ASnIeSH2TQ": {
+      "id": "KnACyiSV918ASnIeSH2TQ",
+      "title": "Design Patterns",
+      "desc": "",
+      "updated": 1644128308874,
+      "created": 1644128273388,
+      "custom": {},
+      "fname": "web.frontend.designpatterns",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "e4831784c704b77b8e1f95aa740291bf",
+      "links": [],
+      "anchors": {
+        "csr-client-side-rendering--spa-single-page-application": {
+          "type": "header",
+          "text": "CSR (Client-Side Rendering) / SPA (Single Page Application)",
+          "value": "csr-client-side-rendering--spa-single-page-application",
+          "line": 8,
           "column": 0,
           "depth": 2
         },
-        "csr--spa--client-side-rendering-single-page-application": {
+        "ssr-server-side-rendering": {
           "type": "header",
-          "text": "CSR / SPA- client-side rendering, single page application",
-          "value": "csr--spa--client-side-rendering-single-page-application",
-          "line": 22,
+          "text": "SSR (Server Side Rendering)",
+          "value": "ssr-server-side-rendering",
+          "line": 27,
           "column": 0,
           "depth": 2
         },
-        "ssr---server-side-rendering": {
+        "ssg-static-site-generating": {
           "type": "header",
-          "text": "SSR - server side rendering",
-          "value": "ssr---server-side-rendering",
-          "line": 42,
-          "column": 0,
-          "depth": 2
-        },
-        "ssg---static-site-generating": {
-          "type": "header",
-          "text": "SSG - static-site generating",
-          "value": "ssg---static-site-generating",
-          "line": 46,
+          "text": "SSG (Static-Site Generating)",
+          "value": "ssg-static-site-generating",
+          "line": 31,
           "column": 0,
           "depth": 2
         },
@@ -103,114 +166,114 @@
           "type": "header",
           "text": "When to use what?",
           "value": "when-to-use-what",
-          "line": 50,
+          "line": 35,
           "column": 0,
           "depth": 2
         }
       },
       "children": [],
-      "parent": "wn8PE1RhG0znK1alrGFYv",
+      "parent": "RhPwsgMN0xuoggGXxjHXh",
       "data": {}
     },
-    "ENDcCZFjAW9h66eDoFg7I": {
-      "id": "ENDcCZFjAW9h66eDoFg7I",
-      "title": "Seed",
+    "bwlvrHRccHBUBhHu7Mh1G": {
+      "id": "bwlvrHRccHBUBhHu7Mh1G",
+      "title": "Agile",
       "desc": "",
-      "updated": 1631921408939,
-      "created": 1631921362276,
+      "updated": 1644116700322,
+      "created": 1644115992039,
       "custom": {},
-      "fname": "seed",
+      "fname": "agile",
       "type": "note",
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "3b930b3c83f174aba26253f4f73e31fb",
+      "contentHash": "e2546f48fa983770456fd19ceb940f2b",
       "links": [
         {
           "type": "wiki",
           "from": {
-            "fname": "seed",
-            "id": "ENDcCZFjAW9h66eDoFg7I",
+            "fname": "agile",
+            "id": "bwlvrHRccHBUBhHu7Mh1G",
             "vaultName": "vault"
           },
-          "value": "seed.child",
-          "alias": "seed.child",
+          "value": "agile.manifesto",
+          "alias": "agile.manifesto",
           "position": {
             "start": {
-              "line": 5,
-              "column": 1,
-              "offset": 47
+              "line": 6,
+              "column": 100,
+              "offset": 237
             },
             "end": {
-              "line": 5,
-              "column": 15,
-              "offset": 61
+              "line": 6,
+              "column": 119,
+              "offset": 256
             },
             "indent": []
           },
           "xvault": false,
           "sameFile": false,
           "to": {
-            "fname": "seed.child"
+            "fname": "agile.manifesto"
           }
         }
       ],
       "anchors": {},
       "children": [
-        "KboSDNpIShkOlDCJuWvZa"
+        "ZjZvFbo2iYiX6bbffE2Xk"
       ],
       "parent": "wn8PE1RhG0znK1alrGFYv",
       "data": {}
     },
-    "KboSDNpIShkOlDCJuWvZa": {
-      "id": "KboSDNpIShkOlDCJuWvZa",
-      "title": "Child",
+    "ZjZvFbo2iYiX6bbffE2Xk": {
+      "id": "ZjZvFbo2iYiX6bbffE2Xk",
+      "title": "Manifesto",
       "desc": "",
-      "updated": 1631921393738,
-      "created": 1631921386219,
+      "updated": 1644116630430,
+      "created": 1644116626340,
       "custom": {},
-      "fname": "seed.child",
+      "fname": "agile.manifesto",
       "type": "note",
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "f59fdce158653788eadf82bceb2bf826",
+      "contentHash": "fd21717f820c3cc20d2371d448742dd0",
       "links": [
         {
           "from": {
-            "fname": "seed",
+            "fname": "agile",
             "vaultName": "vault"
           },
           "type": "backlink",
           "position": {
             "start": {
-              "line": 5,
-              "column": 1,
-              "offset": 47
+              "line": 6,
+              "column": 100,
+              "offset": 237
             },
             "end": {
-              "line": 5,
-              "column": 15,
-              "offset": 61
+              "line": 6,
+              "column": 119,
+              "offset": 256
             },
             "indent": []
           },
-          "value": "seed.child",
-          "alias": "seed.child"
+          "value": "agile.manifesto",
+          "alias": "agile.manifesto"
         }
       ],
       "anchors": {},
       "children": [],
-      "parent": "ENDcCZFjAW9h66eDoFg7I",
+      "parent": "bwlvrHRccHBUBhHu7Mh1G",
       "data": {}
     }
   },
   "domains": [
     {
       "id": "wn8PE1RhG0znK1alrGFYv",
-      "title": "Root",
+      "title": "Knowledge Garden",
       "desc": "",
-      "updated": 1640901290158,
+      "updated": 1644116275124,
       "created": 1631901573363,
       "custom": {
         "nav_order": 0,
@@ -221,32 +284,32 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "3edbef3e538b9314e9fb49854e0766b3",
+      "contentHash": "ae1897c5e907720acd7db1adf9dfd832",
       "links": [],
       "anchors": {
-        "welcome-to-dendron": {
+        "my-second-brain": {
           "type": "header",
-          "text": "Welcome to Dendron",
-          "value": "welcome-to-dendron",
-          "line": 7,
+          "text": "My Second Brain",
+          "value": "my-second-brain",
+          "line": 8,
           "column": 0,
-          "depth": 1
+          "depth": 4
         }
       },
       "children": [
-        "ENDcCZFjAW9h66eDoFg7I",
-        "W7BPiCd7lG1nJ79pOxguW"
+        "bwlvrHRccHBUBhHu7Mh1G",
+        "8HZ1TTh4HUtNFePL29cg7"
       ],
       "parent": null,
       "data": {},
-      "body": "# Welcome to Dendron\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/). Feel free to modify and delete this section.\n\nThis is the root of your dendron vault. If you decide to publish your entire vault, this will be your landing page. You are free to customize any part of this page except the frontmatter on top.\n\nRevision: 3\n"
+      "body": "\n#### My Second Brain\n\n---\n\nA collection of my notes around all things software development.\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/). Feel free to modify and delete this section.\n"
     }
   ],
   "noteIndex": {
     "id": "wn8PE1RhG0znK1alrGFYv",
-    "title": "Root",
+    "title": "Knowledge Garden",
     "desc": "",
-    "updated": 1640901290158,
+    "updated": 1644116275124,
     "created": 1631901573363,
     "custom": {
       "nav_order": 0,
@@ -257,25 +320,25 @@
     "vault": {
       "fsPath": "vault"
     },
-    "contentHash": "3edbef3e538b9314e9fb49854e0766b3",
+    "contentHash": "ae1897c5e907720acd7db1adf9dfd832",
     "links": [],
     "anchors": {
-      "welcome-to-dendron": {
+      "my-second-brain": {
         "type": "header",
-        "text": "Welcome to Dendron",
-        "value": "welcome-to-dendron",
-        "line": 7,
+        "text": "My Second Brain",
+        "value": "my-second-brain",
+        "line": 8,
         "column": 0,
-        "depth": 1
+        "depth": 4
       }
     },
     "children": [
-      "ENDcCZFjAW9h66eDoFg7I",
-      "W7BPiCd7lG1nJ79pOxguW"
+      "bwlvrHRccHBUBhHu7Mh1G",
+      "8HZ1TTh4HUtNFePL29cg7"
     ],
     "parent": null,
     "data": {},
-    "body": "# Welcome to Dendron\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/). Feel free to modify and delete this section.\n\nThis is the root of your dendron vault. If you decide to publish your entire vault, this will be your landing page. You are free to customize any part of this page except the frontmatter on top.\n\nRevision: 3\n"
+    "body": "\n#### My Second Brain\n\n---\n\nA collection of my notes around all things software development.\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/). Feel free to modify and delete this section.\n"
   },
   "vaults": [
     {
