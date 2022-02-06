@@ -1,19 +1,9 @@
 ---
-id: W7BPiCd7lG1nJ79pOxguW
-title: Web Design Patterns
+id: KnACyiSV918ASnIeSH2TQ
+title: Design Patterns
 desc: ""
-updated: 1644119028763
-created: 1643888534600
----
-
----
-
-id: 1Fz07ioIPeUJxh90OClEp
-title: Rendering
-desc: ""
-updated: 1643768298165
-created: 1643170942151
-
+updated: 1644128308874
+created: 1644128273388
 ---
 
 ## CSR (Client-Side Rendering) / SPA (Single Page Application)
