@@ -1,0 +1,41 @@
+<h1 id="operation-rewrite"><a aria-hidden="true" class="anchor-heading" href="#operation-rewrite"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Operation Rewrite</h1>
+<h2 id="project-operation-re-write-purposely-obscure"><a aria-hidden="true" class="anchor-heading" href="#project-operation-re-write-purposely-obscure"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Project: Operation Re-write (Purposely obscure)</h2>
+<h3 id="problem"><a aria-hidden="true" class="anchor-heading" href="#problem"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Problem:</h3>
+<p>Existing site is slow and difficult to improve given it's built in wordpress. Gives limited options for improvement from a developer perspective without adding more bloat and plugins. Owned by non-for-profit therefore budget is an important consideration.</p>
+<h3 id="solution"><a aria-hidden="true" class="anchor-heading" href="#solution"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Solution:</h3>
+<p>Re-write using headless CMS and following JAMSTACK princples.</p>
+<h3 id="existing-stack"><a aria-hidden="true" class="anchor-heading" href="#existing-stack"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Existing stack</h3>
+<ul>
+<li>Frontend: PHP</li>
+<li>Backend: PHP</li>
+<li>CMS: Wordpress</li>
+<li>DB: SQL</li>
+</ul>
+<h3 id="proposed-re-architected-stack"><a aria-hidden="true" class="anchor-heading" href="#proposed-re-architected-stack"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Proposed re-architected stack:</h3>
+<ul>
+<li>Frontend: React framework</li>
+<li>Backend - possibly NodeJS with GraphQL</li>
+<li>CMS: Headless</li>
+<li>DB: ?? not sure if I need one</li>
+</ul>
+<h3 id="rendering-style"><a aria-hidden="true" class="anchor-heading" href="#rendering-style"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Rendering Style</h3>
+<p>Ref <a href="/KnowledgeGarden/notes/KnACyiSV918ASnIeSH2TQ">Rendering Design Patterns</a></p>
+<p>Options: SSR, SSG, SPA, ISR</p>
+<p>Content is mostly static - new blog posts written relatively infrequently. There is an ecommerce section with a small number of products. No comments or anything else that is dynamic at the moment.</p>
+<p>SSG could be a good option here but a framework that supports SSR as well could be useful for any future concerns. Maybe best of both worlds and use ISR? No need to rebuild every time we change a post or add a product.</p>
+<h3 id="framework-options"><a aria-hidden="true" class="anchor-heading" href="#framework-options"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Framework Options</h3>
+<ul>
+<li>Remix - looks good but pretty new</li>
+<li>Next - established, but maybe bloated for my use case? Needs a server to run for ISR and SSR</li>
+<li>Gatsby - only does SSG (?)</li>
+</ul>
+<h3 id="headless-cms-options"><a aria-hidden="true" class="anchor-heading" href="#headless-cms-options"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Headless CMS Options</h3>
+<ul>
+<li>Strapi - free/open source</li>
+<li>Contentful - recommended but paid after certain point</li>
+</ul>
+<h3 id="db"><a aria-hidden="true" class="anchor-heading" href="#db"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>DB?</h3>
+<p>Do I need?</p>
+<ul>
+<li>PSQL</li>
+</ul>

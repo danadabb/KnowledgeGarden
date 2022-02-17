@@ -1,5 +1,8 @@
-<h1 id="design-patterns"><a aria-hidden="true" class="anchor-heading" href="#design-patterns"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Design Patterns</h1>
+<h1 id="rendering-design-patterns"><a aria-hidden="true" class="anchor-heading" href="#rendering-design-patterns"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Rendering Design Patterns</h1>
 <h2 id="csr-client-side-rendering--spa-single-page-application"><a aria-hidden="true" class="anchor-heading" href="#csr-client-side-rendering--spa-single-page-application"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>CSR (Client-Side Rendering) / SPA (Single Page Application)</h2>
+<blockquote>
+<p>the data is fetched after every single render</p>
+</blockquote>
 <p>Most common way of using frameworks such as React, vue, ember etc.</p>
 <p>Client-side rendering means that a website’s JavaScript is rendered in your browser, rather than on the website’s server.</p>
 <ul>
@@ -20,9 +23,20 @@
 </li>
 </ul>
 <h2 id="ssr-server-side-rendering"><a aria-hidden="true" class="anchor-heading" href="#ssr-server-side-rendering"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>SSR (Server Side Rendering)</h2>
-<p>When the user makes a requst to the webpage, the server prepares the html page and then sends it back.</p>
+<blockquote>
+<p>the data is fetched before every single render</p>
+</blockquote>
+<p>When the user makes a request to the webpage, the server prepares the html page and then sends it back.</p>
 <h2 id="ssg-static-site-generating"><a aria-hidden="true" class="anchor-heading" href="#ssg-static-site-generating"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>SSG (Static-Site Generating)</h2>
+<blockquote>
+<p>the data is fetched once at build time</p>
+</blockquote>
 <p>Page is also generated on the server however it is rendered at <strong>build time.</strong></p>
+<h2 id="isr-incremental-static-regeneration"><a aria-hidden="true" class="anchor-heading" href="#isr-incremental-static-regeneration"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>ISR (Incremental Static Regeneration)</h2>
+<blockquote>
+<p>the data is fetched once on build time and will be fetched again after a certain cooldown and served on the second visit.</p>
+</blockquote>
+<p>Allows you to create or update static pages after you've built your site. This gives you the benefit of using static generation without needing to rebuild the entire site.</p>
 <h2 id="when-to-use-what"><a aria-hidden="true" class="anchor-heading" href="#when-to-use-what"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>When to use what?</h2>
 <ul>
 <li>
@@ -32,7 +46,37 @@
 <p>is SEO important?</p>
 </li>
 </ul>
-<p>For a documentation page or a website that doesn't need to fetch dynamic data, but SEO is important, you could use SSG</p>
-<p>For a blog, SEO is important and the content is dynamic. In this case, SSR would be a good candidate.</p>
-<p>For a CRM (Customer Relationship Manager), SEO is not a concern and the content is dynamic therefore an SPA/CSR would be a good choice.</p>
-<p>You could also use a mix of the above depending on specific pages or domains.</p>
+<p>Here are some examples from <a href="https://medium.com/codex/web-design-patterns-ssr-ssg-and-spa-fadad7673dfe#:~:text=SSR%20vs%20SSG,I%20use%20SSR%20then%3F%22.">this article</a></p>
+<blockquote>
+<p>For a documentation page or a website that doesn't need to fetch dynamic data, but SEO is important, you could use SSG.
+For a blog, SEO is important and the content is dynamic. In this case, SSR could be a good candidate.
+For a CRM (Customer Relationship Manager), SEO is not a concern and the content is dynamic therefore an SPA/CSR would be a good choice.</p>
+</blockquote>
+<p>Many websites will use a combination. These days for anything that is not an SPA, it's often recommended to use SSG practically all of the time unless there is a good reason not to e.g. the website is massive with dynamic content that cannot be pre-rendered as it changes frequently. <a href="https://nextjs.org/docs/basic-features/pages#pre-rendering">Next JS recommends SSG </a> for many use cases. The alternative is to use ISR for a website with mostly static content but for a web page with thousands of pages in order to prevent a complete rebuild every time.</p>
+<blockquote>
+<p>"We recommend using Static Generation over Server-side Rendering for performance reasons. Statically generated pages can be cached by CDN with no extra configuration to boost performance. However, in some cases, Server-side Rendering might be the only option."</p>
+</blockquote>
+<p>Some important considerations:</p>
+<ol>
+<li>
+<p>Data Integrity - how fresh do we want the data? CSR and SSR fetch on every render.</p>
+</li>
+<li>
+<p>SEO - SSR, SSG and ISR are SEO friendly given crawlers don't have to wait for a page to load to get relevant data</p>
+</li>
+<li>
+<p>Performance - SSG and ISR load instantly (for first contentful paint)</p>
+</li>
+<li>
+<p>Build Time - the amount of time it takes to build and deploy the website is slower for SSG and ISR since we need to build all the pages to serve where as CSR and ISR build pages dynamically.</p>
+</li>
+</ol>
+<h5 id="references"><a aria-hidden="true" class="anchor-heading" href="#references"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>References</h5>
+<ol>
+<li><a href="https://theodorusclarence.com/blog/nextjs-fetch-usecase">https://theodorusclarence.com/blog/nextjs-fetch-usecase</a></li>
+</ol>
+<hr>
+<strong>Backlinks</strong>
+<ul>
+<li><a href="/KnowledgeGarden/notes/VGLSQgjkL1invoOn1WIVU">Operation Rewrite</a></li>
+</ul>

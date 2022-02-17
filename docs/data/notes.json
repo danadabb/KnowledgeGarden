@@ -9,8 +9,8 @@
       "title": "This page has not yet sprouted",
       "schemaStub": false,
       "type": "note",
-      "updated": 1644185639722,
-      "created": 1644185639722,
+      "updated": 1645083947035,
+      "created": 1645083947035,
       "desc": "",
       "links": [],
       "anchors": {},
@@ -47,6 +47,8 @@
       },
       "children": [
         "bwlvrHRccHBUBhHu7Mh1G",
+        "XZTCg1c8mZeR9jEyM2HOy",
+        "6FtP5bCaxDDd47jEuSH5y",
         "8HZ1TTh4HUtNFePL29cg7"
       ],
       "parent": null,
@@ -85,7 +87,7 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "ecdaaaac46fbae1237f83d96885801b1",
+      "contentHash": "66115866f03607464ce0913654d0cea8",
       "links": [],
       "anchors": {},
       "children": [
@@ -125,9 +127,9 @@
     },
     "KnACyiSV918ASnIeSH2TQ": {
       "id": "KnACyiSV918ASnIeSH2TQ",
-      "title": "Design Patterns",
+      "title": "Rendering Design Patterns",
       "desc": "",
-      "updated": 1644128308874,
+      "updated": 1645079706918,
       "created": 1644128273388,
       "custom": {},
       "fname": "web.frontend.designpatterns",
@@ -135,8 +137,31 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "e4831784c704b77b8e1f95aa740291bf",
-      "links": [],
+      "contentHash": "4e7fe3af2bc366d8030681a77ca27972",
+      "links": [
+        {
+          "from": {
+            "fname": "projects.operation-rewrite",
+            "vaultName": "vault"
+          },
+          "type": "backlink",
+          "position": {
+            "start": {
+              "line": 28,
+              "column": 5,
+              "offset": 660
+            },
+            "end": {
+              "line": 28,
+              "column": 36,
+              "offset": 691
+            },
+            "indent": []
+          },
+          "value": "web.frontend.designpatterns",
+          "alias": "web.frontend.designpatterns"
+        }
+      ],
       "anchors": {
         "csr-client-side-rendering--spa-single-page-application": {
           "type": "header",
@@ -150,7 +175,7 @@
           "type": "header",
           "text": "SSR (Server Side Rendering)",
           "value": "ssr-server-side-rendering",
-          "line": 27,
+          "line": 29,
           "column": 0,
           "depth": 2
         },
@@ -158,7 +183,15 @@
           "type": "header",
           "text": "SSG (Static-Site Generating)",
           "value": "ssg-static-site-generating",
-          "line": 31,
+          "line": 35,
+          "column": 0,
+          "depth": 2
+        },
+        "isr-incremental-static-regeneration": {
+          "type": "header",
+          "text": "ISR (Incremental Static Regeneration)",
+          "value": "isr-incremental-static-regeneration",
+          "line": 41,
           "column": 0,
           "depth": 2
         },
@@ -166,13 +199,247 @@
           "type": "header",
           "text": "When to use what?",
           "value": "when-to-use-what",
-          "line": 35,
+          "line": 47,
           "column": 0,
           "depth": 2
+        },
+        "references": {
+          "type": "header",
+          "text": "References",
+          "value": "references",
+          "line": 71,
+          "column": 0,
+          "depth": 5
         }
       },
       "children": [],
       "parent": "RhPwsgMN0xuoggGXxjHXh",
+      "data": {}
+    },
+    "6FtP5bCaxDDd47jEuSH5y": {
+      "id": "6FtP5bCaxDDd47jEuSH5y",
+      "title": "Projects",
+      "desc": "",
+      "updated": 1644384425192,
+      "created": 1644384425192,
+      "custom": {},
+      "fname": "projects",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "b36ebbab952d910807bf68f098f6aca7",
+      "links": [],
+      "anchors": {},
+      "children": [
+        "VGLSQgjkL1invoOn1WIVU"
+      ],
+      "parent": "wn8PE1RhG0znK1alrGFYv",
+      "data": {}
+    },
+    "VGLSQgjkL1invoOn1WIVU": {
+      "id": "VGLSQgjkL1invoOn1WIVU",
+      "title": "Operation Rewrite",
+      "desc": "",
+      "updated": 1645083833005,
+      "created": 1644384514239,
+      "custom": {},
+      "fname": "projects.operation-rewrite",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "fe9f7a41500e3da0648b38257c274730",
+      "links": [
+        {
+          "type": "wiki",
+          "from": {
+            "fname": "projects.operation-rewrite",
+            "id": "VGLSQgjkL1invoOn1WIVU",
+            "vaultName": "vault"
+          },
+          "value": "web.frontend.designpatterns",
+          "alias": "web.frontend.designpatterns",
+          "position": {
+            "start": {
+              "line": 28,
+              "column": 5,
+              "offset": 660
+            },
+            "end": {
+              "line": 28,
+              "column": 36,
+              "offset": 691
+            },
+            "indent": []
+          },
+          "xvault": false,
+          "sameFile": false,
+          "to": {
+            "fname": "web.frontend.designpatterns"
+          }
+        }
+      ],
+      "anchors": {
+        "project-operation-re-write-purposely-obscure": {
+          "type": "header",
+          "text": "Project: Operation Re-write (Purposely obscure)",
+          "value": "project-operation-re-write-purposely-obscure",
+          "line": 8,
+          "column": 0,
+          "depth": 2
+        },
+        "problem": {
+          "type": "header",
+          "text": "Problem:",
+          "value": "problem",
+          "line": 10,
+          "column": 0,
+          "depth": 3
+        },
+        "solution": {
+          "type": "header",
+          "text": "Solution:",
+          "value": "solution",
+          "line": 14,
+          "column": 0,
+          "depth": 3
+        },
+        "existing-stack": {
+          "type": "header",
+          "text": "Existing stack",
+          "value": "existing-stack",
+          "line": 18,
+          "column": 0,
+          "depth": 3
+        },
+        "proposed-re-architected-stack": {
+          "type": "header",
+          "text": "Proposed re-architected stack:",
+          "value": "proposed-re-architected-stack",
+          "line": 25,
+          "column": 0,
+          "depth": 3
+        },
+        "rendering-style": {
+          "type": "header",
+          "text": "Rendering Style",
+          "value": "rendering-style",
+          "line": 32,
+          "column": 0,
+          "depth": 3
+        },
+        "framework-options": {
+          "type": "header",
+          "text": "Framework Options",
+          "value": "framework-options",
+          "line": 42,
+          "column": 0,
+          "depth": 3
+        },
+        "headless-cms-options": {
+          "type": "header",
+          "text": "Headless CMS Options",
+          "value": "headless-cms-options",
+          "line": 48,
+          "column": 0,
+          "depth": 3
+        },
+        "db": {
+          "type": "header",
+          "text": "DB?",
+          "value": "db",
+          "line": 53,
+          "column": 0,
+          "depth": 3
+        }
+      },
+      "children": [],
+      "parent": "6FtP5bCaxDDd47jEuSH5y",
+      "data": {}
+    },
+    "XZTCg1c8mZeR9jEyM2HOy": {
+      "id": "XZTCg1c8mZeR9jEyM2HOy",
+      "title": "Programming Paradigms",
+      "desc": "",
+      "updated": 1644382520479,
+      "created": 1644210058326,
+      "custom": {},
+      "fname": "programming-paradigms",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "174c5b0510cb00eab64d49573fd8ac3c",
+      "links": [],
+      "anchors": {
+        "imperative": {
+          "type": "header",
+          "text": "Imperative",
+          "value": "imperative",
+          "line": 24,
+          "column": 0,
+          "depth": 2
+        },
+        "declarative": {
+          "type": "header",
+          "text": "Declarative",
+          "value": "declarative",
+          "line": 44,
+          "column": 0,
+          "depth": 2
+        },
+        "types-of-imperative-programming": {
+          "type": "header",
+          "text": "Types of Imperative Programming",
+          "value": "types-of-imperative-programming",
+          "line": 56,
+          "column": 0,
+          "depth": 2
+        },
+        "procedural-programming": {
+          "type": "header",
+          "text": "Procedural Programming",
+          "value": "procedural-programming",
+          "line": 58,
+          "column": 0,
+          "depth": 3
+        },
+        "object-oriented-programming": {
+          "type": "header",
+          "text": "Object-oriented Programming",
+          "value": "object-oriented-programming",
+          "line": 80,
+          "column": 0,
+          "depth": 3
+        },
+        "types-of-declarative-programming": {
+          "type": "header",
+          "text": "Types of Declarative Programming",
+          "value": "types-of-declarative-programming",
+          "line": 91,
+          "column": 0,
+          "depth": 2
+        },
+        "logical-programming": {
+          "type": "header",
+          "text": "Logical programming",
+          "value": "logical-programming",
+          "line": 93,
+          "column": 0,
+          "depth": 3
+        },
+        "functional-programming": {
+          "type": "header",
+          "text": "Functional programming",
+          "value": "functional-programming",
+          "line": 99,
+          "column": 0,
+          "depth": 3
+        }
+      },
+      "children": [],
+      "parent": "wn8PE1RhG0znK1alrGFYv",
       "data": {}
     },
     "bwlvrHRccHBUBhHu7Mh1G": {
@@ -298,6 +565,8 @@
       },
       "children": [
         "bwlvrHRccHBUBhHu7Mh1G",
+        "XZTCg1c8mZeR9jEyM2HOy",
+        "6FtP5bCaxDDd47jEuSH5y",
         "8HZ1TTh4HUtNFePL29cg7"
       ],
       "parent": null,
@@ -334,6 +603,8 @@
     },
     "children": [
       "bwlvrHRccHBUBhHu7Mh1G",
+      "XZTCg1c8mZeR9jEyM2HOy",
+      "6FtP5bCaxDDd47jEuSH5y",
       "8HZ1TTh4HUtNFePL29cg7"
     ],
     "parent": null,
