@@ -9,8 +9,8 @@
       "title": "This page has not yet sprouted",
       "schemaStub": false,
       "type": "note",
-      "updated": 1645083947035,
-      "created": 1645083947035,
+      "updated": 1645609543433,
+      "created": 1645609543433,
       "desc": "",
       "links": [],
       "anchors": {},
@@ -241,7 +241,7 @@
       "id": "VGLSQgjkL1invoOn1WIVU",
       "title": "Operation Rewrite",
       "desc": "",
-      "updated": 1645083833005,
+      "updated": 1645087917572,
       "created": 1644384514239,
       "custom": {},
       "fname": "projects.operation-rewrite",
@@ -249,7 +249,7 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "fe9f7a41500e3da0648b38257c274730",
+      "contentHash": "7a1acd72236a302c4a03a3c50041ea04",
       "links": [
         {
           "type": "wiki",
@@ -352,6 +352,14 @@
           "line": 53,
           "column": 0,
           "depth": 3
+        },
+        "build-steps": {
+          "type": "header",
+          "text": "Build steps",
+          "value": "build-steps",
+          "line": 59,
+          "column": 0,
+          "depth": 2
         }
       },
       "children": [],

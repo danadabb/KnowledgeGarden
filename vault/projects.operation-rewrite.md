@@ -2,7 +2,7 @@
 id: VGLSQgjkL1invoOn1WIVU
 title: Operation Rewrite
 desc: ""
-updated: 1645083833005
+updated: 1645087917572
 created: 1644384514239
 ---
 
@@ -56,3 +56,9 @@ SSG could be a good option here but a framework that supports SSR as well could 
 Do I need?
 
 - PSQL
+
+## Build steps
+
+1. Set up CMS
+2. Set up FE
+3. interface the two

@@ -49,3 +49,9 @@ SSG could be a good option here but a framework that supports SSR as well could 
 Do I need?
 
 - PSQL
+
+## Build steps
+
+1. Set up CMS
+2. Set up FE
+3. interface the two
