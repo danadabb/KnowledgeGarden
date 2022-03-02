@@ -9,8 +9,8 @@
       "title": "This page has not yet sprouted",
       "schemaStub": false,
       "type": "note",
-      "updated": 1645609543433,
-      "created": 1645609543433,
+      "updated": 1646263311067,
+      "created": 1646263311067,
       "desc": "",
       "links": [],
       "anchors": {},
@@ -22,7 +22,7 @@
       "id": "wn8PE1RhG0znK1alrGFYv",
       "title": "Knowledge Garden",
       "desc": "",
-      "updated": 1644116275124,
+      "updated": 1645656788117,
       "created": 1631901573363,
       "custom": {
         "nav_order": 0,
@@ -33,7 +33,7 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "ae1897c5e907720acd7db1adf9dfd832",
+      "contentHash": "b4950fc2f0502a4b50a5036aaaeab1cf",
       "links": [],
       "anchors": {
         "my-second-brain": {
@@ -70,6 +70,7 @@
       "links": [],
       "anchors": {},
       "children": [
+        "1y1y9h9mi8y9k3i44znhfg3",
         "RhPwsgMN0xuoggGXxjHXh"
       ],
       "parent": "wn8PE1RhG0znK1alrGFYv",
@@ -214,6 +215,156 @@
       },
       "children": [],
       "parent": "RhPwsgMN0xuoggGXxjHXh",
+      "data": {}
+    },
+    "1y1y9h9mi8y9k3i44znhfg3": {
+      "id": "1y1y9h9mi8y9k3i44znhfg3",
+      "title": "Backend",
+      "desc": "",
+      "updated": 1645610685140,
+      "created": 1645609882684,
+      "custom": {},
+      "fname": "web.backend",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "ae22306432af64df34755e8530f8dbae",
+      "links": [],
+      "anchors": {},
+      "children": [
+        "yskq69lbyw4kpr8y5sdx9lu",
+        "pjj5em4sf413tfn6ua9tqdw"
+      ],
+      "parent": "8HZ1TTh4HUtNFePL29cg7",
+      "data": {}
+    },
+    "pjj5em4sf413tfn6ua9tqdw": {
+      "id": "pjj5em4sf413tfn6ua9tqdw",
+      "title": "Database",
+      "desc": "",
+      "updated": 1645744667669,
+      "created": 1645609938784,
+      "custom": {},
+      "fname": "web.backend.database",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "9581b494c4158ebebc14441c18009de4",
+      "links": [],
+      "anchors": {
+        "types": {
+          "type": "header",
+          "text": "Types",
+          "value": "types",
+          "line": 8,
+          "column": 0,
+          "depth": 2
+        },
+        "relational-sql": {
+          "type": "header",
+          "text": "Relational (SQL)",
+          "value": "relational-sql",
+          "line": 10,
+          "column": 0,
+          "depth": 3
+        },
+        "non-relational-no-sql": {
+          "type": "header",
+          "text": "Non-relational (No SQL)",
+          "value": "non-relational-no-sql",
+          "line": 48,
+          "column": 0,
+          "depth": 3
+        },
+        "relational-or-non-relational": {
+          "type": "header",
+          "text": "Relational or Non-relational?",
+          "value": "relational-or-non-relational",
+          "line": 50,
+          "column": 0,
+          "depth": 3
+        },
+        "references": {
+          "type": "header",
+          "text": "References",
+          "value": "references",
+          "line": 52,
+          "column": 0,
+          "depth": 4
+        }
+      },
+      "children": [],
+      "parent": "1y1y9h9mi8y9k3i44znhfg3",
+      "data": {}
+    },
+    "yskq69lbyw4kpr8y5sdx9lu": {
+      "id": "yskq69lbyw4kpr8y5sdx9lu",
+      "title": "API Architecture",
+      "desc": "",
+      "updated": 1646263119676,
+      "created": 1646047028554,
+      "custom": {},
+      "fname": "web.backend.api-architecture",
+      "type": "note",
+      "vault": {
+        "fsPath": "vault"
+      },
+      "contentHash": "79134708dbc87d53f16ec5575cf756fd",
+      "links": [],
+      "anchors": {
+        "rpc-rest-and-graphql": {
+          "type": "header",
+          "text": "RPC, REST and GRAPHQL",
+          "value": "rpc-rest-and-graphql",
+          "line": 8,
+          "column": 0,
+          "depth": 3
+        },
+        "rpc---remote-procedure-call": {
+          "type": "header",
+          "text": "RPC - Remote Procedure Call",
+          "value": "rpc---remote-procedure-call",
+          "line": 10,
+          "column": 0,
+          "depth": 2
+        },
+        "disadvantages": {
+          "type": "header",
+          "text": "Disadvantages",
+          "value": "disadvantages",
+          "line": 82,
+          "column": 0,
+          "depth": 3
+        },
+        "advantages": {
+          "type": "header",
+          "text": "Advantages",
+          "value": "advantages",
+          "line": 88,
+          "column": 0,
+          "depth": 3
+        },
+        "grpc": {
+          "type": "header",
+          "text": "gRPC",
+          "value": "grpc",
+          "line": 92,
+          "column": 0,
+          "depth": 3
+        },
+        "references": {
+          "type": "header",
+          "text": "References",
+          "value": "references",
+          "line": 127,
+          "column": 0,
+          "depth": 4
+        }
+      },
+      "children": [],
+      "parent": "1y1y9h9mi8y9k3i44znhfg3",
       "data": {}
     },
     "6FtP5bCaxDDd47jEuSH5y": {
@@ -548,7 +699,7 @@
       "id": "wn8PE1RhG0znK1alrGFYv",
       "title": "Knowledge Garden",
       "desc": "",
-      "updated": 1644116275124,
+      "updated": 1645656788117,
       "created": 1631901573363,
       "custom": {
         "nav_order": 0,
@@ -559,7 +710,7 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "ae1897c5e907720acd7db1adf9dfd832",
+      "contentHash": "b4950fc2f0502a4b50a5036aaaeab1cf",
       "links": [],
       "anchors": {
         "my-second-brain": {
@@ -579,14 +730,14 @@
       ],
       "parent": null,
       "data": {},
-      "body": "\n#### My Second Brain\n\n---\n\nA collection of my notes around all things software development.\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/). Feel free to modify and delete this section.\n"
+      "body": "\n#### My Second Brain\n\n---\n\nA collection of my notes around all things software development.\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/).\n"
     }
   ],
   "noteIndex": {
     "id": "wn8PE1RhG0znK1alrGFYv",
     "title": "Knowledge Garden",
     "desc": "",
-    "updated": 1644116275124,
+    "updated": 1645656788117,
     "created": 1631901573363,
     "custom": {
       "nav_order": 0,
@@ -597,7 +748,7 @@
     "vault": {
       "fsPath": "vault"
     },
-    "contentHash": "ae1897c5e907720acd7db1adf9dfd832",
+    "contentHash": "b4950fc2f0502a4b50a5036aaaeab1cf",
     "links": [],
     "anchors": {
       "my-second-brain": {
@@ -617,7 +768,7 @@
     ],
     "parent": null,
     "data": {},
-    "body": "\n#### My Second Brain\n\n---\n\nA collection of my notes around all things software development.\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/). Feel free to modify and delete this section.\n"
+    "body": "\n#### My Second Brain\n\n---\n\nA collection of my notes around all things software development.\n\n> This website is generated by a Dendron template. For more information, see the [template README file](https://github.com/dendronhq/template.publish.github/).\n"
   },
   "vaults": [
     {
