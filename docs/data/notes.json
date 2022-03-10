@@ -9,8 +9,8 @@
       "title": "This page has not yet sprouted",
       "schemaStub": false,
       "type": "note",
-      "updated": 1646263311067,
-      "created": 1646263311067,
+      "updated": 1646878066781,
+      "created": 1646878066781,
       "desc": "",
       "links": [],
       "anchors": {},
@@ -303,7 +303,7 @@
       "id": "yskq69lbyw4kpr8y5sdx9lu",
       "title": "API Architecture",
       "desc": "",
-      "updated": 1646263119676,
+      "updated": 1646348040958,
       "created": 1646047028554,
       "custom": {},
       "fname": "web.backend.api-architecture",
@@ -311,17 +311,9 @@
       "vault": {
         "fsPath": "vault"
       },
-      "contentHash": "79134708dbc87d53f16ec5575cf756fd",
+      "contentHash": "bfe7e8bcdb6322b445a5f37577df5632",
       "links": [],
       "anchors": {
-        "rpc-rest-and-graphql": {
-          "type": "header",
-          "text": "RPC, REST and GRAPHQL",
-          "value": "rpc-rest-and-graphql",
-          "line": 8,
-          "column": 0,
-          "depth": 3
-        },
         "rpc---remote-procedure-call": {
           "type": "header",
           "text": "RPC - Remote Procedure Call",
@@ -334,7 +326,7 @@
           "type": "header",
           "text": "Disadvantages",
           "value": "disadvantages",
-          "line": 82,
+          "line": 78,
           "column": 0,
           "depth": 3
         },
@@ -342,7 +334,7 @@
           "type": "header",
           "text": "Advantages",
           "value": "advantages",
-          "line": 88,
+          "line": 100,
           "column": 0,
           "depth": 3
         },
@@ -350,15 +342,23 @@
           "type": "header",
           "text": "gRPC",
           "value": "grpc",
-          "line": 92,
+          "line": 106,
           "column": 0,
           "depth": 3
+        },
+        "rest": {
+          "type": "header",
+          "text": "REST",
+          "value": "rest",
+          "line": 149,
+          "column": 0,
+          "depth": 2
         },
         "references": {
           "type": "header",
           "text": "References",
           "value": "references",
-          "line": 127,
+          "line": 172,
           "column": 0,
           "depth": 4
         }
