@@ -1,0 +1,11 @@
+{
+  "name": "KnowledgeGarden",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ddab568/KnowledgeGarden.git",
+  "author": "Dana <dana.dabbagh@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@dendronhq/dendron-cli": "*"
+  }
+}
