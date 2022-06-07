@@ -2,13 +2,59 @@
 id: lncbqck7txvsvlv4qjkdmzd
 title: Code Repositories
 desc: ""
-updated: 1647479346617
+updated: 1654604300354
 created: 1647478912120
 ---
 
+
 ##### Handling multiple related projects:
 
-#### Monorepo
+## Monorepos
+
+Mono (single) repo (repository) is the concept of having a shared codebase of multiple projects. 
+
+The opposite of this would be to spread projects across different repositories e.g. repo-A contains BFF code, repo-B contains client code, repo-C is a micro service etc. 
+
+### Advantages
+
+When multiple repositories exist for projects that are interlinked, you issues such as:
+- Having to create multiple pull-requests in various projects which are merged in the 'correct' order to minimize breaking changes
+- Difficulty of using updated dependencies locally before they are updated on remote e.g. npm libraries.
+
+Having a monorepo can mean:
+- managing multiple projects is much easier
+- dependencies reflect locally immediately
+- improves collaboration between teams by ensuring ownership of ecosystem cohesiveness - poly repos pipelines are often independent and breaking changes can be missed
+
+### In practice
+
+A code repository can be structured in various ways to reflect a mono repo. An example could be:
+
+```bash
+- apps/
+--- app-one
+--- app-two
+- packages/
+--- ui
+--- utilities
+--- eslint-config
+--- ts-config
+
+```
+
+
+
+
+----
+
+#### References
+
+1. https://www.robinwieruch.de/javascript-monorepos/?ck_subscriber_id=1441143038
+
+
+
+
+-----------
 
 some potentially interesting things:
 https://yarnpkg.com/features/workspaces - yarn v2 workspaces overview - shows how easy it is to tie node packages together. other relevant docs are zero installs/offline cache, both super important when it comes to monorepo on CI (re: solving 'how to manage dependencies for N projects')
