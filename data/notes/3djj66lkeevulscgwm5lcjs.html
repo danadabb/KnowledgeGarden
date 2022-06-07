@@ -1,0 +1,33 @@
+<h1 id="search-engine-optimization-seo"><a aria-hidden="true" class="anchor-heading" href="#search-engine-optimization-seo"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Search Engine Optimization (SEO)</h1>
+<p>General guide for achieving good SEO for website:</p>
+<ul>
+<li>Build a sitemap</li>
+<li>Use SSR or SSGs - see <a href="/KnowledgeGarden/notes/KnACyiSV918ASnIeSH2TQ">Rendering Design Patterns</a>. SPAs usually don't use url paths and loading time is not ideal for a crawler.</li>
+<li>Use metadata such as <code>&#x3C;title></code> and <code>&#x3C;meta name="description" content="A good description here"></code> on every page</li>
+<li>Ensure good performance e.g. response time</li>
+<li>Use alt for images</li>
+<li>Use meaningful status codes</li>
+<li>Use semantic HTML - the correct and most relevant tags</li>
+</ul>
+<p>In November 2020, Google added three new metrics to their page experience signals called Core Web Vitals:</p>
+<ul>
+<li>Largest Contentful Paint (LCP) - The amount of time it takes to render the largest content element within the viewable area of the screen e.g. featured image</li>
+<li>First Input Delay (FID) - the time between the first users input and when the page responds (responsiveness)</li>
+<li>Cumulative Layout Shift (CLS) - visual stability of a page - checking for "janky-ness" where the screen shifts</li>
+</ul>
+<h3 id="largest-contentful-paint-lcp"><a aria-hidden="true" class="anchor-heading" href="#largest-contentful-paint-lcp"><svg aria-hidden="true" viewBox="0 0 16 16"><use xlink:href="#svg-link"></use></svg></a>Largest Contentful Paint (LCP)</h3>
+<p>Common causes of poor LCP:</p>
+<ul>
+<li>
+<p><strong>Slow server response times </strong>- The first thing to look at is Time to First Byte (TFFB) and see if that can be improved.</p>
+</li>
+<li>
+<p><strong>Render blocking JS and CSS</strong> - style sheets and javascript imports will block the HTML parser. Defer any non-critical JavaScript &#x26; CSS. CSS and JS files can be minified.</p>
+</li>
+<li>
+<p>Slow resource load times - optimize and compress images</p>
+</li>
+<li>
+<p>Client side rendering - If you're building a site that is mostly rendered on the client, you should be wary of the effect it can have on LCP if a large JS bundle is used.</p>
+</li>
+</ul>
