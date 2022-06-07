@@ -84,7 +84,7 @@ publishing:
         - root
     enableSiteLastModified: true
     siteRootDir: docs
-    siteUrl: 'https://ddab568.github.io/'
+    siteUrl: 'https://danadabb.github.io/'
     enableFrontmatterTags: true
     enableHashesForFMTags: false
     enableRandomlyColoredTags: true
