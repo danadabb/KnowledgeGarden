@@ -2,7 +2,7 @@
 id: 514eyidh124uj7yywy9os9z
 title: Machine Setup
 desc: ''
-updated: 1659181864276
+updated: 1659182705440
 created: 1659180652543
 ---
 
@@ -13,10 +13,13 @@ My machine setup preferences.
 
 1. [Steermouse](https://plentycom.jp/en/steermouse/) - to set up mouse hot keys
 2. [Rectangle](https://rectangleapp.com/) - Mac window snapping
-3. [asdf](https://asdf-vm.com/) - manage individual project dependencies
-4. [jq](https://stedolan.github.io/jq/) - pretty printing json usually to pipe curl output
-5. [bat](https://github.com/sharkdp/bat) - instead of `cat` for syntax highlighting and pretty print
-6. [kitty](https://sw.kovidgoyal.net/kitty/) - better terminal
+3. [kitty](https://sw.kovidgoyal.net/kitty/) - better terminal
+4. [asdf](https://asdf-vm.com/) - manage individual project dependencies
+5. [jq](https://stedolan.github.io/jq/) - pretty printing json usually to pipe curl output
+6. [bat](https://github.com/sharkdp/bat) - instead of `cat` for syntax highlighting and pretty print
+
+7. [tmux](https://github.com/tmux/tmux/wiki) - terminal multiplexer
+8. [vscode](https://code.visualstudio.com/) - for most languages and frameworks unless I need a really smart IDE then I would use intellij
 
 ## Configuration files
 
