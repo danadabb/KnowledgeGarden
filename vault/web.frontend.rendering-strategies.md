@@ -1,8 +1,8 @@
 ---
 id: KnACyiSV918ASnIeSH2TQ
-title: Rendering Design Patterns
-desc: ""
-updated: 1645079706918
+title: Rendering Design Patterns / Strategies
+desc: ''
+updated: 1659501692463
 created: 1644128273388
 ---
 

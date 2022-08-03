@@ -1,7 +1,7 @@
 ---
 id: VGLSQgjkL1invoOn1WIVU
 title: Operation Rewrite
-desc: ""
+desc: ''
 updated: 1645087917572
 created: 1644384514239
 ---
@@ -32,7 +32,7 @@ Re-write using headless CMS and following JAMSTACK princples.
 
 ### Rendering Style
 
-Ref [[web.frontend.designpatterns]]
+Ref [[web.frontend.rendering-strategies]]
 
 Options: SSR, SSG, SPA, ISR
 
