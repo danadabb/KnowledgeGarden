@@ -1,7 +1,7 @@
 ---
 id: qj2rqad3fu03nbzrzybffsr
 title: Design Systems
-desc: ""
+desc: ''
 updated: 1647478947669
 created: 1647398584322
 ---

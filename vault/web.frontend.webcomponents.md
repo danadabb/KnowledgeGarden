@@ -1,7 +1,7 @@
 ---
 id: 7XijrYmKXAiV06wGj50MP
 title: Web Components
-desc: ""
+desc: ''
 updated: 1644129246630
 created: 1644128329194
 ---

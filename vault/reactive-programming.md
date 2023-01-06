@@ -1,7 +1,7 @@
 ---
 id: aig5i0xuh2jq0ibzfq8sz22
 title: Reactive Programming
-desc: ""
+desc: ''
 updated: 1672820609674
 created: 1672719811772
 ---

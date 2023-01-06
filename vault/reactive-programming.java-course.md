@@ -1,7 +1,7 @@
 ---
 id: 7izbnov3vo8esfmctmtyjyi
 title: Reactive Programming In Java (Course Notes)
-desc: ""
+desc: ''
 updated: 1672820844976
 created: 1672819245128
 ---

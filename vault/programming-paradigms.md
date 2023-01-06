@@ -1,7 +1,7 @@
 ---
 id: XZTCg1c8mZeR9jEyM2HOy
 title: Programming Paradigms
-desc: ""
+desc: ''
 updated: 1644382520479
 created: 1644210058326
 ---

@@ -1,7 +1,7 @@
 ---
 id: 7w0mtdy9yip2z8dm44sazxg
 title: Architecture
-desc: ""
+desc: ''
 updated: 1647479261009
 created: 1647478689306
 ---

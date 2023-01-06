@@ -1,7 +1,7 @@
 ---
 id: yskq69lbyw4kpr8y5sdx9lu
 title: API Architecture
-desc: ""
+desc: ''
 updated: 1646348040958
 created: 1646047028554
 ---
