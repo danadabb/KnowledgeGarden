@@ -6,6 +6,6 @@
   "author": "Dana <dana.dabbagh@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@dendronhq/dendron-cli": "*"
+    "@dendronhq/dendron-cli": "^0.119.0"
   }
 }
