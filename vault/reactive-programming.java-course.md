@@ -1,14 +1,14 @@
 ---
 id: 7izbnov3vo8esfmctmtyjyi
 title: Reactive Programming In Java (Course Notes)
-desc: ''
-updated: 1672820844976
+desc: ""
+updated: 1673260620030
 created: 1672819245128
 ---
 
 > These notes are based entirely off the course: ["Reactive Programming with Java"](https://www.youtube.com/watch?v=OiRx2pZskR0&list=PLqq-6Pq4lTTYPR2oH7kgElMYZhJd4vOGI&index=5)
 
-The default programming module in java is known as the blocking programming module. We make a request, it takes time ot process, and then it responds. The alternative to this is what is known as Reactive Programming.
+The default programming module in java is known as the blocking programming module. We make a request, it takes time to process, and then it responds. The alternative to this is what is known as Reactive Programming.
 
 In Java, there are several frameworks that do this, namely:
 
@@ -20,9 +20,7 @@ A lot of people confuse reactive with async. Reactive programming doesn't imply 
 - user events
 - I/O responses e.g. file is completed
 
-Reactive programming = "react to something".
-
-It's not exactly event driven programming.
+Reactive Programming is not exactly event driven programming.
 
 Why do we care:
 
@@ -87,3 +85,44 @@ public Mono<User> getUserDetails(@PathVariable String userId) {
         })
 }
 ```
+
+The difference above to the concurrent approach is:
+
+- much simpler
+- Reusable flexible functions - many of the paradigms can be re-used and applied all over the application
+
+Reactive programming is more declarative than imperative. Java has a 'Flow' interface that can be used by reactive programming libraries (in reality it was not adopted as much as was hoped).
+
+Reactive programming is not worth it for small projects. The learning curve is big and the benefit only shows when the size of the project is increased.
+
+Reactive programming in java may seem familiar when comparing to Java Collections. Java Streams represent a sequence of data, with no concern over the internal representation of the collection, we just focus on the computation of the data. The iteration is also internal and is obfuscated from the programmer.
+
+```Java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+// Traditional loop
+for (int i = 0; i < numbers.size(); i++) {
+    System.out.println(numbers.get(i));
+}
+
+// Streams
+numbers.stream().forEach(number -> System.out.println(number))
+```
+
+Typical stream operations: map, filter, flatMap, findFirst and more.
+
+Relevant Design patterns:
+
+- Iterator Pattern - traverse a container and access it's elements. It decouples the algorithms from the container meaning that we don't care about the underlying implementation and that the iterator can take any container and gives us a consistent experience (Collections).
+- Observer Pattern - used to observe an event/number of events and trigger a course of action.
+
+These two patterns are sort of inverses of each other (push/pull data).
+
+```Java
+// iterator
+myList.forEach(element -> System.out.println(element)); //push
+// observer
+clicksChannel.addObserver(event -> System.out.println(event)) //pull
+```
+
+The idea these two use the same module/paradigm is the fundamental idea behind reactive programming.
