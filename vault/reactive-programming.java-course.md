@@ -2,7 +2,7 @@
 id: 7izbnov3vo8esfmctmtyjyi
 title: Reactive Programming In Java (Course Notes)
 desc: ""
-updated: 1673260620030
+updated: 1674465616111
 created: 1672819245128
 ---
 
@@ -126,3 +126,5 @@ clicksChannel.addObserver(event -> System.out.println(event)) //pull
 ```
 
 The idea these two use the same module/paradigm is the fundamental idea behind reactive programming.
+
+**Reactive Streams** were introduced in Java 9.
