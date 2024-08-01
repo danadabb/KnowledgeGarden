@@ -2,7 +2,7 @@
 id: zbqz5oql3yy88t9yf8q9mtz
 title: Nextjs
 desc: ""
-updated: 1707542821977
+updated: 1707554604205
 created: 1707529949723
 ---
 
@@ -98,4 +98,20 @@ Route handlers replace the API routes from 13.0 onward (although API routes can 
 
 Next.js recommends that whenever possible, to fetch data on the server with server components. This is done via server actions.
 
-Server actions are react functions that are asynchronous and are executed on the server. They are denoted via the "use server" directive.
+Server actions are react functions that are asynchronous and are executed on the server. They can be denoted via the "use server" directive, can be inline or within a separate file.
+
+```jsx
+// Server Component
+export default function Page() {
+  // Server Action
+  async function create() {
+    'use server'
+
+    // ...
+  }
+
+  return (
+    // ...
+  )
+}
+```
