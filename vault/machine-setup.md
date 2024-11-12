@@ -1,25 +1,24 @@
 ---
 id: 514eyidh124uj7yywy9os9z
 title: Machine Setup
-desc: ''
+desc: ""
 updated: 1659182705440
 created: 1659180652543
 ---
 
 My machine setup preferences.
 
-
 ## Programs
 
 1. [Steermouse](https://plentycom.jp/en/steermouse/) - to set up mouse hot keys
 2. [Rectangle](https://rectangleapp.com/) - Mac window snapping
 3. [kitty](https://sw.kovidgoyal.net/kitty/) - better terminal
-4. [asdf](https://asdf-vm.com/) - manage individual project dependencies
-5. [jq](https://stedolan.github.io/jq/) - pretty printing json usually to pipe curl output
-6. [bat](https://github.com/sharkdp/bat) - instead of `cat` for syntax highlighting and pretty print
+4. [bat](https://github.com/sharkdp/bat) - instead of `cat` for syntax highlighting and pretty print
 
-7. [tmux](https://github.com/tmux/tmux/wiki) - terminal multiplexer
-8. [vscode](https://code.visualstudio.com/) - for most languages and frameworks unless I need a really smart IDE then I would use intellij
+5. [tmux](https://github.com/tmux/tmux/wiki) - terminal multiplexer
+6. [vscode](https://code.visualstudio.com/) - for most languages and frameworks unless I need a really smart IDE then I would use intellij
+7. [oh-my-zsh](https://ohmyz.sh/) - zsh config manager
+8. [jq](https://stedolan.github.io/jq/) (optional, I only use this sometimes) - pretty printing json usually to pipe curl output
 
 ## Configuration files
 
@@ -46,7 +45,6 @@ set hlsearch               " Keep matches highlighted.
 set cursorline             " Find the current line quickly.
 ```
 
-
 ## tmux
 
 ```bash
@@ -72,7 +70,6 @@ set -g default-terminal "screen-256color"
 
 ```
 
-
 ## zhrc
 
 ```bash
@@ -85,7 +82,7 @@ plugins=(
      zsh-autosuggestions
 )
 
-## command line prompt - 
+## command line prompt -
 ## shows username, path and git branch details
 parse_git_branch() {
     git branch 2> /dev/null | sed -n -e 's/^\* \(.*\)/[\1]/p'
@@ -105,7 +102,7 @@ export EDITOR=vim
 bindkey "\e[1;3D" backward-word # ⌥←
 bindkey "\e[1;3C" forward-word # ⌥→
 
- 
-# for JQ extention, "null" is hard to see so change the colour
+
+# for JQ extention if using -  "null" is hard to see so change the colour
 export JQ_COLORS='0;31:0;39:0;39:0;39:0;32:1;39:1;39'
 ```
