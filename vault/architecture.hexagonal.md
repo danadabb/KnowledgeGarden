@@ -2,7 +2,7 @@
 id: 7gq4n7i7t84iqthitoblipc
 title: Hexagonal Architecture
 desc: ""
-updated: 1731542089315
+updated: 1731545009046
 created: 1731454274600
 ---
 
@@ -56,7 +56,7 @@ created: 1731454274600
 
 - Driver ports are the **API** of the application. You can group the use cases into one port or spread across a few if we want to follow the Single Responsibility Principle.
 
-- If using a lot of ports, a recommended option is applying the command bus design pattern or CQRS pattern - a port for executing commands and another port for executing queries.
+- If using a lot of ports, a recommended option is applying the command bus design pattern or [[CQRS pattern |architecture#command-query-responsibility-segregation-cqrs]] a port for executing commands and another port for executing queries.
 
 - A driven port is an interface for functionality to implement business logic. Driven ports are the **SPI** (service provider interface) required by the application.
 
