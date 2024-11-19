@@ -1,7 +1,7 @@
 ---
 id: 7w0mtdy9yip2z8dm44sazxg
 title: Architecture
-desc: ""
+desc: ''
 updated: 1731976743982
 created: 1647478689306
 ---
@@ -33,7 +33,7 @@ On the query side, CQRS emphasizes the use of queries to retrieve data from the 
 
 The main advantage of separating command and query is giving developers the ability to optimize each side independently. Read can be optimized with strategies such as caching or specialized data stores. CQRS is useful in complex domains or applications where read and write have different scalability and performance requests. Considering it adds complexity would mean that it's not suitable for all requirements and trade-offs should be taken into account.
 
-[[Read more|CQRS]]
+[[Read more|architecture.CQRS]]
 
 ### ACID & CAP Theorem
 

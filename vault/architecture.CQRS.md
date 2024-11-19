@@ -1,7 +1,7 @@
 ---
 id: x9svkv1c2vvyef4l5xjdmps
 title: CQRS
-desc: ""
+desc: ''
 updated: 1731885472528
 created: 1731883600536
 ---
