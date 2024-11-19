@@ -2,7 +2,7 @@
 id: 7w0mtdy9yip2z8dm44sazxg
 title: Architecture
 desc: ""
-updated: 1687088916739
+updated: 1731976743982
 created: 1647478689306
 ---
 
@@ -32,6 +32,8 @@ A pattern that separates the responsibility of reading (querying) data and modif
 On the query side, CQRS emphasizes the use of queries to retrieve data from the system. These are typically handled by query handlers within the system.
 
 The main advantage of separating command and query is giving developers the ability to optimize each side independently. Read can be optimized with strategies such as caching or specialized data stores. CQRS is useful in complex domains or applications where read and write have different scalability and performance requests. Considering it adds complexity would mean that it's not suitable for all requirements and trade-offs should be taken into account.
+
+[[Read more|CQRS]]
 
 ### ACID & CAP Theorem
 
