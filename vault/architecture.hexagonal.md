@@ -2,7 +2,7 @@
 id: 7gq4n7i7t84iqthitoblipc
 title: Hexagonal Architecture
 desc: ""
-updated: 1731545009046
+updated: 1732595981915
 created: 1731454274600
 ---
 
@@ -89,9 +89,16 @@ Besides the above, there will be a 'composition root' or Main Component that run
 
 ![alt text](assets/images/task-assignment-app.png)
 
+### Example implementation references (Repositories)
+
+- https://github.com/jmgarridopaz/bluezone - Java
+- https://github.com/Sairyss/domain-driven-hexagon - Node JS
+- https://github.com/kamilmysliwiec/nest-cqrs-example - Using Nest JS CQRS
+- https://github.com/gregoryyoung/m-r - supplementary CQRS repo by Greg Young (.NET)
+
 #### References
 
-1. ttps://medium.com/ssense-tech/hexagonal-architecture-there-are-always-two-sides-to-every-story-bc0780ed7d9c
+1. https://medium.com/ssense-tech/hexagonal-architecture-there-are-always-two-sides-to-every-story-bc0780ed7d9c
 2. https://scalastic.io/en/hexagonal-architecture/
 3. https://youtu.be/bDWApqAUjEI?feature=shared
 4. https://jmgarridopaz.github.io/content/hexagonalarchitecture.html#tc2-1
