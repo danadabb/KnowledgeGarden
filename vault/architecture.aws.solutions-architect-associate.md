@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1734582975000
+updated: 1734584249124
 created: 1734484581601
 ---
 
@@ -26,3 +26,8 @@ Notes attributed to [this course](https://learn.cantrill.io/courses/enrolled/182
 - IAM Access Keys are long term credentials with up to 2 available per IAM user typically used in CLIs or applications
 - Access Keys are made up of Access Key ID and the Secret Access Key
 -
+
+## Technical fundamentals
+
+Pre-cursor to the concepts covered in this course summarized here:
+[[architecture.tech-fundamentals]]
