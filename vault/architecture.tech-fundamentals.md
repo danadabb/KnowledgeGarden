@@ -2,7 +2,7 @@
 id: fqi20n3dabq8rhrs04h6tk3
 title: Tech Fundamentals
 desc: ""
-updated: 1735773211354
+updated: 1735786487556
 created: 1734584183713
 ---
 
@@ -104,3 +104,43 @@ NAT only makes sense for IPv4 because IPv6 adds many more addresses.
 
 IPv4 addresses occupy a range from 0.0.0.0 -> 255.255.255.255.255
 Although it covers over 4.29 billion addresses, with the current world population it will not suffice. Public IP addresses need to be allocated but private ones can be used freely.
+
+The IPV4 public address space is split into ranges where specific subsets are assigned to specific entities:
+
+- Class A - 0.0.0.0 -> 127.255.255.255 - historically this space was For huge businesses but since it's been given up to the regional managers of the IP address space
+- Class B - 128.0.0.0 -> 191.255.255.255 - larger businesses that didn't need class A but as above, they are now addressed to IP managers
+- Class C - for those that were not big enough to fit into A or B but as with above, they're now owned by IP managers
+- Class D
+- Class E
+
+With IPv6, the address space is 340 trillion spaces. IP addresses in IPv6 are no longer a scarce resource and don't need strict management.
+
+Subnetting is the process of breaking up IP address space into smaller pieces. CIDR allows us to break up the IP addresses with a prefix e.g. /16
+
+### Distributed Denial of Service (DDoS) attacks
+
+An attack that is designed to overload websites.
+
+There are different types of DDoS attacks:
+
+- Application layer - flooding HTTP
+- Protocol based attacks - SYN floods
+- Volumetric - DNS amplification
+
+### VLANS, TRUNKS and QinQ
+
+- A Virtual Area Network (VLAN) is a way to divide a single physical network into multiple logical networks.
+
+// TODO
+
+### SSL and TLS
+
+Secure Sockets Layer (SSL) and Transport Layer Security (TLS) at a high level do the same thing. TLS is newer and more secure.
+
+SSL and TLS provide privacy and data integrity between client and server.
+
+TLS:
+
+- ensures privacy via encryption
+- identity (server/client) verification
+- ensures a reliable connection by protecting against alteration of data in transit
