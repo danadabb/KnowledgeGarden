@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1735814728540
+updated: 1735880973752
 created: 1734484581601
 ---
 
@@ -25,7 +25,6 @@ Notes attributed to [this course](https://learn.cantrill.io/courses/enrolled/182
 - IAM is an identity provider, which also authenticates and authorizes
 - IAM Access Keys are long term credentials with up to 2 available per IAM user typically used in CLIs or applications
 - Access Keys are made up of Access Key ID and the Secret Access Key
--
 
 ## Technical fundamentals
 
@@ -100,4 +99,52 @@ Inside every region, AWS also provide multiple availability zones. These give is
   - Root volume - the drive that boots the operating system
   - Block device mapping - configuration which links the volumes that the AMI has and how they're presented to the operating system e.g boot vs data volume
 - EC2 can host different OS e.g. linux, windows, macos. You can connect to them via remote desktop (windows) or SSH (linux/macos)
--
+
+### Simple Storage Service (S3)
+
+- S3 is a global storage platform - it's regionally resilient. The data is replicated across availability zones in that regions. It can tolerate a fault in an AZ
+- S3 is a public service
+- It's used to host a large amount of data e.g. movies, audio, photos, text, large data sets
+- Economical and can be accessed via a variety of methods e.g. UI/CLI/API/HTTP
+- S3 delivers two main things:
+
+1. Objects - the data s3 stores
+2. Buckets - containers for objects
+
+**Objects** are basically files that are made up of two components:
+
+1. the object key (name) - usually the file name
+2. the object value (data) - the data or contents of the object
+
+- The bucket name needs to be **globally unique** - this is across all regions and aws accounts. It should be between 3-63 characters, all lower case, no underscores. Must start with a lowercase letter or a number. It can't be formatted like an IP address.
+
+- A bucket can hold an unlimited number of objects and an unlimited amount of data - it's an infinitely scalable service.
+
+- A bucket may show on the UI that it has folders but the underlying structure is flat and everything sits in the root. Folders are referred to as prefixes in s3 as they prefix the object names.
+
+- There is a soft limit of 100 buckets for an s3 account and a hard limit of 1000 buckets using support request.
+
+- You can have unlimited objects in a bucket, with each object able to range between 0 to 5TB in size.
+
+- S3 is not a file or block. It is an object store
+- You can't mount an s3 bucket as a drive e.g. K:\ or /images
+- s3 is great for large scale data storage, distribution or upload
+- great for offloading - moving data from a server to the s3
+- Most services can use s3 as an INPUT or OUTPUT. s3 is a good default for data storage.
+
+### CloudFormation (CFN) basics
+
+- CloudFormation is Infrastructure as Code (IaC) which allows automation infrastructure creation, update and deletion.
+- CFN uses templates written in either YAML or JSON
+- A template:
+  - has a list of resources to do the action on (at least one - mandatory)
+  - description - the only restriction with this is if the template has an AWSTemplateFormatVersion, the description must come directly after it (this can be a trick question in the exam)
+  - metadata - controls how the UI presents the template
+  - parameters - adds fields which need to be added with input (default values could be provided)
+  - mappings - allows you to create lookup tables
+  - conditions - decision making in the template
+  - outputs - once the template is finished it can present outputs based on the resource e.g. the instance ID of the ec2
+- CloudFormation takes a template and creates a stack. A stack contains all the logical resources the template tells it to contain. CFN will create a corresponding physical resource in your AWS account.
+- You can update or delete the logical resources in the template and the template will do this to the physical resources on your account
+- CFN exists to automate infrastructure
+- CFN can be used as part of change management as it can be put in code repositories
