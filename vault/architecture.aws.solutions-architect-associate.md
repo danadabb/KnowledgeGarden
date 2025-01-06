@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1735880973752
+updated: 1736137389774
 created: 1734484581601
 ---
 
@@ -10,13 +10,13 @@ Notes attributed to [this course](https://learn.cantrill.io/courses/enrolled/182
 
 ## AWS Accounts
 
-- AWS account is a container for identities (users) and resources
-- Every AWS account has a root users
+- An AWS account is a container for identities (users) and resources
+- Every AWS account has a root user
 - The account root user can't be restricted it has full access to everything within this account.
 - The credit card used with the root account will be the Account Payment method, everything will be billed to that card
 - AWS is a pay-as-you-go/consume platform
 - Certain resources have a free-tier
-- IAM - every AWS account comes with it's own IAM DB
+- IAM - every AWS account comes with it's own IAM Database
 - IAM lets you create 3 different IAM profiles - Users, groups and roles
   - Users represent humans or applications that need access to your account - this is for individual purposes
   - Groups are a collection of related users
@@ -35,7 +35,7 @@ Pre-cursor to the concepts covered in this course summarized here:
 
 ### Public vs Private services
 
-- Can be categorized into two types: public and private services
+- Services can be categorized into two types: public and private services
 - AWS public and private service are separated by network access.
 - Public service is something which can be accessed using public endpoints e.g. s3
 - A private aws service runs within a vpc so only what is connected to that vpc can access it
@@ -52,10 +52,10 @@ Pre-cursor to the concepts covered in this course summarized here:
 - Regions have three main benefits:
 
 1. Each reason is separate geographically which isolates any faults
-2. Geopolitical separation - difference governance depending the region
+2. Geopolitical separation - different governance depending the region
 3. Location control - tune architecture performance relative to an area
 
-- Regions also have a code e.g Sydney is ep-southeast-2 and a name Asia Pacific (Sydney)
+- Regions also have a code e.g. Sydney is ep-southeast-2, as well as a name - Asia Pacific (Sydney)
 
 Inside every region, AWS also provide multiple availability zones. These give isolated infrastructure within a region. If a region experiences an isolated issue but only one availability zone is affected, the others are likely to be still fully functional. A solutions architect may distribute the services across multiple availability zones. This is used to build resilience.
 
@@ -148,3 +148,62 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - You can update or delete the logical resources in the template and the template will do this to the physical resources on your account
 - CFN exists to automate infrastructure
 - CFN can be used as part of change management as it can be put in code repositories
+
+### CloudWatch (CW) Basics
+
+- CloudWatch is a support service which is used by many other AWS services. It collects and manages operational data detailing how it performs, runs or logging data
+- It performs 3 main jobs:
+
+1. **Metrics** - collects metrics from AWS products, Apps, on-premises
+2. **Logs** - collects logs as above
+3. **Events** - Cloudwatch can generate events to do something
+
+- Namespace is a container for monitoring data. It's a way of separating things into different areas e.g. AWS/EC2
+- A metric is a collection of related data points in a time ordered structure e.g. cpu utilization, network I/O or disk I/O
+- Data points are measurements of data consisting of a timestamp and value
+- Dimensions are used to separate data points within the same metric e.g. instance ID (i-xxxxx) and instance type (t3.small)
+- We can take action on metrics using alarms
+
+### Shared Responsibility Model
+
+- Shared responsibility in AWS is the principal that some areas you have to manage vs AWS have to manage
+- At a high level, AWS is responsible for the security of the cloud where as customers are responsible for the security in the cloud
+- AWS responsibilities include managing security of regions, Availability Zones and Edge locations specifically the hardware/global infrastructure.
+- AWS also manage the security around compute, storage, database and networking as well as any software that is used to provide those services
+- Customers need to take care of client side data encryption, server side encryption and network traffic protection.
+- Customers need to take care of OS, network and firewall configuration
+- Customers need to take care of platform, applications, identity and access management as well as customer data.
+
+![Shared Responsibility Model](/assets/images/srp-model.png)
+
+### High-Availability vs Fault-Tolerance vs Disaster Recovery
+
+- High Availability (HA) aims to ensure an agreed level of operational performance, usually uptime. for a higher than normal period
+- HA is about maximizing a system's online time
+- System availability is usually expressed as a percentage of uptime e.g. 99.9% a year means 8.77 hours p/year downtime
+- Fault tolerance (FA) is the property that enables a system to continue operating properly in the event of the failure of one or more of its components
+- HA is just about maximizing uptime where as FA is operating through failure e.g. a aeroplane can't just be highly available it must be fault tolerant
+- FA is much more complex and more costly to implement as you need to minimize outages but also design a system that will tolerate a failure
+- Disaster recovery (DR) is a set of policies, tools and procedures to enable the recovery or continuation of vital technology infrastructure and systems following a natural or human-induced disaster
+- You need to plan what should be done in the event of a failure. An example of DR planning is having off-site backup storage
+- DR planning should happen in advance so that the process is automated
+
+**Summary**:
+
+- HA - minimise outages
+- FA - operate through faults
+- DR - used when these don't work
+
+### Route53 (R53) Fundamentals
+
+- Route53 provides two main services:
+
+1. Allows you to register domains
+2. Hosts zones on managed nameservers it provides
+
+- Route53 is a global service with a single Database. You don't need to pick a region
+- It is globally resilient so it can tolerate the fault of multiple regions
+- Route53 provides DNS zones as well as hosting for those zones
+- Zone files are created and hosted on four managed name servers
+- Hosted zones can be public or private (VPC)
+- A hosted zone hosts DNS records (recordsets)
