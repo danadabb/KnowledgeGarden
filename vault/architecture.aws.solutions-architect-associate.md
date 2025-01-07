@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1736137389774
+updated: 1736219913268
 created: 1734484581601
 ---
 
@@ -207,3 +207,101 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - Zone files are created and hosted on four managed name servers
 - Hosted zones can be public or private (VPC)
 - A hosted zone hosts DNS records (recordsets)
+
+### DNS Record Types
+
+- There are different records that can be stored in DNS:
+
+  - Nameserver (NS) - allow delegation to occur end to end in DNS. e.g example.com → ns1.example.com, ns2.example.com
+
+  - A and AAAA Records - A record will point to a v4 IP address and the AAAA will point to the v6 IP address. For example:
+
+    ** A Record:** example.com → 192.168.1.1
+
+    ** AAAA Record:** example.com → 2001:db8::1
+
+  - CNAME - Canonical Name - lets you create the equivalent of DNS shortcuts by pointing to the same A record. E.g. www.example.com → example.com
+  - MX Record - how a server can find a mail server for a specific domain. Includes a priority number
+    ```
+    example.com
+      Priority: 10 → mail1.example.com
+      Priority: 20 → mail2.example.com
+    ```
+  - TXT - allow you to add arbitrary text to a domain that must be matched to prove domain ownership.
+
+- TTL (Time To Live) is the time set by the DNS to determine how long a DNS record is cached by a resolver (DNS server o browser) before it must check for an updated record from an authoritative server.
+
+## IAM, Accounts and AWS Organisations
+
+### IAM Identity Policies
+
+- IAM policies are a type of policy which get attached to identities in AWS
+- Identities are IAM users, groups and roles
+- IAM Policies:
+
+  - provides and denies access to features in AWS
+  - Policy documents are created using JSON containing one or more statements
+  - the first part of a statement is a Sid (Statement ID) which is an optional field that lets you identify a statement and what it does. Using these is best practice to inform the reader
+  - Every statement will have a resource you're interacting with and the action you're wanting to perform on that resource
+  - The action is in the format "service:operation" where the operation can possibly be a wild card or a list of multiple actions
+  - Resources is the same only it matches AWS resources. Individual resources are referred to using the ARN
+  - Effect is either allow or deny. It is possible to be allowed and denied at the same time
+
+  ```json
+  <!-- Policy document example -->
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "FullAccess",
+        "Effect": "Allow",
+        "Action": ["s3:*"],
+        "Resource": ["*"]
+      }
+    ]
+  }
+  ```
+
+  - when there is an overlap in permissions, then both of the statements are processed where the priority begins at explicit denies. Denies overrule everything else. The second priority are explicit allows. Allows take effect unless there are explicit denies. The default if no rules are in place, the default is DENY.
+  - With the exception of the account root user, aws identity start of with NO ACCESS to aws resources.
+  - Remember: explicit DENY > explicit ALLOW > DENY
+
+- There are two types of policies: Inline policies and managed policies
+- Inline policies are when you apply individual JSON policy documents to each individual account. This is good for exceptional or special access rights for an individual as opposed to a group or a number of people
+- Managed policies are another JSON policy that you'd attach to identities in a reusable way. These should be used for the normal default rights in a business as they are low overhead
+- There are two types of managed policies: AWS managed policies and customer managed policies which you can create and manage for exact requirements
+
+### IAM Users and ARNs
+
+- IAM users are an identity used for anything required long term AWS access e.g. humans, applications or service accounts
+- A principal (a person/application) makes a request tto IAM to authenticate to a resource
+- Authentication for IAM users is done using either username and password or access keys. Access keys are usually used by applications or by humans using CLI tools.
+- Once a principal goes through the access tools, they become an authenticated identity
+- Once a principal is identified AWS knows which policies apply to an identity. This is the process of authorization.
+- Authentication is how a prinicpal can prove to IAM it's who they say they are where as AUthorization checks the policies attached to the identity to give them permission for a resource
+- ARN (Amazon Resource Name) uniquely identify resources within any AWS accounts.
+- ARN is used to allow you to refer to a single or group of resources using wild cards
+- ARNs are used in IAM policies
+- The format is:
+  `arn:partition:service:region:account-id:resource-id`
+  `arn:partition:service:region:account-id:resource-type/resource-id`
+  `arn:partition:service:region:account-id:resource-type:resource-id`
+- You can only have 5000 IAM users per account
+- An IAM User can be a member of 10 groups
+- If you have more than 5000 identifiable users then IAM users is not the right identity to use for that solution. You can fix this with IAM roles or Identity Federation.
+
+### IAM Groups
+
+- IAM groups are containers for IAM users
+- You can't log into IAM groups nor do they have credentials of their own
+- THey are used solely to manage and organise IAM users
+- an IAM user can be part of multiple IAM groups
+- Groups can have policies attached to them, both inline and managed
+- You can also have individual inline/managed policies at the user level
+- You should collect all the policies that apply to a user from their groups and individual policies and apply the same deny-allow-deny rule to work out what their permissions are
+- There is no limit for the amount of users in an IAM group but the IAM user limit of 5000 exists for the whole account
+- There is no such 'all users' group in IAM built in. You can create this and manage it manually
+- You cannot have any nesting in groups
+- There is a limit of 300 groups per account but it can be increased with a support ticket
+- Policies can be attached to resources as well for example a bucket can have a policy attached to it where it allows and denies identities access to that bucket.
+- A resource can be refer to a user or role to give permission to itself but it cannot give it to a group. This is because a group is not a true identity and they can't be referenced as a principal in a policy
