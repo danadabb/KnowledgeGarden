@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1736219913268
+updated: 1739249839751
 created: 1734484581601
 ---
 
@@ -305,3 +305,46 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - There is a limit of 300 groups per account but it can be increased with a support ticket
 - Policies can be attached to resources as well for example a bucket can have a policy attached to it where it allows and denies identities access to that bucket.
 - A resource can be refer to a user or role to give permission to itself but it cannot give it to a group. This is because a group is not a true identity and they can't be referenced as a principal in a policy
+
+### IAM Roles
+
+- A role is a type of identity that exists inside an IAM account
+- IAM user is when a single principal wants to use AWS
+- IAM roles are best suited to be used by multiple principals e.g. multiple users in the aws account or users, apps or services inside or outside of the aws account.
+- If you can't identify the number of principals that use an identity or if you have more than 5000 principals you could consider using an IAM role
+- Usually roles are used on a temporary basis to borrow permissions
+- IAM roles have two types of policies that can be attached:
+
+  1. Trust policy - which identities can assume that role. This can be entities in AWS accounts, other accounts, anonymous users and SSO providers e.g. facebook, google etc
+  2. Permissions policy - temporary credentials are given to identities assuming the role and these credentials are used to check the permissions
+
+- temporary credentials are generated to roles using STS (Secure Token Service).
+
+### When to use IAM Roles
+
+- One of the most common uses of IAM roles is AWS services as they need permission and access rights to perform certain actions
+- An example is AWS Lambda - it may start/stop ec2 instances, perform backups or other tasks that need permission
+- Instead of hardcoding the access keys into the Lambda, the IAM role 'Lambda execution role' can grant access to aws product/services. It will use the sts:AssumeRole operation to generate temporary credentials to use AWS services.
+- This is a better approach than using access keys as it's more secure and it won't need key rotation
+- Roles are also useful for emergency or unusual situations. A person can assume an emergency role when absolutely required for a short time.
+- Roles are useful for an existing corporate environment. If a corporate has over 5000 staff you cant assign each of them an IAM user.
+- You could allow an IAM role inside your AWS account to be used by an external identity e.g. active directory
+- If you create an app with over 5000 users that needs AWS access, you can use web identity federation which uses IAM roles. Web identities can be providers such as google, facebook or twitter/X
+- The pro of using web identities is that no AWS credentials are stored on the app and it uses existing accounts that customers have. This can scale to 100 million+ users
+- If you want to use resources across aws accounts, aws roles can also be used.
+
+### Service-linked Roles and PassRole
+- Service-linked roles are a special time of IAM role linked to a specific AWS service
+- their permissions are pre-defined by an AWS service
+- The main difference between a regular IAM role and a service-linked role is that you cannot delete a service-linked role until it's no longer required
+- They are either created by a service or by you during set up
+- Passrole permissions give the users the ability to use a service linked role without being able to create or edit the role. This is similar to using a pre-created role in a cloud formation stack. 
+
+
+### AWS Organisations
+- AWS organisations take a single AWS account (standard account) to create an organisation. This account becomes the management account (previously called Master account). 
+- The management account invites existing standard AWS accounts into the organisation. Once they join they change from being standard to member accounts.
+- An AWS organisation has only ONE management account and zero or more member accounts
+- An organisational root is not the same as an AWS account root user. The root of an AWS organisation is just a container for aws accounts and organisational units. It's the top level of the hierarchical structure of an organisation. 
+- Consolidating billing for organisations changes the billing methods for member accounts by removing them and passing them through to the management account. In the context of consolidated billing this is known as the Payer Account. 
+- Master, management and payment account refer to the same thing - the account that was used to create the organisation. 
