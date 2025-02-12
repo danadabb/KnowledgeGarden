@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739249839751
+updated: 1739402788496
 created: 1734484581601
 ---
 
@@ -278,7 +278,7 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - Authentication for IAM users is done using either username and password or access keys. Access keys are usually used by applications or by humans using CLI tools.
 - Once a principal goes through the access tools, they become an authenticated identity
 - Once a principal is identified AWS knows which policies apply to an identity. This is the process of authorization.
-- Authentication is how a prinicpal can prove to IAM it's who they say they are where as AUthorization checks the policies attached to the identity to give them permission for a resource
+- Authentication is how a principal can prove to IAM it's who they say they are where as AUthorization checks the policies attached to the identity to give them permission for a resource
 - ARN (Amazon Resource Name) uniquely identify resources within any AWS accounts.
 - ARN is used to allow you to refer to a single or group of resources using wild cards
 - ARNs are used in IAM policies
@@ -348,3 +348,80 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - An organisational root is not the same as an AWS account root user. The root of an AWS organisation is just a container for aws accounts and organisational units. It's the top level of the hierarchical structure of an organisation. 
 - Consolidating billing for organisations changes the billing methods for member accounts by removing them and passing them through to the management account. In the context of consolidated billing this is known as the Payer Account. 
 - Master, management and payment account refer to the same thing - the account that was used to create the organisation. 
+
+### Service Control Policies
+
+- SCPs are a feature of AWS organisations which allow restrictions to be placed on member accounts in the form of boundaries
+- SCPs are policy documents or JSON that can be attached to the organisation as a whole or organisational units or individual AWS accounts
+- They inherit down the organisation tree so that nested units will be affected by it and everything below it will be affected too
+- Management accounts are special as they cannot be restricted and not affected by service control policies.
+- They can limit what a root user can do though
+- SCP do not grant permissions. They just control what an account can and cannot grant via identity policies
+- By default, SCP applies FullAWsAccess which means no restrictions 
+- SCP also has implicit deny if there is an absence of an allow
+- Only permissions allowed within the intersection of Identity policies and SCPs are allowed
+
+![SCP and Identity Policies Venn](/assets/images/SCP-policies-venn.png)
+
+### CloudWatch Logs
+- A public service that allows you to store, monitor and access logging data
+- Has built in AWS integration with services eg EC2, VPC, Lambda, CloudTrail, R53
+- Can generate metrics based on logs (metric filter)
+- Log events are stored in log streams. Log streams are from one specific source e.g. one ec2 instance
+- Log groups are containers for multiple log streams for the same type of logging 
+- Log groups are where we define retention and permission policies and metric filters
+- Metrics can have associated alarms
+
+### CloudTrail Essentials
+- A product which logs API calls and account events/activities e.g. creating, deleting s3 bucket, stopping a service etc
+- A cloudtrail event is a call/activity on an aws account
+- Stores 90 days of event history - enabled by default for no cost. You don't get any s3 storage unless you configure a trail. 
+- To customise this you must create 1 or more Trails
+- Management Events and Data Events are the type of trails
+- Management Events are control plane operations 
+- Data events are resource operations e.g. uploading objects, lambda functions being invoked
+- By default, cloud trail only logs Management events
+- A trail logs events for an AWS region it's created in
+- Cloud trail is a regional service
+- A trail can be set to all regions or one region 
+- By default, regional trails will log to the region they're in but global services will log to **us-east-1**
+- If you create a trail, it is stored in an s3 bucket as compressed JSON log files
+- CloudTrail could also be integrated into Cloudwatch logs
+- You can create an organisational trail which is a single management point for every event across the whole organisation 
+- CloudTrail is NOT real time. There can be a 15+ minute delay
+
+### AWS Control Tower
+- AWS Control Tower gives an easy and quick way to set up a multi-account environment
+- Control Tower orchestrates other services to provide this functionality e.g. Organizations, IAM identity center, cloudformation, config
+- It's another evolution of AWS Organisation with more capability 
+
+There are a few different parts of control tower:
+- Landing zone - multi-account environment 
+- Guard Rails - detect/mandates rules and standards across all accounts
+- Account Factory - automates and standardises new account creation 
+- Dashboard - single page oversight of the entire environment 
+
+**Landing Zone**
+  - Home region - the region you deploy the region 
+  - brings features of multiple AWS products together e.g. Organizations, AWS Config, Cloudformation
+  - Security OU - organisational unit that has log archive and audit accounts
+  - Sandbox OU - which is for testing and less rigid security
+  - You can create other OU's and Accounts
+  - Utilises the IAM Identity Center (AWS SSO) - SSO, multi account, ID Federation 
+  - Monitoring and Notifications - cloudwatch and SNS
+
+**Guard Rails** 
+ - Come in either Mandatory, Strongly Recommended or Elective
+ - Function in two ways
+  1. preventative - stop you from doing things - either enforced or not enabled
+  2. detective - compliance check for identifying issues - either clear, in violation or not enabled 
+
+**Account Factory**
+  - Automate account provisioning
+  - Can be done with cloud admins or end users with appropriate permissions
+  - This provisioning comes with Guardrails which are automatically added
+  - Account admin given to a named user to allow people in the organisation to provision accounts
+  - Accounts are set up with standard configuration
+  - Accounts can be closed or repurposed
+  - Can be fully integrated with a business SDLC
+  
