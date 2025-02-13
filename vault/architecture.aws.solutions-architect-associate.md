@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739402788496
+updated: 1739419754751
 created: 1734484581601
 ---
 
@@ -274,11 +274,11 @@ Inside every region, AWS also provide multiple availability zones. These give is
 ### IAM Users and ARNs
 
 - IAM users are an identity used for anything required long term AWS access e.g. humans, applications or service accounts
-- A principal (a person/application) makes a request tto IAM to authenticate to a resource
+- A principal (a person/application) makes a request to IAM to authenticate to a resource
 - Authentication for IAM users is done using either username and password or access keys. Access keys are usually used by applications or by humans using CLI tools.
 - Once a principal goes through the access tools, they become an authenticated identity
 - Once a principal is identified AWS knows which policies apply to an identity. This is the process of authorization.
-- Authentication is how a principal can prove to IAM it's who they say they are where as AUthorization checks the policies attached to the identity to give them permission for a resource
+- Authentication is how a principal can prove to IAM it's who they say they are where as Authorization checks the policies attached to the identity to give them permission for a resource
 - ARN (Amazon Resource Name) uniquely identify resources within any AWS accounts.
 - ARN is used to allow you to refer to a single or group of resources using wild cards
 - ARNs are used in IAM policies
@@ -294,7 +294,7 @@ Inside every region, AWS also provide multiple availability zones. These give is
 
 - IAM groups are containers for IAM users
 - You can't log into IAM groups nor do they have credentials of their own
-- THey are used solely to manage and organise IAM users
+- They are used solely to manage and organise IAM users
 - an IAM user can be part of multiple IAM groups
 - Groups can have policies attached to them, both inline and managed
 - You can also have individual inline/managed policies at the user level
@@ -424,4 +424,81 @@ There are a few different parts of control tower:
   - Accounts are set up with standard configuration
   - Accounts can be closed or repurposed
   - Can be fully integrated with a business SDLC
-  
+
+## Simple Storage Service
+
+### S3 Security (Resource Policies and ACLs)
+- S3 is private by default 
+- The only identity which has any access to s3 by default is the account root user
+- You can grant permission to s3 via S3 Bucket Policies:
+  - A form of resource policy 
+  - like identity policies but attached to a bucket
+  - Resource perspective permissions - you control who can access that resource 
+  - Identity policies are limited by only being able to give control to the current account, so you cannot give another account access to an s3 bucket. Resource policies allows this for the current or different accounts. 
+  - Resource policies can ALLOW/DENY anonymous principals. This can't be done with identity policies since they need to be attached to a valid identity in AWS. Therefore the resource policies can be given to external access.  
+  - Resource policies have a 'principal' component which specifies which principals this policy applies to
+  - An identity policy doesn't have a principal because the policy always applies to the account that created it. A good way to identify identity vs resource policy is checking the absence of principal
+  - Identity policy as well as the bucket policy applies to both internal and cross account access. For anonymous only the bucket policy applies. 
+
+Access Control Lists (ACLs):
+- Another form of s3 security used less frequently these days. They aren't recommended anymore by AWS
+- A sub-resource of an object or bucket.
+- You cannot use ACLs on a group of objects 
+
+Block Public Access:
+- Another layer of permission to block all public access as a fail safe 
+
+Choosing between resource or identity policies depends on the business' requirements and personal preference but sometimes choosing one over the other makes sense in specific situations:
+- If you're granting/denying permissions on lots of different resources across an aws account, then you will need to use identity as not all services support resource policies. 
+- If you prefer to manage resources from one place then identity makes sense because this is done in IAM
+- If you're managing a specific product then resource makes sense
+- Cross account or anonymous resources should use resource policies
+- Do not use ACLs unless you MUST  
+
+### S3 Static Hosting
+- Without static hosting, you access S3 Via AWS APIs
+- With static hosting, you can access those resources via HTTP e.g. websites, blogs etc 
+- You must set an Index and Error document for s3 hosting. We point the index document to a specific html file object in the bucket as well as Error
+- A website endpoint is created for hosting
+- You can use a custom domain via R53 but the bucket name MUST match the domain name
+
+There are two scenarios that are perfect for s3
+1. Offloading - moving large data from a compute service to s3 is cheaper
+2. Out-of-band pages - if a server is offline for maintenance or has performance bugs we can point users to a static page on s3 that contains something like a status message
+
+Pricing:
+- Per GB per month charge
+- Transfer fee - in is free, out is per gig charge
+- Request and data retrieval - every operation e.g. GET, POST incurs a cost
+
+
+### Object Versioning and MFA Delete
+- Disabled by default. **Once enabled you cannot disable it** 
+- You can suspend it and a suspended bucket can be re-enabled
+![S3 versioning state](/assets/images/s3-versioning-state.png)
+
+- Versioning let's you store multiple version of objects within a bucket where as without it, there is a unique object name and the object gets replaced each time.
+- the 'id' is null if versioning is disabled, if it is enabled then s3 will allocate an id 
+- newer versions will have a new ID
+- The newest version is known as Latest or current version
+- If you don't specify to s3 a specific version, you always get the latest. You can access individual versions by specifying the ID
+- If we delete an object, the object is not deleted, it's just hidden and  marked with a delete marker. This is when we don't specify an ID/version
+- if we specify a version ID then an object is actually deleted 
+- Important: **versioning CANNOT be switched off - only suspended***
+- Space is consumed by ALL versions and you are billed for ALL versions
+- Only way to remove all costs is to delete the bucket. Suspending does not remove the old versions
+- MFA Delete - enabled in versioning configuration which means you need an MFA token to change bucket versioning state or delete version
+- You would need to pass in MFA and the code passed with API calls to do these actions
+
+### S3 Performance Optimization
+- Default upload in s3 is using single data stream to s3. The issue with this is if the stream fails the entire upload fails and you need a full restart
+- A single PUT upload in AWS is limited to 5GB as a maximum 
+- A solution to a single stream is using a **multi-part upload**
+- This breaks the original blob into individual parts
+- The **minimum** data size to use multi part upload is 100MB. It's recommended to use it for anything over 100mb. 
+- An upload can be split into a maximum of 10,000 parts with each part between 5mb -> 5gb
+- Each individual part is treated as it's own isolated upload and can be restarted in isolation 
+- It also improves transfer rates by uploading in parallel 
+- S3 Accelerated transfer 
+  - using the public internet is not the most ideal way to get data from source to destination as the route chosen by ISPs is not always optimal. S3 transfer acceleration uses the network of AWS Edge locations located in convenient areas. This feature needs to be switched on. 
+  - Edge locations then use AWS Network as an 'express train' to get to the destination
