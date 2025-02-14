@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739419754751
+updated: 1739497855890
 created: 1734484581601
 ---
 
@@ -502,3 +502,63 @@ Pricing:
 - S3 Accelerated transfer 
   - using the public internet is not the most ideal way to get data from source to destination as the route chosen by ISPs is not always optimal. S3 transfer acceleration uses the network of AWS Edge locations located in convenient areas. This feature needs to be switched on. 
   - Edge locations then use AWS Network as an 'express train' to get to the destination
+
+### Key Management System
+- A regional and Public service
+- Let's you create, store and manage keys
+- Handles both Symmetric and Asymmetric keys
+- Capable of performing cryptographic operations (encrypt, decrypt)
+- **Keys never leave KMS**
+-  Uses a FIPS 140-2 (L2) - the L2 matters for the exam
+-  KMS Keys are the keys that KMS manages 
+-  These are logical containers which contain ID, date, policy, desc and state. 
+- KMS keys are backed by physical key material
+- The material is generated or imported and can be used for up to 4kb of data
+- KMS Keys do not leave the KMS product and the unecrypted form is never stored on disk
+- Data Encryption Keys (DEKs) are another type of key in KMS
+- DEK uses GenerateDataKey which can be used to encrypt and decrypt data more than 4kb in size
+-  KMS does NOT store DEK, it provides it to you and discards it. 
+- KMS will provide you with the plaintext and ciphertext version of this key
+- KMS does not do the encryption or decryption using DEK - you do or the service using KMS does
+- Services such as s3 use DEK for every object
+
+- KMS keys are isolated to a region and never leave
+- KMS keys CAN be multi region
+- THey can be AWS owned or customer owned
+- THere are two types of customer owned keys:
+  1. AWS managed - created automatically by services
+  2. Customer managed - created by customers and are more configurable
+- Both of these keys support rotation - with AWS managed keys this cannot be disabled but with customer it is optional
+- A KMS key contains a backing key which means previous backing keys can be used 
+- Can use alias
+
+- Every KMS Key has a key policy (resource). For customer managed keys you can change it
+- KMS has to be explicitly be told which AWS account to manage it
+- Usually you use a combination of Key policies and IAM policies to manage KMS 
+
+### S3 Object Encryption CSE/SSE
+- Buckets aren't encrypted - objects are
+
+Data can be stored in disk in two different ways:
+1.  Client side encryption - objects are being encrypted by the client before they ever leave. AWS receives it in a scrambled form and stores it in a scrambled form
+2.  Server side encryption - in transit, the data is in it's original form, once it's hitting s3 it's encrypted by the s3 servers 
+
+![S3 Encryption](/assets/images/s3-encryption.png)
+
+There are 3 types of encryption for server side encryption:
+1. SSE-C - Server side encryption with customer provided keys 
+2. SSE-S3 - with amazon s3 managed keys (this is the default)
+3. SSE-KMS - with KMS Keys stored in AWS Key management service 
+
+SSE-C:
+- Customer is responsible for the keys and S3 manages the s3 encryption/decryption processes. When you put an object into s3 you put it through as plaintext alongside the encryption key. When it goes through https it will be encrypted to an external observer. The key is destroyed at s3. 
+
+SSE-S3: 
+- AWS handles both the encryption and the keys. You provide the plaintext data, the s3 encrypts it via a generated key for the object. You don't get to choose the key or customise it. 
+
+SSE-KMS:
+- You use KMS to create a key. Client sends data via plaintext and it's encrypted by S3 via the KMS key. That key is used by s3 to generate an encryption Key. Using this method, key managers can decide who can see the unencrypted data 
+
+Summary of encryption types
+
+![summary](/assets/images/s3-encryption-summary.png)
