@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739497855890
+updated: 1739616559826
 created: 1734484581601
 ---
 
@@ -562,3 +562,139 @@ SSE-KMS:
 Summary of encryption types
 
 ![summary](/assets/images/s3-encryption-summary.png)
+
+
+ ### S3 Bucket Keys
+ - A way to help s3 scale with server side encryption
+ - using SSE-KMS, AWS KMS is called every single time a call is made to s3 to generate a DEK
+ - This starts to cost a lot upon scaling
+ - Instead of generating a new DEK from KMS every time, **bucket keys** will ask KMS to generate a time limited bucket key used to generate DEKs within s3
+ - This significantly reduces KMS API calls, reduces cost and increases scalability
+ - Using bucket keys means cloudtrail kms events now show the bucket not te object
+ - Bucket key works with replication, object encryption is maintained
+ - If you replicate a plain text bucket to a bucket that is encrypted, it will get encrypted at the destination side  
+
+ ### S3 Object Storage Classes
+ - **S3 standard** is the default storage class. This replicates objects across at least 3 availability zones (AZs) in the AWS region
+ - if s3 object is stored, a HTTP 1.1 200 OK response is provided by the s3 API endpoint
+ - You're billed a GB/m fee for data stored, a $ per GB charge for transfer OUT (in is free) and a price per 1,000 requests. No specific retrieval fee, no minimum duration, no minimum size 
+ - S3 standards can be made publicly available
+ - S3 standard should be used for frequently accessed data which is important and non-replaceable. This should be used as the default and only investigate moving other classes if you need a specific use case. 
+
+ - **S3 Standard-IA (infrequent Access)**
+ - The same as S3 standard in most ways however has a lower GB storage price and a retrieval fee that increases with frequent data access
+ - there is a minimum duration charge for using it (30 days)
+ - Has a min capacity charge of 128kb per object
+ - S3 Standard-ia should be used for long-lived data which is important but where access is infrequent
+ 
+ - **S3 One Zone-IA (infrequent Access)**
+ - Shares many of the considerations of standard-IA
+ - The big difference is that the data is stored in one AZ in the region 
+ - Should be used for long-lived data which is non-critical and replaceable and where access is infrequent
+ - Examples could be intermediate data you can afford to use or for replica copies
+
+
+ - **S3 Glacier - Instant**
+ - Like s3 standard IA except it has cheaper storage, more expensive retrieval costs, and longer minimums
+ - more for when you want to access something once a quarter as opposed to once a month 
+
+ - **S3 Glacier - Flexible**
+ - A cheaper storage solution
+ - Stored as if 'cold' and therefore cannot be made publicly accessible. Retrieving requires a retrieval process
+ - Retrieved to s3 standard-IA temporarily
+ - There are 3 different retrieval methods:
+  1. expedited - 1-5 minutes
+  2. standard - 3-5 hours
+  3. bulk - 5-12 hours
+  - the faster the retrieval the more expensive
+  - situations for when you need to store archival data where frequent or realtime access isn't needed (e.g. yearly) and the access takes time. 
+  
+ - **S3 Glacier - Deep Archive**
+ - If you consider Flexible to be a 'chilled' state, then data in Deep Archive is in a 'frozen' state 
+ - 180 day minimum duration
+ - The retrieval methods are:
+ 1. standard (12 hours)
+ 2. bulk (up to 48 hours)
+ - best for data that rarely if ever needs to be accessed e.g. legal or regulation data storage
+ - it's a cheaper storage
+
+ **Intelligent Tiering**
+ Monitors and automatically moves any objects not accessed for 30 days to a low cost infrequent access tier and eventually to archive instant access, archive access or deep archive tiers. If objects start to become more popular and frequently accessed, they will be moved back up the tiers to frequent access at no charge
+ - Designed for long lived data with changing or unknown patterns
+ 
+ ### S3 Lifecycle Configuration
+ - You can create life cycle rules on objects in an s3 bucket 
+ - A set of rules that consist of actions based on a criteria
+ - Can be applied on a bucket or group of objects
+
+two types of actions can be applied
+- Transition actions - change the storage class of the object(s) e.g. from s3 standard to s3 IA after 30 days
+  - all the transitions transition 'downward' in a waterfall fashion, not upward
+  - the only exception of a transition not available downward is one zone-IA into S3 Glacier Instant Retrieval 
+  - if you transition objects you need to be aware of the minimum days before transition for example s3 standard to standard IA or one zone IA it would need to have been in s3 standard for at least 30 days
+  - smaller objects can cost more upon transitioning due to minimum sizes
+  - moving from s3 to IA also requires an additional 30 days before you can move them again to glacier classes 
+- Expiration actions - delete object(s) or versions
+
+You can't apply these rules based on 'access frequency' in the same way intelligent tiering does
+
+
+### S3 Replication
+S3 has two replication features which allow objects to be replicated between source and destination buckets in the same or different AWS accounts:
+1. Cross region replication (CSR) - allows the replication of objects from a source bucket to one or more destination buckets in different AWS regions
+
+2. Same region replication (SSR) - as above but same region
+
+The architecture replication is applied to the source bucket. It specifies:
+  - the destination bucket
+  - an IAM role to use for the replication process - s3 assumes that role
+  - For replication across AWS accounts, the role isn't by default trusted by the destination account, therefore there needs to be a bucket policy in the destination account to allow the role to replicate into it 
+
+Replication Options:
+  - What to replicate - all objects or subset
+  - which storage class the destination bucket will use - the default is the destination uses the same class as the source
+  - you can define the ownership of the objects in the destination. Across accounts, the bucket objects will by default be owned by the source bucket account
+  - Replication time control (RTC) - adds a guaranteed 15 minute SLA on to the replication process.
+
+Replication consideration:
+- By default, it's not retroactive - only from the point you enable replication will objects in the bucket be replicated. Objects prior to that time will not. 
+- Versioning MUST be enabled for replication
+- batch replication can be turned on to replicate existing objects
+- objects are replicated only one way i.e. source to destination - there is a bi-directional setting that can be configured
+- replication can be unencrypted, SSE-S3, SSE-KMS (with extra config) and SSE-C
+- Source bucket owner needs permission to the object they replicate
+- It will not replicate system events that are made by life cycle management. Neither can it replicate glacier or glacier deep archive objects
+- Delete markers are not replicated - but can be enabled
+
+Why use replication?
+- SSR (Same region replication) - Log aggregation - sync logs into a single s3 bucket
+- SSR - Prod and test sync
+- SSR - resilience with strict sovereignty 
+- CRR (Cross region replication) - global resilience improvements
+- CRR - Latency reduction by replicating data to buckets closer to source
+
+### S3 PreSigned URLs
+- Presigned URLS in s3 are a way to generate a URL with access permissions in a safe way. 
+- If a bucket is not public, only an authenticated aws user can access it
+- AWS offers pre-signed urls for the case where we don't want to give someone short term access to the bucket without making it public or creating an aws identity for them 
+- This can be used for both PUT and GET operations
+- Pre-signed urls allow someone to access a certain object in a private bucket with the same access rights as the user who generated the url for a certain period of time
+- You can create a pre-signed url for an object you don't have access to where the url will also not provide access to the object 
+- the url has the same permissions of the identity as of the time the url was made
+- Don't generate pre-signed urls with a role - URLs will stop working when temporary credentials expire - because assuming an IAM role gives you temporary credentials and the pre-signed url may expire far later than the credentials. It's best to use long term identities i.e. an IAM user
+
+### S3 Select and Glacier Select
+- Ways you can retrieve parts of objects rather than all of an object
+- S3 can store objects up to 5TB in size
+- Retrieving a whole object will take time
+- S3/Glacier select lets you use SQL like statements to select part of an object
+- Works on many file types such as CSV, JSON, Parquet, BZIP2 compression for CSV and JSON
+
+### S3 Events
+- Allows you to create event notifications on a bucket
+- When enabled, a notification is delivered when something happens on a bucket. It can be delivered to SNS, SQS and lambda functions
+- Can be generated when objects are created (PUT, POST, COPY and Multi part upload)
+- Can be generated on Delete (as well as delete markers)
+- For object restores (start and end)
+- Replication events
+
