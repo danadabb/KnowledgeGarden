@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739616559826
+updated: 1739763535834
 created: 1734484581601
 ---
 
@@ -698,3 +698,34 @@ Why use replication?
 - For object restores (start and end)
 - Replication events
 
+### S3 Access Logs
+-  Access logging provides detailed records for the requests that are made to a bucket. They are best effort - they are usually loggeed in target bucket wihtin a few hours 
+- Let you help the access patterns of your customer base
+
+### S3 Object Lock
+- Enable on new S3 buckets only otherwise you will need to contact AWS for an existing
+- You cannot disable object lock or versioning 
+- Write Once Read Many (WORM) - No delete, no overwrite
+- Requires versioning to be enabled and individual versions are locked
+- An object version can have one, both or none of **retention period** or **legal hold**
+
+Retention Locking:
+- Specified in days and years
+- The two types you can do:
+  1. Compliance mode - an object version can't be adjusted, deleted or overwritten for that period. The retention period and mode cannot be changed even by the account root user. This is the most strict form of object lock. This could be good for compliance reasons e.g. medical or legal 
+  2. Governance - can grant special permissions to allow locking settings to be adjusted (s3:ByPassGovernanceRetention). Useful if you want to prevent accidental deletions
+
+Legal Hold Locking:
+- Set on object version either on or off, no retention period
+- You can't delete or change until removed
+- You need permission to add or remove the legal hold
+- Good to prevent accidental deletion of critical object versions
+
+### S3 Access Points
+- A feature of S3 which improves the manageability of s3 buckets
+- Rather than having 1 bucket with 1 bucket policy you can conceptually split it into many access points with different policies
+- Each access point can be limited in terms of where they can be accessed from with it's own endpoint address
+- Can be created via the console of via the cli: `aws s3control create-access-point --name secretcats --acount-id 12355423 --bucket catpics`
+- You can think of access points as mini buckets or views. The DNS of each AP is given to a section of users and those mini buckets are individually controlled
+- Any definitions defined in the access point policy need to be defined in the bucket policy e.g. giving permission to certain users for the access point 
+- 
