@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739763535834
+updated: 1739934487653
 created: 1734484581601
 ---
 
@@ -430,10 +430,10 @@ There are a few different parts of control tower:
 ### S3 Security (Resource Policies and ACLs)
 - S3 is private by default 
 - The only identity which has any access to s3 by default is the account root user
-- You can grant permission to s3 via S3 Bucket Policies:
-  - A form of resource policy 
+- You can grant permission to s3 via S3 **Bucket Policies** which are:
+  - A form of resource policies
   - like identity policies but attached to a bucket
-  - Resource perspective permissions - you control who can access that resource 
+  - From the perspective of the resource  - you control who can access that resource 
   - Identity policies are limited by only being able to give control to the current account, so you cannot give another account access to an s3 bucket. Resource policies allows this for the current or different accounts. 
   - Resource policies can ALLOW/DENY anonymous principals. This can't be done with identity policies since they need to be attached to a valid identity in AWS. Therefore the resource policies can be given to external access.  
   - Resource policies have a 'principal' component which specifies which principals this policy applies to
@@ -441,7 +441,7 @@ There are a few different parts of control tower:
   - Identity policy as well as the bucket policy applies to both internal and cross account access. For anonymous only the bucket policy applies. 
 
 Access Control Lists (ACLs):
-- Another form of s3 security used less frequently these days. They aren't recommended anymore by AWS
+- Another form of s3 security used less frequently these days. They aren't recommended any more by AWS
 - A sub-resource of an object or bucket.
 - You cannot use ACLs on a group of objects 
 
@@ -514,7 +514,7 @@ Pricing:
 -  These are logical containers which contain ID, date, policy, desc and state. 
 - KMS keys are backed by physical key material
 - The material is generated or imported and can be used for up to 4kb of data
-- KMS Keys do not leave the KMS product and the unecrypted form is never stored on disk
+- KMS Keys do not leave the KMS product and the unencrypted form is never stored on disk
 - Data Encryption Keys (DEKs) are another type of key in KMS
 - DEK uses GenerateDataKey which can be used to encrypt and decrypt data more than 4kb in size
 -  KMS does NOT store DEK, it provides it to you and discards it. 
@@ -641,7 +641,7 @@ You can't apply these rules based on 'access frequency' in the same way intellig
 
 ### S3 Replication
 S3 has two replication features which allow objects to be replicated between source and destination buckets in the same or different AWS accounts:
-1. Cross region replication (CSR) - allows the replication of objects from a source bucket to one or more destination buckets in different AWS regions
+1. Cross region replication (CRR) - allows the replication of objects from a source bucket to one or more destination buckets in different AWS regions
 
 2. Same region replication (SSR) - as above but same region
 
@@ -699,7 +699,7 @@ Why use replication?
 - Replication events
 
 ### S3 Access Logs
--  Access logging provides detailed records for the requests that are made to a bucket. They are best effort - they are usually loggeed in target bucket wihtin a few hours 
+-  Access logging provides detailed records for the requests that are made to a bucket. They are best effort - they are usually logged in target bucket within a few hours 
 - Let you help the access patterns of your customer base
 
 ### S3 Object Lock
@@ -725,7 +725,127 @@ Legal Hold Locking:
 - A feature of S3 which improves the manageability of s3 buckets
 - Rather than having 1 bucket with 1 bucket policy you can conceptually split it into many access points with different policies
 - Each access point can be limited in terms of where they can be accessed from with it's own endpoint address
-- Can be created via the console of via the cli: `aws s3control create-access-point --name secretcats --acount-id 12355423 --bucket catpics`
+- Can be created via the console of via the cli: `aws s3control create-access-point --name secretcats --account-id 12355423 --bucket catpics`
 - You can think of access points as mini buckets or views. The DNS of each AP is given to a section of users and those mini buckets are individually controlled
 - Any definitions defined in the access point policy need to be defined in the bucket policy e.g. giving permission to certain users for the access point 
-- 
+
+## Virtual Private Cloud (VPC) Basics
+
+### VPC Sizing and Structure
+- A private network inside AWS
+- You need to decide what IP range to use in advance - it's not easy to change later. There are a few things you should keep in mind:
+  - What size should the VPC be? This influences how many services can fit into the VPC
+  -  Are there any networks we can't use? Duplicate or overlapping ranges complicate things
+  - Be mindful of other VPC ranges, other cloud envs, on premises, partners and vendors and their IP ranges
+  - Try to plan for the future
+  - Consider the VPC structure - tiers and resiliency 
+
+- A VPC can be at the smallest a /28 network (16 IP) and at most /16 (65536 IPs)
+- Avoid common ranges 
+- Ranges can be determined by the number of regions a business operates in. A suggestion is to reserve 2+ networks per region being used per account
+e.g. 3 US, Europe, Australia - 5 regions x 2 - Assume 4 accounts - total 40 ranges ideally 
+
+- Deciding what size VPC to get, you should ask:
+  - How many subnets will you need in each VPC?
+  - How many IP Addresses will you need in total ad how many per subnet?
+- Services use subnets and subnets operate in 1 availability zone. THerefore you need to consider regions as some regions have more availability zones than others.
+  1. pick how many AZs yours would use - possibly use 4 as a default. This means you need 4 smaller networks 
+  2. A suggested default is to start with four tiers - Web, application, database and a spare. If you only used 1 az then you would each tier would need it's own subnet so 4 subnets
+
+
+![VPC Design](./assets/images/vpc-design.png)
+
+### Custom VPCs
+- VPCs are a regionally isolated and regionally resilient service
+- Lets you create an isolated network in AWS
+- Nothing is allowed IN or OUT without explicit configuration
+- Flexible configuration 
+- Hybrid networking 
+- You have the option of created default or dedicated tenancy - allows you to either put the VPC in shared or dedicated hardware - If you put default you can change this later. If you put dedicated **it's locked in and any resources on this vpc will have to be dedicated too**. Only choose this if you really need it as it comes at a premium cost 
+- Can use IPv4 private and public IPs
+- Private CIDR block is the main method of communication for the VPC
+- This primary block at it's smallest can be /28 (16 IP) and max /16 (65,536 IP)
+- You can create optional secondary IPv4 block
+- Can be configured to use IPv6 (/56). However, you can't pick a range, AWS chooses them for you unless you own specific IPv6 IPS
+
+DNS in a VPC:
+- Provided by R53
+- Available on the base IP address of the VPC +2
+- enableDnsHostnames - gives public DNS hostnames to instances
+- enableDnsSupport - enables DNS resolution in VPC - if not then the dns won't work 
+
+
+### VPC Subnets
+- Subnets in VPCs start of entirely private and you need to configure them to be public 
+- A subnet is an AZ resilient feature of the VPC
+- It's a subnetwork of a VPC within a particular AZ
+- 1 subnet is created a specific AZ in that region. It can never be changed and can never ben in multiple AZs. ONE SUBNET => ONE AZ. Although one AZ can have 0 or more subnets
+- Allocated an IPv4 CIDR - it has to be within the range of the VPC
+- The CIDR that a subnet uses can't overlap with other subnets in that VPC
+- Can optionally be allocated an IPv6 CIDR block. A /64 subset of the /56 is allocated (256)
+- Subnets can communicate with other subnets in the VPC
+- Sizes of networks are based on the prefix
+- Some IPs in every VPC network are reserved
+
+Every VPC subnet has five addresses that cannot be used. Assuming the subnet we use is 10.16.16.0/20, the following can't be used:
+1. the network address (starting address) e.g. 10.16.16.0
+2. Network + 1 (10.16.16.1) - used by the VPC router 
+3. Network + 2 (10.16.16.2) - Reserved by the DNS 
+4. Network + 3 (10.16.16.3) - For future use
+5. Broadcast address 10.16.31.255 (Last IP in subnet)
+
+A VPC has a configuration object applied to it called a DHCP option set - (dynamic host configuration protocol) - how computing devices receive IP addresses automatically. 
+- On every subnet you can define two important allocation options:
+  1. Auto assign public IPv4 - allocated public addresses as well as their private automatically
+  2. Auto assign public IPv6 
+
+### VPC Routing, Internet Gateway & Bastion Hosts
+VPC Router:
+  - Every VPC has a VPC router - it's highly available
+  - In every subnet, the network+1 address is reserved for the vpc router
+  - It routes traffic between subnets
+  - It's controllable, you create route tables which influences what to do with traffic when it leaves the subnet 
+  - A VPC is created with a main route table - if you don't explicitly associate it, then it uses the main route table of the vpc. Otherwise if you create your own, the old one is dissociated. A subnet can only be associated with one route table at a time but a route table can be associated with many subnets
+  - A route table is a list of routes - the vpc looks at the destination address, looks at the route table for the destination address and propagates the data to those destinations. It can be either to a single route or a range. The prefix is used as a priority - the higher the prefix the higher the priority 
+  - The target field in a route table is either pointing to a gateway or to local 
+  - All route tables have at least 1 route - the local route which matches the VPC CIDR range
+  - If it's also ipv6 enabled it will have another default local route for ipv6
+  - These local routes can never be updated, and those two will ALWAYS take priority
+
+Internet Gateway:
+  - Regional resilient gateway which can be attached to a VPC 
+  - you do not need a gateway per availability zone
+  - a vpc can have no internet gateways or just one
+  - a gateway can have no attachments or 1 at a time 
+  - Runs from the border of the VPC and the aws public zone - allows services to be reached from the internet (AWS public zone)
+  - it's a managed gateway, aws handles the performance
+  - Public ipv4 internet addresses never actually touch the services inside the VPC. A record is created which the internet gateway maintains. The instance itself is not configured with a public IP. 
+
+baston Host / Jump boxes
+- An instance in a public subnet inside a vpc 
+- used to manage incoming connections
+- this allows you to access internal vpc resource - it's a management or entry point to private vpcs
+- It used to be the only way in to a vpc 
+
+### Stateful vs Stateless Firewalls
+- TCP and IP work together where TCP connection send IP packets
+- TCP runs on top of IP
+- A stateless firewall does not understand the state of connections. It needs two rules per inbound connection, an inbound and an outbound and 2 per outbound connection (inbound and outband). 
+- You will have to allow the full range of ephemeral ports allowed in stateless firewall since responding to a request in a stateless server goes back to a random requester port. This can be a security concern. 
+- A stateful firewall is intelligent enough to identify the request and response components of a connection
+- you will only have to allow the request meaning the response is automatically allowed 
+- You don't need to allow the full ephemeral port range because a stateful firewall is smart enough to know which port to open up for a request/response 
+
+### Network Access Control Lists (NACLs)
+- Can be thought of as a traditional firewall available in AWS vps 
+- Connections within a subnet are not affected by NACLs but inbound/outbound crossing the subnet boundary are filtered by NACLs
+- NACLs have inbound and outbound rules - data entering and leaving the subnet. Remember a request and a response can be both inbound and outbound. 
+- A VPC is created with a default NACL. Inbound/outbound rules have the implicit deny (*) and an ALLOW ALL rule. The result is all traffic is allowed, the NACL has no effect 
+- Custom NACLs are created for a specific VPC and are initially associated with no subnets. The default rule for inbound and outbound is an implicit deny (*). This means all traffic is denied by default
+- NACL crossing subnets needs the correct inbound/outbound rules
+- NACLs can only be assigned to subnets in AWS
+- They can be used together with security groups to add explicit DENY
+- Each subnet can have one NACL associated to it (default or custom)
+- A single NACL can be associated with many subnets
+
+### Security Groups (SG)
