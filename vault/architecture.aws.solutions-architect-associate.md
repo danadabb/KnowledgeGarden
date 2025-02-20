@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739934487653
+updated: 1739944118372
 created: 1734484581601
 ---
 
@@ -849,3 +849,42 @@ baston Host / Jump boxes
 - A single NACL can be associated with many subnets
 
 ### Security Groups (SG)
+- A second type of security filtering feature used in AWS VPC
+- SG's are stateful - they detect response traffic automatically for a given request
+- that means any IN or OUT request that is allowed will automatically allow a response - you dont have to worry about configuring ephemeral ports 
+- The major limitation of SG's are that there is no EXPLICIT deny. You cannot block specific bad actors e.g. a range of or a single  IP
+- Usually SGs and NACLs are used in conjuction for this reason
+- SG support iP/CIDR AND logical resources
+- This includes other security groups as well as itself
+- SGs are not attached to instances nor subnets, they are attached to specific elastic network interfaces known as ENIs
+- SG can use logical references - it can refer to other security groups so that you don't explicitly put IP ranges, any resource in that SG is allowed 
+
+
+### Network Address Translation (NAT) & NAT Gateway
+- A set of different processes by changing their source/destination IP addresses 
+- IP Masquerading is a subset of NAT. IT can hide CIDR IP Blocks behind one IP i.e. many private IP to one public IP
+- Since IPv4 addresses are running out, giving many private CIDR range **outgoing** internet access 
+- A NAT gateway takes all the incoming packets from all the instances it's managing and it records all the information about the communication. It takes those packets, changes the source address from those instances to it's own IP address (external facing address). 
+- NAT Gateways need to be run from a public subnet so that you can assign an external IPv4 for it 
+- Uses Elastic IPs (static ipv4 public)
+- AZ resilient service - to make it region resilient, you should but a nat gateway in each AZ and a routing table for each AZ in that NAT gateway as a target
+- Can get costly if you have a lot of AZs
+- They are a managed service, you deploy and AWS takes care of them 
+
+![NATGW Full resilience](./assets/images/natgw-resilience.png)
+
+- A NAT instance is when you make an EC2 instance run as a NAT instance 
+- It's much easier and scalable to use a NAT gateway except for when:
+  - cost is an issue
+  - for test purposes 
+  - need something free tier eligible 
+  - you need to connect to them like normal ec2 instances - NAT Gateway cannot be used as a bastion host nor can they do port forwarding 
+  - NAT Gateways don't support security groups, they can only use NACLs
+
+
+- NAT is not required for IPv6
+- In AWS IPv6 addresses are all publicly routable
+- **Nat gateways DON'T work with IPV6**
+- if you add ::/0 route, that will give an internet gateway bidirectional connectivity for ipv6
+- You can use Egress Only internet gateway if you want outbound only connection for IPv6
+  
