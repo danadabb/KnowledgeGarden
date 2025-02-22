@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1739944118372
+updated: 1740212845289
 created: 1734484581601
 ---
 
@@ -888,3 +888,205 @@ baston Host / Jump boxes
 - if you add ::/0 route, that will give an internet gateway bidirectional connectivity for ipv6
 - You can use Egress Only internet gateway if you want outbound only connection for IPv6
   
+## Elastic Compute Cloud (EC2) Basics
+### Virtualization 101
+- EC2 provides virtualisation as a service (IaaS)
+- Virtualization is the process of running more than one operating system on a piece of physical hardware (a server)
+- Before virtualization, Applications would run on top of an OS in user mode. They cannot directly access hardware resources. If apps try to do that it would cause a system wide error or crash the application
+- Virtualization fixes this by allowing a single piece of hardware to run multiple OS' where each is separate.
+- Historically, virtualization was done in two ways:
+1. Emulated Virtualization (software) - the OS still ran on the hardware on top of a hypervisor. The software ran in privileged mode. Each OS ran inside in a virtual machines. They have emulated hardware provided by the hypervisor. The main issue was that this method was slow. 
+2. Para-virtualization - only works on a small subset of OS that can be modified. 
+
+The major improvement in virtualization came when the physical hardware became virtualization aware. This is known as hardware assisted virtualization. The CPU itself knowns virtualization exists. The hardware redirects privileged calls to the hypervisor. 
+The process of where the hardware devices themselves become virtualization aware is known as SR-IOV - single route I/O virtualization. Allows a network card or any other I/O card to present itself as not a single card but as several mini cards. These are presented to the guest operating system as real cards and hence the hypervisor doesn't need to be used - the OS can directly use it's card when it wants. 
+
+### EC2 Architecture and Resilience
+- EC2 instances are virtual machines (OS + Resources)
+- Run on EC2 Hosts which are either shared or dedicated
+- Shared hosts are used by different AWS customers so you don't get ownership of hardware and you pay for usage and resource. There is still no visibility between customers when using shared hosts. Shared host is the default type of hosting
+- Dedicated hosts is dedicated to your account and you pay for the whole thing. You don't share it with any AWS customers.
+- EC2 is an **AZ resilient service** - Hosts run in a single AZ. If that AZ fails then hosts will fail and any instances on those hosts will fail or be impacted
+ - EC2 have some local hardware: cpu, memory and storage (instance store). The instance store will be lost if the instance moves to another host. They also have storage and data networking. 
+ - EC2 can connect to network storage known as Elastic Block Store (EBS). EBS also rus inside an AZ. You can't access it cross zone.
+ - If an availability zone in AWS has issues, it impacts ec2, subnets, storage and volumes. 
+ - An instance runs in a specific host and it will stay on that host when you restart it. It stays there unless it fails or is taken down by AWS. Also if it is stopped and started which is different to restarting. In that instance it will be relocated to another host but it will still be in the same AZ
+ - You can never connect network interfaces or EBS storage in one AZ to an ec2 instance in another AZ
+ 
+ EC2 is good when:
+- When you have a traditional OS and compute need
+- Long running compute needs as it's designed for persistent long running compute requirements
+- You have server style applications
+- For burst or steady state load
+- For monolithic application stacks 
+- For migrating application workloads or disaster recovery
+- EC2 tends to be the default compute service in AWS unless you have niche requirements. 
+
+### EC2 Instance Types
+Factors in choosing instances:
+- CPU, memory, local storage capacity and type will influence which instance type you choose
+- Resource ratios can give you different ratios of different o resource which will also affect your decision
+-  The amount of storage, data and network bandwidth 
+- The architecture and vendor the instance is run on - x86, ARM, intel, AMD 
+- Additional features and capabilities - GPUs, FPGAs 
+
+EC2 instances are grouped into 5 main categories:
+1. General Purpose - default - should be first choice. even resource ratio, diverse workloads
+2. Compute Optimized - Media Processing, High performance computing, scientific modelling, gaming, machine learning. Ratio is higher towards CPU
+3. Memory Optimized - inverse of compute - ideal for applications for processing large in-memory datasets, database workloads
+4. Accelerated computing - for additional capabilities e.g. hardware GPUs field programmable gate arrays (FPGAs)
+5. Storage Optimized - fast local storage needs - sequential and random IO. Data warehouses, elastic search, data analytics 
+
+Decoding EC2 Types:
+Example: "R5dn.8xlarge"
+- Letter at the start is the instance family - specific type/types of computing 
+- Next (5) is the generation e.g. 5th generation of the family. The latest generation should ideally always be used
+- the part of the dot - the size "8xlarge" - the instance size
+- the "dn" - additional capability e.g n could mean network optimized 
+
+![EC2 Instance Types](./assets/images/ec2-instance-types.png)
+
+### Storage Refresher
+
+Storage terms:
+- Direct (local) attached storage - Storage on the EC2 Host. Fast but prone to loss
+- Network attached storage - volumes delivered over the network (EBS). Resilient but slower
+- Ephemeral Storage - temporary storage
+- Persistent Storage - Permanent storage - lives on past the lifetime of the instance
+
+Three main categories of storage available in AWS:
+1. Block storage - Create a volume that has addressable blocks. No structure provided. The OS usually takes the block storage and creates a file storage on it. Can be HDD or SSD or a logical storage that's backed by physical storage. You can mount and boot off this volume. 
+2. File storage - presented as a file server with a structure already there. Mountable but not bootable since the OS doesn't have low level access to it. 
+3. Object storage - Flat collection of objects. Not mountable or bootable.
+
+Storage Performance terms:
+- I/O (block) size - the size of the blocks of data that you're writing to disk - KB/MB. 
+- IOPS - input output operations per second - how many reads/writes a disk or storage system can accommodate in a second 
+- Throughput - amount of data that can be transferred per second - MB/s. Relies on using the right block size and then maximising the number of IOPS
+
+IO X IOPS = THROUGHPUT
+
+### Elastic Block Store (EBS) Service Architecture
+- Provides block storage which can be addressed using block IDs. It takes raw physical discs, and presents a raw allocation of those disks known as volumes. These volumes can be written to or read from using a block number. They can be encrypted
+- When you attach a volume to an EC2 they see a block device and they can use it to create a file system on top of it (ext3/4, xfs). They appear just like any other storage design
+- Storage is provisioned in ONE AZ. It is separate and isolated within that AZ. 
+- You can attach to one EC2 instance (or other service) over a storage network. There is a multi attach feature which allows to attach to multiple at a time but it needs to be managed so that there aren't multi writes
+- You can deattach and reattach the EBS to another volume. EBS are persistent so if an instance moves or stops, restarts, the EBS is maintained
+- Snapshots can be taken of EBS volumes and they can be regionally resilient by migrating them between AZs and regions 
+- EBS can provision different physical storage types, sizes and performance profiles
+- You are billed based on GB-month (and sometimes performance)
+
+You can't communicate across AZs for EBS
+
+![EBS sample architecture](/assets/images/ebs-sample-architecture.png)
+
+### EBS Volume Types - General Purpose
+GP2 - SSD:
+- it's high performance storage for a low price. 
+- from 1GB - 16TB
+- Alocated with IO credit of 16KB. IOPS is 16kb. 1 IOPS is 1 IO in 1 second
+- IO Credit bucket has a capacity of 5.4 million IO credits
+- Bucket fills with min 100 IO credits per second regardless of volume size
+- GP2 can burst up to 3000 IOPS by depleting the bucket
+- All volumes start with an initial 5.4 million IO credits
+- Maximum IO per second is 16,000
+- GP2 is flexible storage for general usage. It can be a default if GP3 isn't there yet
+
+GP3 - SSD:
+- Removes the credit architecture of GP2
+- Starts at 3000 IOPS & 125 MiB/s 
+- 20% cheaper than GP2 
+- You get benefits of GP2 with this
+- Extra cost for up to 16,000 IOPS or 1,000 MiBs
+
+### EBS Volume Types - Provisioned IOPS
+io1/2 - SSD:
+- IOPS is configured independtly of the volume. Good for consistent low latency and jitter. 
+- 4x IOPS of gp2/3 (up to 64,000)
+- Block express gets you more IOPS and MiBs
+- There is a maximum performance that can be achieved - a per instance performance 
+- Provisioned io can be good for low latency consistency with high levels of performance e.g. low volumes but high performance 
+
+### EBS Volume Types - HDD-Based
+- These volume types are slower
+
+Two types of storage in EBS:
+1. st1 - throughput optimised
+  - cheap
+  - 125gb - 16tb
+  - maximum of 500 IOPS - 1mb blocks - max of 500 MB/s
+  - Useful for big data, data warehouses, log processing
+2. sc1 - cold HDD
+  - cheaper
+  - 125gb - 16tb
+  - designed for infrequent workloads - used for maximum economy where performance isn't as important
+  - max 250 IOPS - max 250 MB/s 
+  - lowest cost ebs storage type
+  - cold data with few scans a day
+
+### Instance Store Volumes - Architecture
+- Block storage devices - raw volumes presented to an instance that present TEMPORARY storage
+- Like EBS except local
+- physically connected to one EC2 host
+- Instances on that host can access those volumes
+- High storage performance
+- Included in the instance price
+- Have to be attached at launch time - CANNOT be attached after like EBS
+- these are temporary volumes
+
+![alt text](./assets//images/instance-store-volumes.png)
+
+- if you move an instance between hosts, that data is lost. They are given new ephemeral volumes. 
+- if a physical volume fails, then the instance would lose that data
+- these should only be used for temporary data
+- some instance types don't support these
+- performance is a strength of instance store e.g. 4.6 GB/s - 16 GB/s throughput depending on HDD or SSD
+- More IOPS and Throughput VS EBS
+- Local to EC2 HOST
+- if the volume is resized the data is also lost
+- You pay for it with the instance so there is no advantage to not using them
+
+
+### Choosing between the EC2 Instance Store and EBS
+- Persistence required - default to EBS (avoid Instance store)
+- Resilience - as above
+- If you need storage isolated from instance lifecycles then use EBS
+- If your instance requires resilience but your app supports built-in replication, you could use lots of instances 
+- If you need high performance - both could be good although super high performance, instance store makes more sense
+- If cost is a concern, instance store makes sense as it comes with the instance
+
+REMEMBER these figures: 
+- If you need cheap storage but with EBS, use ST1 or SC1 because they are cheaper
+- Throughput or streaming should default to DT1
+- if you need a boot volume NEITHER ST1 OR SC1 are suitable
+- GP/2 - can deliver up to 16,000 IOPS 
+- IO1/2 - up to 64,000 IOPS (*256,000 for block express for large instance types)
+- RAID0 + EBS can achieve 260,000 IOPS (io1/2-BE/GP2/3 combination)
+- If you need more than 260,000 and you can deal with less resilience or no persistence, then use Instance Store 
+
+These figures are important to remember:
+![ec2 instance store vs ebs](./assets/images/instance-store-ebs.png)
+
+
+### Snapshots, Restore & Fast Snapshot Restore (FSR)
+- Backup volumes to s3
+- Protect against AZ issues, migrate data between AZs
+- Snapshots become region resilient 
+- Incremental in nature - the first is a full copy of the data on the volume
+- Future snapshots only store the difference - consume less space and are quicker to perform
+- If you accidentally delete a snapshot, future snapshots will fix any lost saves
+- EBS volumes can be blank or based on a restored snapshot 
+- Snapshots can be copied between regions
+
+![Ebs Snapshot architecture](./assets/images/EBS-snapshots.png)
+
+Nuances to Snapshot/volume performance:
+- Snaps restore lazily - fetched gradually
+- Fast Snapshot Restore (FSR) is an option to immediately restore
+- Up to 50 FSR snaps per region can be restored. Set on the Snap and AZ. 
+- FSR costs extra and can get expensive
+- You can achieve the same end result by manually getting the OS to read all the data in s3 which forces the requested blocks to be pulled in 
+- Snapshots are billed at Gigabyte per month 
+- The data stored is the USED not the allocated data e.g if you use 10 of 40gb only 10gb is stored and billed on
+
+### EBS Encryption
