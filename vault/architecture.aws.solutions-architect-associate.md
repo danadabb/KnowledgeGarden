@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1740212845289
+updated: 1740374996090
 created: 1734484581601
 ---
 
@@ -1090,3 +1090,54 @@ Nuances to Snapshot/volume performance:
 - The data stored is the USED not the allocated data e.g if you use 10 of 40gb only 10gb is stored and billed on
 
 ### EBS Encryption
+- EBS is not encrypted by default
+- EBS Encryption uses a KMS key using either a default KMS/EBS key or a customer managed key
+- The key is used to create a data encrypted key (DEK)
+- What is stored in the EBS is encrypted and what is in the instance's memory is the decrypted version 
+- Any snapshot of the EBS will also be encrypted with the same key
+- It doesn't cost anything to use so you should use it by default
+- Accounts can be set up to encrypt EBS by default
+- Each volume uses a 1 unique DEK 
+- If you create any EBS volumes from a snapshot with an encryption key, it uses that same DEK
+- You can't change a volume NOT to be encrypted
+- OS isn't aware of the encryption therefore there is no performance loss 
+
+### Network Interfaces, Instance IPs and DNS
+- Instances all start of with 1 network interface (a primary ENI - Elastic Network Interface)
+- Network interfaces need to be in the same AZ as an instance
+- Network instances have a MAC address which is the hardware address
+- Network instances have a primary IPv4 Private IP
+- 0 or more secondary private IPs - doesn't change for the lifetime of the instance
+- 0 or 1 public IPv4 address - dynamic and will change e.g. when you stop and start an instance (not restarts)
+- 1 elastic IP per private IPv4 address - assigning this means the instance will remove the dynamic public IPv4 
+- 0 or more Ipv6 addresses (these are publicly routable)
+- Security groups
+- Per interface you can enable/disable source/destination check 
+- Secondary interfaces can be moved to other instances
+
+- you might use different network interfaces for different security groups 
+- OS never sees the public IPv4 - this is performed by the internet gateway - You will NEVER configure an IPv4 public address 
+- Public DNS will resolve to the primary private IP in the VPC. Instance to instance communication will not leave the VPC because of this. Everywhere else, it resolves to the public IP address. 
+
+
+### Amazon Machine Images (AMI)
+- Images of EC2 - you can create a template of an instance configuration and use that template to create other instances
+- When you create an instance you're using AWS provided AMIs but you can create your own
+- AMIs can be AWS or Community provided as well e.g. Redhat, Centos, Ubuntu
+- Marketplace also provide AMIs which include commercial software
+- AMIs are regional and they have a unique ID (ami-[letters, numbers])
+- AMIs can control permissions (public, your account, specific accounts)
+- You can create an AMI from an existing EC2 instance
+
+AMI Lifecycle:
+1. Launch - create an instance from AMI
+2. Configure - Customising your instance 
+3. Create image - Creating a new AMI from the instance - Snapshots are also taken of EBS volumes and they are references by the AMI as block device mapping
+4. Launch - when the AMI is used to create a new instance, it will have the same EBS volume as the original 
+
+- AMI's are in ONE region. Only works in that region but it can be used to deploy into all AZs in that region
+- AMI Baking - creating an AMI from configured instance
+- AMI **can't be edited **- you need ot launch an instance, update the config and make a new AMI 
+- AMI can be copied between regions but they become SEPARATE AMIs 
+- Permissions of AMI by default is your account - it can be private, public or given to specific accounts
+- 
