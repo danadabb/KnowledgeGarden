@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1740374996090
+updated: 1740455829333
 created: 1734484581601
 ---
 
@@ -830,7 +830,7 @@ baston Host / Jump boxes
 ### Stateful vs Stateless Firewalls
 - TCP and IP work together where TCP connection send IP packets
 - TCP runs on top of IP
-- A stateless firewall does not understand the state of connections. It needs two rules per inbound connection, an inbound and an outbound and 2 per outbound connection (inbound and outband). 
+- A stateless firewall does not understand the state of connections. It needs two rules per inbound connection, an inbound and an outbound and 2 per outbound connection (inbound and outbound). 
 - You will have to allow the full range of ephemeral ports allowed in stateless firewall since responding to a request in a stateless server goes back to a random requester port. This can be a security concern. 
 - A stateful firewall is intelligent enough to identify the request and response components of a connection
 - you will only have to allow the request meaning the response is automatically allowed 
@@ -851,9 +851,9 @@ baston Host / Jump boxes
 ### Security Groups (SG)
 - A second type of security filtering feature used in AWS VPC
 - SG's are stateful - they detect response traffic automatically for a given request
-- that means any IN or OUT request that is allowed will automatically allow a response - you dont have to worry about configuring ephemeral ports 
+- that means any IN or OUT request that is allowed will automatically allow a response - you don't have to worry about configuring ephemeral ports 
 - The major limitation of SG's are that there is no EXPLICIT deny. You cannot block specific bad actors e.g. a range of or a single  IP
-- Usually SGs and NACLs are used in conjuction for this reason
+- Usually SGs and NACLs are used in conjunction for this reason
 - SG support iP/CIDR AND logical resources
 - This includes other security groups as well as itself
 - SGs are not attached to instances nor subnets, they are attached to specific elastic network interfaces known as ENIs
@@ -971,7 +971,7 @@ IO X IOPS = THROUGHPUT
 - When you attach a volume to an EC2 they see a block device and they can use it to create a file system on top of it (ext3/4, xfs). They appear just like any other storage design
 - Storage is provisioned in ONE AZ. It is separate and isolated within that AZ. 
 - You can attach to one EC2 instance (or other service) over a storage network. There is a multi attach feature which allows to attach to multiple at a time but it needs to be managed so that there aren't multi writes
-- You can deattach and reattach the EBS to another volume. EBS are persistent so if an instance moves or stops, restarts, the EBS is maintained
+- You can de-attach and reattach the EBS to another volume. EBS are persistent so if an instance moves or stops, restarts, the EBS is maintained
 - Snapshots can be taken of EBS volumes and they can be regionally resilient by migrating them between AZs and regions 
 - EBS can provision different physical storage types, sizes and performance profiles
 - You are billed based on GB-month (and sometimes performance)
@@ -984,7 +984,7 @@ You can't communicate across AZs for EBS
 GP2 - SSD:
 - it's high performance storage for a low price. 
 - from 1GB - 16TB
-- Alocated with IO credit of 16KB. IOPS is 16kb. 1 IOPS is 1 IO in 1 second
+- Allocated with IO credit of 16KB. IOPS is 16kb. 1 IOPS is 1 IO in 1 second
 - IO Credit bucket has a capacity of 5.4 million IO credits
 - Bucket fills with min 100 IO credits per second regardless of volume size
 - GP2 can burst up to 3000 IOPS by depleting the bucket
@@ -1001,7 +1001,7 @@ GP3 - SSD:
 
 ### EBS Volume Types - Provisioned IOPS
 io1/2 - SSD:
-- IOPS is configured independtly of the volume. Good for consistent low latency and jitter. 
+- IOPS is configured independently of the volume. Good for consistent low latency and jitter. 
 - 4x IOPS of gp2/3 (up to 64,000)
 - Block express gets you more IOPS and MiBs
 - There is a maximum performance that can be achieved - a per instance performance 
@@ -1137,7 +1137,108 @@ AMI Lifecycle:
 
 - AMI's are in ONE region. Only works in that region but it can be used to deploy into all AZs in that region
 - AMI Baking - creating an AMI from configured instance
-- AMI **can't be edited **- you need ot launch an instance, update the config and make a new AMI 
+- AMI **can't be edited** - you need to launch an instance, update the config and make a new AMI 
 - AMI can be copied between regions but they become SEPARATE AMIs 
 - Permissions of AMI by default is your account - it can be private, public or given to specific accounts
-- 
+
+
+### EC2 Purchase Options 
+- Sometimes known as launch types
+On demand:
+  - default
+  - Instances of different sizes run on the same EC2 hosts with different AWS customers.
+  - On demand uses per second billing while instances are running. Associated storage e.g. storage will charge even when the instances are shut down
+  - For all projects, assume on demand and move only when needed
+  - No interruptions
+  - Will not give you priority access if there are any failures
+  - Predictable pricing, upfront costs but no discounts
+  - Good for short term workloads or unknown workloads
+  - For apps that can't be interrupted
+  
+Spot pricing:
+  - Cheapest 
+  - AWS sells spare capacity in an EC2 host at a discounted rate (up to 90% discount)
+  - Will charge up to your maximum price before terminating any of your instances
+  - Never use SPOT for workloads which can't tolerate interruptions
+  - Good fits for SPOT workloads are things that are not time critical or can tolerate interruption/re-run e.g. media processing
+
+Reserved instances:
+  - For long term consistent usage of EC2
+  - Reduce the per-second cost or remove it entirely 
+  - It's possible to reserve and not use and therefore still be built
+  - You can commit for 1 year of 3 years - the longer the more discounted but you need to be careful of wasted resource
+  - You can choose to pay no upfront - per second fee 
+  - You can choose upfront means no per second fee so you get the greatest discount here
+  - Partial upfront - pay a smaller lump sum in advance for a lower per-second cost
+
+Dedicated host:
+  - An EC2 host that is dedicated to you in it's entirety 
+  - You pay for the host - the instances on the host you don't pay for so they can be any size up until the capacity
+  - You have a feature called host affinity - stopping and starting instances means that they can stay on the same host
+  - A good use case for dedicated host is you are using software that has licensing based on socket and core
+
+Dedicated Instances:
+  - A middle ground - instances run on ec2 hosts with other instances of yours and no other customers use the same hardware. You don't pay for the host nor share. You don't to manage the host itself 
+  - You have to pay one off hourly fee for any regions where you use them
+  - A fee for the dedicated industry itself
+  - This is where you may be an industry where you cannot use the same underlying hardware as other customers
+
+Focus : On-demand, spot and reserved for the exam
+
+
+### Reserved Instances - the rest
+- If you need access to the cheapest ec2 running all the time then you would pick standard reserved
+- Scheduled reserved:
+ -  are great for when you have long term requirements but when it doesn't need to be run constantly e.g. batch processing
+  - If you reserve for that time window that's the only time you can use it 
+  - Doesn't support all instance types and regions. 1,200 hours per year and 1 year minimum terms
+- Capacity reservations
+  - have a requirement for some compute that you can guarantee you can launch when you need
+  - You can purchase a reservation and make it a regional one, you get billing discounts on instances in the AZ. They don't reserve capacity within an AZ which is risky during major faults when capacity can be limited
+  - You can pick a zonal reservation - only apply to one AZ providing billing discounts and capacity reservation in that AZ
+  - Regional/AZ are both 1 or 3 year commitment - you can choose on demand capacity reservation  - can be booked to ensure you always have access to capacity in an AZ when you need it but at full on demand price. You will pay regardless of whether you consume it 
+ 
+Savings plan: 
+- an hourly commit for 1-3 years and you get a reduction 
+- You can make a reservation for general compute amounts 
+- Or a specific EC2 savings plan 
+
+
+### Instance Status Checks & Auto Recovery
+- Every instance has two high level per instance checks:
+  1. Systems status - failure could mean loss of system power, loss of network connectivity, host software issues, hardware issues
+  2. Instance status - corrupt file system, incorrect instance networking, OS kernel issues 
+- You can manually stop/restart an instance to fix status checks otherwise you can set up auto-recovery 
+
+### Horizontal & Vertical Scaling
+- Two different ways to handle increasing and decreasing load on the system
+
+Vertical scaling: 
+- Use a bigger server e.g. using a different ec2 instance i.e. go from t3.large to t3.xlarge
+- There will be downtime when you do this - you should do it during an outage window 
+- Larger instance carry a price premium 
+- there is an upper cap on the performance of an instance
+- No application modification required
+- works for all applications even monolithic 
+
+Horizontal scaling:
+- Instead of increasing the size of an individual instance, you add more instances with load
+- Instead of one running copy of your application you will have multiple that need to work together
+- For that reason you will need a load balancer usually so that the load is distributed across the instances
+- Sessions handling is important - since you may be shifting between instances constantly - you would need application support or **off-host sessions** which means that the session is stored somewhere else e.g. another db
+- Using off-host sessions would mean the application is stateless - the application doesn't care which instance you connect to 
+-  You have no disruption while you're scaling - customer connections remain unaffected and if the sessions are externally hosted it wouldn't matter if you scale down either
+- There are no real limits to horizontal scaling 
+- Often less expensive - no large instance premium 
+- more granular in terms of resource management 
+
+### Instance Metadata
+- A service EC2 provides to instances where you can access data about an instance
+- Used to configure and manage an instance
+- Accessible inside all instances - you access it via the IP: http://169.254.169.254 -> http://169.254.169.254/latest/meta-data/
+- Data/information provided:
+  - environment
+  - networking
+  - authentication
+  - user-data
+  - NOT AUTHENTICATED or ENCRYPTED - if you connect to an ec2 you can access this. You can restrict it with a firewall for extra money
