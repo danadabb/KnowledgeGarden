@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1740455829333
+updated: 1740705405826
 created: 1734484581601
 ---
 
@@ -1242,3 +1242,123 @@ Horizontal scaling:
   - authentication
   - user-data
   - NOT AUTHENTICATED or ENCRYPTED - if you connect to an ec2 you can access this. You can restrict it with a firewall for extra money
+
+## Containers & ECS
+
+### Introduction to Containers
+- A container is similar to a VM in that in provides an isolated environment 
+- Where virtual machines run a whole isolated OS, a container runs as a process within the host operating system 
+- The processes are like isolated OS
+- Containers are much lighter than virtual machines since they don't need to run a full OS
+- A container is a running copy of a docker image
+- Docker images are a stack of layers created using a docker file
+- Docker images are how we create a docker container - a running copy of a docker image
+- A container registry is a hub of container images - it can be private or public e.g. docker hub
+
+Container key concepts:
+- Dockerfiles are used to build images
+- Containers are portable, self contained and always run as expected
+- Containers and images are super lightweight
+- Containers only run the application and environment it needs
+- Provide much of the isolation VMs do
+- Ports are 'exposed' to the host and beyond
+
+### ECS - Concepts
+- ECS is a product that allows you to run containers fully or partially managed by AWS - it takes away much of the admin overhead of managing containers
+- ECS to containers is what ec2 is to virtual machines
+- ECS uses clusters which runs in two modes: ec2 mode which uses ec2 instances as container hosts or fargate mode which is a serverless way of running docker containers 
+- ECS lets you create a cluster
+- AWS also have a container registry called ECR (elastic container registry)
+- A task in ECS represents the container as a whole 
+- A task role is the IAM role a task can assume to interact with AWS resources - a task role is the best way to give permission to containers
+- Tasks and containers are separate things. A task can include one or more containers. 
+- A service definition is how we can define a task to scale and how we want it to run 
+
+- A container definition - defines the image and ports that will be used for a container - points to a container image in a registry
+- A task definition applies to the application as a whole. It can be a single container definition or multiple containers and multiple container definitions. It's also where you define a task role and the resources that your task is going to consume
+- A task role is the IAM role which hte task assumes 
+- Service - how many copies of a task you want to run, High availability, restarts 
+
+### ECS - Cluster Mode
+
+EC2 cluster types defines a number of things but one of them is how much admin overhead surrounding running a set of container hosts that you manage vs how many AWS manage. 
+
+EC2 Mode:
+- Start with an ECS management component (also exists in fargate) - handle high level tasks
+- An ECS cluster is created within VPC in your AWS account  - benefits from the multiple AZs
+- EC2s are used to run containers
+- Auto scaling groups are used 
+- If you want to use containers in your infrastructure but you want to also manage host capacity and availability then EC2 mode is the appropriate choice
+- With EC2 mode, even if you're not running any tasks or services in your containers, you will still be paying for them while they're running
+
+
+Fargate mode:
+- removes more overhead 
+- you have no servers to manage - you won't have to pay for EC2 instances
+- AWS have a shared fargate infrastructure
+- Fargate still operates in VPC and across AZ
+- Tasks and services run on the shared infrastructure platform and are then injected into your VPC - they're given network interfaces inside the VPC
+- You only pay for the containers you are using based on the resources they consume - you don't need to manage or provision hosts
+
+
+EC2 vs ECS (EC2) vs Fargate:
+- if you use containers, use ECS over EC2
+- Pick EC2 mode when you have a large workload and price conscious organisation - you can use reserved pricing and try to optimise 
+- Large workload but overhead conscious - use fargate 
+- Small or burst style workloads - fargate makes sense as you only use for the resources the container uses
+- batch/periodic workloads - fargate
+
+### Elastic Container Registry (ECR)
+- ECR is a managed container image registry service - like docker hub but for AWS
+- We have public and private registries - each aws is provided with one of each. 
+- Each registry can have many repositories (think of github)
+- Inside each repo you can have many container images and these can have several tags. 
+- The tags need to be unique within your repository
+- public registry means that anyone can have read only access to anything within that repo (read write needs permission)
+- private registry means permission required for read only OR read write
+- ECR is integrated with IAM for permission
+- Image scanning is either in basic or enhanced (using inspector product)
+- ECR provides near real time metrics - delivered into cloud watch (auth, push, pull)
+- ECR logs all api actions into cloud trail
+- Generates events that are pushed to eventbridge
+- offers replication cross region and cross-account
+
+
+### Kubernetes 101
+- Open source container orchestration system - use it to automate the deployment, scaling and management of containerised applications
+- A cloud agnostic product so you can use it on many cloud platforms 
+- A kubernetes cluster is a highly available cluster of compute resources which are organised to work as one unit
+- The cluster starts with a cluster control plane - it manages the cluster, scheduling, applications, deploying
+- Cluster nodes are VM or Physical servers which function as a worker in the cluster - they run the containerized applications
+- containerd or docker is the software for handling container operations 
+- kubelet is the agent to interact with the cluster control plane 
+- kubelet interacts with the control plane using kubernetes API 
+- Pods are the smallest unit of computing in kubernetes. It's common to see one container one pod architecture 
+- You could run multiple containers in a pod but it's usually when they're tightly coupled and are in close proximity 
+- You will rarely manage pods directly - they are temporary
+- kube-api server is the front end for kubernetes control plane
+- etcd provides a highly available key-value store - main backing store
+- kube-scheduler - responsible for checking pods that don't have a node assigned - will assign based on constraints
+- optional component - cloud-controlled-manager - provides cloud specific control logic i.e. AWS/azure/GCP 
+- kube controller manager - cluster controller processing - node controller, job controller, endpoint controller, service account & token controllers
+- on every node - kube proxy is a network proxy - it coordinates networking with the control plane 
+
+summary terms:
+- **cluster** deployment of kubernetes
+- **node** - resources: pods are placed on nodes
+- **pods** - smallest unit in kubernetes - often 1 container 1 pod 
+- **services** - an abstraction from pods - service running on 1 or more pods
+- **job** - ad-hoc, creates one or more pods until completion
+- **ingress** - exposes a way into a service 
+- **ingress controller** - used to provide ingress e.g. AWS LB controller
+- **Persistent storage (PV)** - provision long running storage to your applications
+
+### Elastic Kubernetes Service (EKS) 101
+- A fully-managed kubernetes implementation that simplifies the process of building, securing, operating and maintaining kubernetes clusters 
+- Can run on AWS, outposts, EKS anywhere, EKS distro - open source
+- Control plane is managed by AWS and scales based on load across multiple AZs
+- Integrates with other AWS services - ECR, ELB, IAM, VPC
+- EKS Cluster = EKS Control Plane & EKS Nodes
+- etcd is distributed across multiple AZs
+- Nodes can be self managed, or managed groups or fargate pods - deciding between these is checking the node type and what it needs
+- For persistent storage - can use EBS, EFS, FSx
