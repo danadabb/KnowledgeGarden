@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1740705405826
+updated: 1740979079746
 created: 1734484581601
 ---
 
@@ -1362,3 +1362,61 @@ summary terms:
 - etcd is distributed across multiple AZs
 - Nodes can be self managed, or managed groups or fargate pods - deciding between these is checking the node type and what it needs
 - For persistent storage - can use EBS, EFS, FSx
+
+
+## Advanced EC2
+### Bootstrapping EC2 using User Data
+- Bootstrapping is the process of bringing an instance with a certain pre-configured state
+- Bootstrapping is a general term outside of AWS
+- Within EC2 it can allow build automation
+- Bootstrapping in EC2 is enabled using ec2 User Data - accessed via the meta-data IP (169.254.196.254/latest/user-data)
+- Anything in the user data is executed by the instance OS 
+- Executed ONLY on the FIRST initial launch 
+- EC2 doesn't interpret, the OS needs to understand the User Data
+
+- EC2 on launch checks User Data and executes it or errors on a bad config
+- User data:
+  - is opaque to EC2 - it is just a block of data
+  - not secure - don't use it for passwords or long term credentials
+  - limited to 16kb in size
+  - can be modified but the contents are only executed ONCE on launch
+
+Boot time to service time - how quickly after you launch an instance is it ready to use
+- For an aws managed AMI it's usually in minutes
+- You can do the work in advance by AMI baking
+- the optimal way is to combine bootstrapping and baking - use AMI baking for any part of the process that is time intensive
+
+### Enhanced Bootstrapping with CFN-INIT
+- A way you can pass complex bootstrapping instructions to EC2 instances
+- cfn-init is a helper script which is installed on EC2 OS
+- User data is procedural where as cfn-init is the desired state (declarative)
+- can work with packages, groups, users, sources, files, commands and services
+- Provided with directives via Metadata and AWS::CLoudFormation:Init on a CFN resource
+- Unlike with user-data that only works on first launch, cfn-init can work with stack updates so that it can execute again and update the configuration of that instance
+
+Cloudformation creation policies and signals:
+- Creation policies is something that is added to a logical resource with a timeout value. It waits for a signal from the resource as either a success or error. The resource in cloud formation will show that there is an error if there is one
+
+### EC2 Instance Roles & Profile
+- EC2 instance roles are roles that an instance can assume and anything running in that instance has those permissions
+- An instance profile is a wrapper around an IAM role, it's a way to put the credentials into an instance. This is what gets attached to an ec2 instance. 
+- The credentials are delivered by tbe instance meta-data. The credentials are always renewed before they expired. It will never be in a position where they expire. (automatically rotated)
+- Credentials are in /iam/security-credentials/role-name
+- Always use roles where possible - they are always preferable to use as opposed to long term credentials 
+- CLI tools use ROLE credentials automatically 
+
+### SSM Parameter Store
+- Parameter store is a storage for configuration and secrets
+- Many AWS services integrate with Parameter store natively
+- Allows you to store 3 different types of parameters: String, StringList, SecureString
+- You can store License codes, database strings, full configs and passwords
+- Allows you to store in hierarchies and use versioning
+- Can store plaintext and ciphertext (can integrate with KMS)
+- Public parameters available e.g latest AMIs per region
+- anything using it needs to be an AWS service or have access to the public endpoints
+
+### System and Application Logging on EC2
+- Cloudwatch is for metrics and cloudwatch logs is for logging
+- Neither of those products natively capture data inside an instance
+- A cloudwatch agent is required - it runs in the ec2 instance and captures OS visible data and sends it to cloudwatch or cloudwatch logs
+- It needs the configuration and permissions to be able to access and send that data
