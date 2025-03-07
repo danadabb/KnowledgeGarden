@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1740979079746
+updated: 1741237142666
 created: 1734484581601
 ---
 
@@ -1420,3 +1420,76 @@ Cloudformation creation policies and signals:
 - Neither of those products natively capture data inside an instance
 - A cloudwatch agent is required - it runs in the ec2 instance and captures OS visible data and sends it to cloudwatch or cloudwatch logs
 - It needs the configuration and permissions to be able to access and send that data
+
+### EC2 Placement Groups
+- EC2 usually selects an AZ for you when you launch an instance
+- Placement groups ensure that instances are physically close together or not
+- There are three types of placement groups:
+1. Cluster - any instances in a single cluster placement group are physically close together
+2. Spread - the inverse where instances are kept separate 
+3. Partition - for distributed and replicated applications where each group is on different hardware 
+
+Best practice with cluster group is to launch all the instances at the same time.
+Typically instances in the same group are usually on the same rack, sometimes the same host. They have a direct connection to each other which ensures there is speedy communication between them. Lowest latency and max PPS possible in AWS. 
+
+**Cluster placement groups** are used when you really need performance. The con is that there are little resilience because if the AZ goes down the whole cluster goes down.
+
+- You can't span cluster placement groups across AZs - they must be on ONE AZ only and this is locked when launching first instance 
+- You can span VPC peers but it will signifcantly impact performance
+- Not supported on every instance type
+- You should use the same type of instance (although it's not mandatory)
+- You should launch them at the same time (this is again not mandatory but **very recommended**). 
+- Offer 10gbps single stream performance
+- Use cases: Performance, fast speeds, low latency e.g. high compute
+
+**Spread placement groups**: 
+- designed to ensure the maximum amount of availability and resilience 
+- Can be across availability zones
+- Instances are on separate racks so if a rack fails, it won't affect the other instances
+- There is a limit to 7 instances per AZ
+- Provides infrastructure isolation - every instance will be entirely separate from every other instance in that spread placement group
+- each instance runs from a different rack with its own network and power source
+- You can't use dedicated instances or hosts 
+- Use case: small number of critical instances that need to be kept separate from each other 
+
+**Partition placement groups**:
+- Similar to spread groups 
+- Designed for when you have infrastructure where you have more than 7 instances per AZ but you still have a requirement to separate them 
+- Can be created across multiple AZs and you must specify the number of partitions per AZ with a maximum of 7 partitions per AZ.
+- Each partition has it's own rack and power 
+- You can launch as many instances as you need per partition and you can either select the partition explicitly or have AWS make that decision on your behalf 
+- Great for topology aware applications such as HDFS, HBase and Cassandra 
+- Can help topology aware applications contain the impact of a failure to part of an application 
+
+### Dedicated Hosts
+- A dedicated host is an EC2 host that is dedicated to you in it's entirety
+- the host is designed for a specific family of instances e.g. a1, c5, m5 etc 
+- No instance charges - you pay for the host
+- Can either pay on demand or reserve options
+- Host hardware comes with a certain number of physical sockets and cores - this dictates how many instances can be run and some software is licensed on the number of sockets and cores of the hardware 
+- Older hosts required all the instances to be the same size but newer ones allow you to mix sizes
+
+Limitations and features:
+- AMI Limits - you can't use RHEL, SUSE linux, Windows AMIs
+- Can't use Amazon RDS instances
+- Can't use placement groups 
+- Hosts can be shared with other accounts in the org using RAM (resource access manager) and those other accounts can create instances on that host. They can only see the instances they created only. You as the owner of the host cannot control the ones that are created by other accounts 
+- Dedicated hosts are generally used for software licensing / licensing issues. It's not typically the approach you would take just for running EC2 instances
+
+## Enhanced Networking & EBS Optimized
+- Enhanced network is a feature which is designed to improve the overall performance of EC2 networking
+- Required for any high end performance features such as cluster placement groups
+- Uses SR-IOV - Makes it so a physical network interface in an EC2 instance is aware of virtualization
+- Offers logical cards per physical card - gives each instance exclusive access to each logical card. Handles the process end to end without consuming the host process' CPU
+- Higher I/O and lower host CPU usage as a result
+- more bandwidth 
+- higher packets per second (PPS)
+- Consistent lower latency
+- Available at no charge for EC2 and available on most EC2 types but needs to be configured
+
+EBS Optimized 
+- Historically,  network used to be shared by data and EBS
+- EBS Optimisation means a dedicated capacity is provided for EBS usage
+- This means faster speeds for EBS and it doesn't impact the data side
+- Most instances support and have enabled by default 
+- Some older instances its supported but enabling costs extra
