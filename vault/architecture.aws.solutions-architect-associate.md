@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1741237142666
+updated: 1741577429532
 created: 1734484581601
 ---
 
@@ -1476,7 +1476,7 @@ Limitations and features:
 - Hosts can be shared with other accounts in the org using RAM (resource access manager) and those other accounts can create instances on that host. They can only see the instances they created only. You as the owner of the host cannot control the ones that are created by other accounts 
 - Dedicated hosts are generally used for software licensing / licensing issues. It's not typically the approach you would take just for running EC2 instances
 
-## Enhanced Networking & EBS Optimized
+### Enhanced Networking & EBS Optimized
 - Enhanced network is a feature which is designed to improve the overall performance of EC2 networking
 - Required for any high end performance features such as cluster placement groups
 - Uses SR-IOV - Makes it so a physical network interface in an EC2 instance is aware of virtualization
@@ -1493,3 +1493,132 @@ EBS Optimized
 - This means faster speeds for EBS and it doesn't impact the data side
 - Most instances support and have enabled by default 
 - Some older instances its supported but enabling costs extra
+
+## Route 53 - Global DNS
+### R53 Public Hosted Zones
+- There are two types of DNZ Zones in Route 53 - public and private. 
+- A hosted zone is a DNS database for a given section of the global DNS database e.g. animals4life.org
+- A globally resilient service
+- Hosted zones are created automatically via R53 - or separately and R53 will host it
+- A zone hosts DNS records e.g. A, AAAA, MX, NS, TXT
+- A hosted zone is what the dns system references and it's authoritative for that domain
+
+- A public hosted zone is a DNS database hosted by R53 on public name servers
+- Accessible from public internet and VPC
+- Hosted on 4 x r53 name servers (NS) specific for the zone
+- Use the ns records to point at those 4 x route
+- To integrate it with the public DNS system, you change the NS records to point at the 4 name servers
+- Inside a public hosted zone, you create resource records which DNS uses
+- You can use route 53 to host zone files for externally registered domains
+
+### R53 Private Hosted Zones
+- Operates the same way as a public zone except it's not public 
+- It's associated with VPCs within AWS and it's only accessible there
+- Can also associate it to different accounts
+- Can use a split-view technique where you can have overlapping public and private for public and internal use with the same zone name e.g. private intranet websites
+- Private zone is inaccessible from the internet - but it can be made accessible with VPCs. 
+- VPC can access the private zone via route53 resolver
+- If you create a public hosted zone with the same name that is how a split view could work. You have specific records in each.
+
+### CNAME vs R53 Alias
+If we only use CNAMES:
+  - In DNS an A record maps a name to an IP address i.e. catagram.io => 1.3.3.7
+  - CNAME maps a NAME to another NAME e.g. www.catagram.io => catagram.io
+  - You can't use CNAME for the APEX of the domain i.e. you can't have catagram.io pointing at something else
+  - Many AWS services use a DNS Name (ELB)
+  - Therefore if you only use CNAME - catagram.io => ELB would be invalid 
+  - Alias record fixes this
+
+An ALIAS record:
+  - Maps a NAME onto an AWS resource
+  - Can be used for naked/apex and normal records
+  - For non apex/naked it functions like CNAME
+  - There is no charge for ALIAS requests pointing to AWS resources
+  - For AWS services e.g. cloudfront, gateway, s3 buckets - you should default to picking ALIAS
+  - An ALIAS is a subtype - you need to manage the record type with the type youre pointing to e.g. elastic balancer is A record therefore you need to create an A record ALIAS
+  - Can only use ALIAS if you're using route 53
+
+### Simple Routing
+- Simple routing supports 1 record per name
+- Each record can have multiple values
+- Simple routing should be used when you want to route request to one single service e.g a web server
+- It doesn't support health checks 
+- simple to implement and manage
+
+### R53 Health Checks
+- Separate from but are used by records in route 53
+- Performed by a fleet of health checkers distributed globally
+- Not limited to just AWS targets - can check anything that is accessible by IP
+- Check every 30s but can be every 10s (cost extra)
+- Test TCP, HTTP/HTTPS, HTTP/HTTPS with string matching 
+- An endpoint is either healthy or unhealthy
+- Types of checks: Endpoint, Cloudwatch Alarm, checks of checks 
+- if 18%+ of distributed checkers report a healthy then the health check is healthy
+- Commonly uses s3 as a back up
+
+### Failover Routing
+- You can add a backup/failure resource with the inclusion of a health check on the primary record 
+- Use this when you want to configure active-passive failover 
+
+### Multi value routing
+- A mix of simple and failover
+- Can create many records with the same name
+- Each record can have an associated health check
+- Up to 8 healthy records are randomly selected
+- Client chooses and uses 1 value
+- Any failed health check records won't be returned
+- More of an active-active method
+- Not a replacement for a load balancer
+- Improves availability of an application 
+
+### Weighted Routing
+- A simple form of load balancing
+- You're able to specify a weight for each record
+- The total weight is calculated for a given name 
+- A record with the weight of 0 never gets returned
+- Each record is returned based on it's record weight vs total weight
+- If a record returned is unhealthy, it repeats until a healthy record is chosen
+- Useful for when you have records with the same name and want to test the distribution 
+
+### Latency Routing
+- When you want to optimise for performance and user experience
+- For each of the records with the same name, you can use different regions 
+- In the background, aws maintains a latency between different regions 
+- A record that has the lowest latency based on region is chosen for a user
+- If a record is unhealthy then the second lowest latency is returned
+- The database AWS maintains is not real time
+
+### Geolocation Routing
+- Similar to latency except the location of customers and resources is the influencing factor
+- With geolocation routing, records are tagged with a location e.g. country, continent or default 
+- When a user is making a request, the IP check verifies the location of the user. Then the relevant record is returned (not the closest) - it checks the state first, the country next and then the continent. Optionally it returns the default you defined. If there is no default then a NO ANSWER is returned. 
+- This is ideal for restricting content e.g. to the usa only
+- For language specific content or balancing across regional locations
+- This is about location not proximity. E.G. if you're not based in a specific state the record is defined for in the state, then you wont get that record
+
+### Geoproximity
+- Aims to return records as close to your users as possible
+- Records can be tagged by AWS region or lat and long coordinates
+- Allows us to define a bias - how route 53 handles a calculation .e.g + - bias where "+" increases the region size and "-" decreases neighbouring regions 
+- Bias expands/shrinks the region to direct traffic to
+ 
+### R53 Interoperability
+- Using route 53 to register domain or host domain files when the other part of that is not with route 53
+- Usually these things are done together with Route 53 but it can do one or the other
+- When you register a domain with route 53 it does two jobs: *domain registrar* and *domain hosting*
+- It can do BOTH or either
+- If you register a domain using route 53
+  - it accepts your money (domain registration fee)
+  - allocates 4 x Name Servers (domain hosting)
+  - Creates a zone file (domain hosting) on the NS servers
+- Domain registration:
+  - R53 communicates with the registry of TLD (domain registrar)
+
+- typically r53 doesn't isn't just used as a domain registar but sometimes used purely for hosting where the domain is registered via a 3rd party
+
+### Implementing DNSSEC using Route53
+- DNSSEC strengthens authentication in DNS using digital signatures based on public key cryptography. 
+- Asymmetric keys are created in the us-east-1 region  (Using KMS)
+- Route53 creates the zone signing keys internally (KMS isn't involved)
+- Adds the key signing key and zone signing key public parts within a DNS record 
+- Cloudwatch alarms should be enabled for DNSECInternalFailure or KeySigningKeysNeedingAttention
