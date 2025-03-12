@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1741577429532
+updated: 1741762860996
 created: 1734484581601
 ---
 
@@ -1622,3 +1622,98 @@ An ALIAS record:
 - Route53 creates the zone signing keys internally (KMS isn't involved)
 - Adds the key signing key and zone signing key public parts within a DNS record 
 - Cloudwatch alarms should be enabled for DNSECInternalFailure or KeySigningKeysNeedingAttention
+
+## Relational Database Service (RDS)
+### Database Refresher & MODELS - PART1
+Relational (SQL) vs Non-Relational (NoSQL)
+- SQL - Structured Query Language
+- Relational - structure in and between tables of data - Rigid Schema 
+- Fixed relationship between tables and defined in advance
+- NoSQL - is not one single thing - it covers alternative database models
+- They have a more relaxed schema and relationships between tables is handled differently
+
+### Database Refresher & MODELS - PART2
+Examples of nosql/non-relational DB models:
+- Key Value databases consist of sets of keys and values. 
+- unstructured and are key/value pairs
+- good for simple data, no structure, name/value pairs 
+- Good for in-memory caching
+
+Wide Column Store
+- A variation on key value 
+- you can have additional keys as well as a partition key 
+- DynamoDB uses this
+- Has tables which are groupings of data 
+- tables containing attributes but they don't have to be the same. It can have all of the same attributes or a mixture or none 
+- No fixed structure on the attribute side
+- Every item has to use the same key structure and needs to include a key that is unique
+- DynamoDB is a wide column store
+
+Document
+- Store and query data as documents
+- Formatted using json or XML and can have different structure within the same DB
+- Interacted with via it's ID
+- Work best for order or collections or contact style DB 
+- Good for deep attributes within a nested structure i.e. orders or contacts 
+- Have flexible indexing for deep nested data
+
+Column 
+- Row based DBs are when you interact with data based on rows
+- Rows are ideal when you operate on rows
+- Column stores data in columns i.e. a grouping column for orderID, Product, Colour Size 
+- Good for reporting where you need a particular column 
+- An AWS column db is RedShift
+- Column db is great for reporting and analytics
+
+
+Graph
+- Good for social media or HR systems
+- Can store complex relationships between data
+- Quicker for running queries on relationships
+- Relationships are fluid and dynamic and are stored along the data
+
+### ACID vs BASE
+- Database transaction models
+- CAP Theorem - consistency, availability and partition tolerance - choose 2
+  - Consistency means it will receive the most recent write otherwise an error
+  - Availability - every request will receive a response but it may not be the most recent write
+  - Partition tolerance - can be made of multiple network partitions and continues to operates even if there is a drop of packets
+
+ACID
+  - Atomic - all of the transaction parts must be successful otherwise none are
+  - Consistent - transactions move the db from one valid state to another - no in between state is allowed 
+  - Isolated - concurrent executions leave the db in the same state as if they were executed sequentially
+  - Durable - once a transaction has been committed, it will remain so even in the event of a system failure 
+- Generally refers to RDS DB and it limits a database to scale
+
+
+BASE
+  - Basically available - R/W operations are available as much as possible but without any consistency guarantees
+  - Soft state - the DB doesn't enforce consistency, it's offloaded to the developer
+  - Eventually consistent - if we wait long enough, reads from a system will be consistent 
+- highly scalable and performant
+- Dynamo DB usually works in a BASE like way but does offer consistent reads and other ACID functionality 
+- typically no-sql and acid mentioned together would be referring to a dynamo db database
+
+### Databases on EC2
+- Running databases directly on EC2 is considered bad practice
+- There may be some small scenarios where it may benefit
+- There needs to be reliable communication between your app and DB
+Why you might do it:
+- Access to the DB Instance OS
+- Advanced DB Option tuning - you don't have these with managed DBs but AWS does allow you to control them without root access in managed DBs
+- The app vendor might require it 
+- DB or DB version which AWS doesn't provide
+- specific OS/DB combination that AWS doesn't provide
+- Architecture AWS don't provide
+- Decision makers just want it 
+
+Why you shouldn't:
+- admin overhead - managing EC2 and DBHost/server
+- Backup / DR management adds additional complexity 
+- EC2 is single AZ - access to DB can fail
+- Features - AWS DB products have a extensive features which achieve more than what can be done in an ec2 instance
+- EC2 is on or off - no serverless so you can't scale up or down easily
+- Replication - admin overhead
+- performance - aws has advanced performance features for managed DBs
+
