@@ -1,0 +1,2241 @@
+<h1 id="solutions-architect-associate">Solutions Architect Associate<a aria-hidden="true" class="anchor-heading icon-link" href="#solutions-architect-associate"></a></h1>
+<p>Notes attributed to <a href="https://learn.cantrill.io/courses/enrolled/1820301">this course</a></p>
+<h2 id="aws-accounts">AWS Accounts<a aria-hidden="true" class="anchor-heading icon-link" href="#aws-accounts"></a></h2>
+<ul>
+<li>An AWS account is a container for identities (users) and resources</li>
+<li>Every AWS account has a root user</li>
+<li>The account root user can't be restricted it has full access to everything within this account.</li>
+<li>The credit card used with the root account will be the Account Payment method, everything will be billed to that card</li>
+<li>AWS is a pay-as-you-go/consume platform</li>
+<li>Certain resources have a free-tier</li>
+<li>IAM - every AWS account comes with it's own IAM Database</li>
+<li>IAM lets you create 3 different IAM profiles - Users, groups and roles
+<ul>
+<li>Users represent humans or applications that need access to your account - this is for individual purposes</li>
+<li>Groups are a collection of related users</li>
+<li>Roles can be used for granting external access to your account</li>
+</ul>
+</li>
+<li>IAM policy - used to allow/deny access to AWS services attached to other identities</li>
+<li>IAM is an identity provider, which also authenticates and authorizes</li>
+<li>IAM Access Keys are long term credentials with up to 2 available per IAM user typically used in CLIs or applications</li>
+<li>Access Keys are made up of Access Key ID and the Secret Access Key</li>
+</ul>
+<h2 id="technical-fundamentals">Technical fundamentals<a aria-hidden="true" class="anchor-heading icon-link" href="#technical-fundamentals"></a></h2>
+<p>Pre-cursor to the concepts covered in this course summarized here:
+<a href="/KnowledgeGarden/notes/fqi20n3dabq8rhrs04h6tk3">Tech Fundamentals</a></p>
+<h2 id="aws-fundamentals">AWS Fundamentals<a aria-hidden="true" class="anchor-heading icon-link" href="#aws-fundamentals"></a></h2>
+<h3 id="public-vs-private-services">Public vs Private services<a aria-hidden="true" class="anchor-heading icon-link" href="#public-vs-private-services"></a></h3>
+<ul>
+<li>Services can be categorized into two types: public and private services</li>
+<li>AWS public and private service are separated by network access.</li>
+<li>Public service is something which can be accessed using public endpoints e.g. s3</li>
+<li>A private aws service runs within a vpc so only what is connected to that vpc can access it</li>
+<li>AWS has three zones - the public internet zone, the private network and the AWS public zone which runs in between the public and private zone.</li>
+<li>AWS public zone is where public services operate from e.g. s3</li>
+</ul>
+<h3 id="aws-global-infrastructure">AWS Global Infrastructure<a aria-hidden="true" class="anchor-heading icon-link" href="#aws-global-infrastructure"></a></h3>
+<ul>
+<li>AWS have created their infrastructure platform consisting of isolated regions connected together.</li>
+<li>A region is a creation of AWS which covers an area over the world which contains a full deployment of AWS infrastructure. New regions are added all the time.</li>
+<li>When interacting with most AWS services you're doing it at a particular region e.g. elastic compute cloud in North virginia is different to interacting to elastic compute in Sydney.</li>
+<li>AWS also provides Edge locations which are smaller than regions and they typically have only content distribution services as well as some types of edge computing. They are useful for companies like Netflix who want to store tv shows and movies as close to their customers as possible to allow low for low latency and high speed distribution</li>
+<li>Some services act from a global perspective e.g. IAM</li>
+<li>Regions have three main benefits:</li>
+</ul>
+<ol>
+<li>Each reason is separate geographically which isolates any faults</li>
+<li>Geopolitical separation - different governance depending the region</li>
+<li>Location control - tune architecture performance relative to an area</li>
+</ol>
+<ul>
+<li>Regions also have a code e.g. Sydney is ep-southeast-2, as well as a name - Asia Pacific (Sydney)</li>
+</ul>
+<p>Inside every region, AWS also provide multiple availability zones. These give isolated infrastructure within a region. If a region experiences an isolated issue but only one availability zone is affected, the others are likely to be still fully functional. A solutions architect may distribute the services across multiple availability zones. This is used to build resilience.</p>
+<h3 id="aws-default-virtual-private-cloud-vpc">AWS Default Virtual Private Cloud (VPC)<a aria-hidden="true" class="anchor-heading icon-link" href="#aws-default-virtual-private-cloud-vpc"></a></h3>
+<ul>
+<li>A VPC is a Virtual Network inside AWS</li>
+<li>A VPC is a regional service that operates within that region</li>
+<li>A VPC by default is private and isolated. Services deployed into the same vpc can communicate but it's isolated from other vpcs and the AWS zone/public internet.</li>
+<li>There are two types of VPCs per account:</li>
+</ul>
+<ol>
+<li>Default VPCs - can only have one per region. Configured by AWS.</li>
+<li>Custom VPCs - can have many per region. You use these in almost all serious AWS deployments to configure them how you like.</li>
+</ol>
+<ul>
+<li>VPCs cannot communicate with each other without you configuring them to do so.</li>
+<li>VPCs are regionally resilient</li>
+<li>The default VPC gets a default CIDR IP range which is always the same - 172.31.0.0/16</li>
+<li>A VPC can be subdivided into subnets for resilience. Each subnet inside a VPC can be put into an availability zone. The default VPC has one subnet in every availability zone in that region.</li>
+<li>the default VPC assigns a public address to the services by default.</li>
+</ul>
+<h3 id="elastic-compute-cloud-ec2">Elastic Compute Cloud (EC2)<a aria-hidden="true" class="anchor-heading icon-link" href="#elastic-compute-cloud-ec2"></a></h3>
+<ul>
+<li>EC2 is a service which allows you to provision virtual machines known as instances with an operating system.</li>
+<li>EC2 is IAAS (Infrastructure as a Service) which provides access to virtual machines (instances)</li>
+<li>An instance is just an operating system configured in a certain way</li>
+<li>EC2 is a private AWS service by default - it uses VPC. You can configure it to have public access</li>
+<li>An EC2 is AZ (availability zone) resilient. If the AZ fails then the instance fails</li>
+<li>You can choose an instance with various sizes and capabilities</li>
+<li>EC2 provides on-demand billing - per second</li>
+<li>Instances can use different types of storage e.g. local host storage (ec2 host) or Elastic Block Store (EBS) which is network storage made available</li>
+<li>EC2 instances have a state e.g. RUNNING -> STOPPED -> TERMINATED</li>
+<li>EC2 can be moved from RUNNING TO STOPPED and back again</li>
+<li>TERMINATING an instance is a one way change, you can do that from the RUNNING or STOPPED state. It's a non-reversible action</li>
+<li>At a high level, an instance is composed of CPU, memory, disk and networking. You are charged for all four of those instances.</li>
+<li>When an instance is STOPPED, it means no CPU, memory or network is being used therefore you won't be charged for any running costs of that instance. Storage however is still being used when it's in the stopped state which means you will be charged for it.</li>
+<li>In order to have no costs for an EC2 instance you need to terminate it.</li>
+<li>An Amazon Machine Image (AMI) is an image of an EC2 instance.</li>
+<li>An AMI can be used to create an EC2 instance or an AMI can be created from an EC2 instance.</li>
+<li>An AMI is similar to a server image in a physical server</li>
+<li>An AMI contains:
+<ul>
+<li>Attached permissions - who can use the image e.g only owner vs specific accounts vs public</li>
+<li>Root volume - the drive that boots the operating system</li>
+<li>Block device mapping - configuration which links the volumes that the AMI has and how they're presented to the operating system e.g boot vs data volume</li>
+</ul>
+</li>
+<li>EC2 can host different OS e.g. linux, windows, macos. You can connect to them via remote desktop (windows) or SSH (linux/macos)</li>
+</ul>
+<h3 id="simple-storage-service-s3">Simple Storage Service (S3)<a aria-hidden="true" class="anchor-heading icon-link" href="#simple-storage-service-s3"></a></h3>
+<ul>
+<li>S3 is a global storage platform - it's regionally resilient. The data is replicated across availability zones in that regions. It can tolerate a fault in an AZ</li>
+<li>S3 is a public service</li>
+<li>It's used to host a large amount of data e.g. movies, audio, photos, text, large data sets</li>
+<li>Economical and can be accessed via a variety of methods e.g. UI/CLI/API/HTTP</li>
+<li>S3 delivers two main things:</li>
+</ul>
+<ol>
+<li>Objects - the data s3 stores</li>
+<li>Buckets - containers for objects</li>
+</ol>
+<p><strong>Objects</strong> are basically files that are made up of two components:</p>
+<ol>
+<li>the object key (name) - usually the file name</li>
+<li>the object value (data) - the data or contents of the object</li>
+</ol>
+<ul>
+<li>
+<p>The bucket name needs to be <strong>globally unique</strong> - this is across all regions and aws accounts. It should be between 3-63 characters, all lower case, no underscores. Must start with a lowercase letter or a number. It can't be formatted like an IP address.</p>
+</li>
+<li>
+<p>A bucket can hold an unlimited number of objects and an unlimited amount of data - it's an infinitely scalable service.</p>
+</li>
+<li>
+<p>A bucket may show on the UI that it has folders but the underlying structure is flat and everything sits in the root. Folders are referred to as prefixes in s3 as they prefix the object names.</p>
+</li>
+<li>
+<p>There is a soft limit of 100 buckets for an s3 account and a hard limit of 1000 buckets using support request.</p>
+</li>
+<li>
+<p>You can have unlimited objects in a bucket, with each object able to range between 0 to 5TB in size.</p>
+</li>
+<li>
+<p>S3 is not a file or block. It is an object store</p>
+</li>
+<li>
+<p>You can't mount an s3 bucket as a drive e.g. K:\ or /images</p>
+</li>
+<li>
+<p>s3 is great for large scale data storage, distribution or upload</p>
+</li>
+<li>
+<p>great for offloading - moving data from a server to the s3</p>
+</li>
+<li>
+<p>Most services can use s3 as an INPUT or OUTPUT. s3 is a good default for data storage.</p>
+</li>
+</ul>
+<h3 id="cloudformation-cfn-basics">CloudFormation (CFN) basics<a aria-hidden="true" class="anchor-heading icon-link" href="#cloudformation-cfn-basics"></a></h3>
+<ul>
+<li>CloudFormation is Infrastructure as Code (IaC) which allows automation infrastructure creation, update and deletion.</li>
+<li>CFN uses templates written in either YAML or JSON</li>
+<li>A template:
+<ul>
+<li>has a list of resources to do the action on (at least one - mandatory)</li>
+<li>description - the only restriction with this is if the template has an AWSTemplateFormatVersion, the description must come directly after it (this can be a trick question in the exam)</li>
+<li>metadata - controls how the UI presents the template</li>
+<li>parameters - adds fields which need to be added with input (default values could be provided)</li>
+<li>mappings - allows you to create lookup tables</li>
+<li>conditions - decision making in the template</li>
+<li>outputs - once the template is finished it can present outputs based on the resource e.g. the instance ID of the ec2</li>
+</ul>
+</li>
+<li>CloudFormation takes a template and creates a stack. A stack contains all the logical resources the template tells it to contain. CFN will create a corresponding physical resource in your AWS account.</li>
+<li>You can update or delete the logical resources in the template and the template will do this to the physical resources on your account</li>
+<li>CFN exists to automate infrastructure</li>
+<li>CFN can be used as part of change management as it can be put in code repositories</li>
+</ul>
+<h3 id="cloudwatch-cw-basics">CloudWatch (CW) Basics<a aria-hidden="true" class="anchor-heading icon-link" href="#cloudwatch-cw-basics"></a></h3>
+<ul>
+<li>CloudWatch is a support service which is used by many other AWS services. It collects and manages operational data detailing how it performs, runs or logging data</li>
+<li>It performs 3 main jobs:</li>
+</ul>
+<ol>
+<li><strong>Metrics</strong> - collects metrics from AWS products, Apps, on-premises</li>
+<li><strong>Logs</strong> - collects logs as above</li>
+<li><strong>Events</strong> - Cloudwatch can generate events to do something</li>
+</ol>
+<ul>
+<li>Namespace is a container for monitoring data. It's a way of separating things into different areas e.g. AWS/EC2</li>
+<li>A metric is a collection of related data points in a time ordered structure e.g. cpu utilization, network I/O or disk I/O</li>
+<li>Data points are measurements of data consisting of a timestamp and value</li>
+<li>Dimensions are used to separate data points within the same metric e.g. instance ID (i-xxxxx) and instance type (t3.small)</li>
+<li>We can take action on metrics using alarms</li>
+</ul>
+<h3 id="shared-responsibility-model">Shared Responsibility Model<a aria-hidden="true" class="anchor-heading icon-link" href="#shared-responsibility-model"></a></h3>
+<ul>
+<li>Shared responsibility in AWS is the principal that some areas you have to manage vs AWS have to manage</li>
+<li>At a high level, AWS is responsible for the security of the cloud where as customers are responsible for the security in the cloud</li>
+<li>AWS responsibilities include managing security of regions, Availability Zones and Edge locations specifically the hardware/global infrastructure.</li>
+<li>AWS also manage the security around compute, storage, database and networking as well as any software that is used to provide those services</li>
+<li>Customers need to take care of client side data encryption, server side encryption and network traffic protection.</li>
+<li>Customers need to take care of OS, network and firewall configuration</li>
+<li>Customers need to take care of platform, applications, identity and access management as well as customer data.</li>
+</ul>
+<p><img src="/KnowledgeGarden/assets/images/srp-model.png" alt="Shared Responsibility Model"></p>
+<h3 id="high-availability-vs-fault-tolerance-vs-disaster-recovery">High-Availability vs Fault-Tolerance vs Disaster Recovery<a aria-hidden="true" class="anchor-heading icon-link" href="#high-availability-vs-fault-tolerance-vs-disaster-recovery"></a></h3>
+<ul>
+<li>High Availability (HA) aims to ensure an agreed level of operational performance, usually uptime. for a higher than normal period</li>
+<li>HA is about maximizing a system's online time</li>
+<li>System availability is usually expressed as a percentage of uptime e.g. 99.9% a year means 8.77 hours p/year downtime</li>
+<li>Fault tolerance (FA) is the property that enables a system to continue operating properly in the event of the failure of one or more of its components</li>
+<li>HA is just about maximizing uptime where as FA is operating through failure e.g. a aeroplane can't just be highly available it must be fault tolerant</li>
+<li>FA is much more complex and more costly to implement as you need to minimize outages but also design a system that will tolerate a failure</li>
+<li>Disaster recovery (DR) is a set of policies, tools and procedures to enable the recovery or continuation of vital technology infrastructure and systems following a natural or human-induced disaster</li>
+<li>You need to plan what should be done in the event of a failure. An example of DR planning is having off-site backup storage</li>
+<li>DR planning should happen in advance so that the process is automated</li>
+</ul>
+<p><strong>Summary</strong>:</p>
+<ul>
+<li>HA - minimise outages</li>
+<li>FA - operate through faults</li>
+<li>DR - used when these don't work</li>
+</ul>
+<h3 id="route53-r53-fundamentals">Route53 (R53) Fundamentals<a aria-hidden="true" class="anchor-heading icon-link" href="#route53-r53-fundamentals"></a></h3>
+<ul>
+<li>Route53 provides two main services:</li>
+</ul>
+<ol>
+<li>Allows you to register domains</li>
+<li>Hosts zones on managed nameservers it provides</li>
+</ol>
+<ul>
+<li>Route53 is a global service with a single Database. You don't need to pick a region</li>
+<li>It is globally resilient so it can tolerate the fault of multiple regions</li>
+<li>Route53 provides DNS zones as well as hosting for those zones</li>
+<li>Zone files are created and hosted on four managed name servers</li>
+<li>Hosted zones can be public or private (VPC)</li>
+<li>A hosted zone hosts DNS records (recordsets)</li>
+</ul>
+<h3 id="dns-record-types">DNS Record Types<a aria-hidden="true" class="anchor-heading icon-link" href="#dns-record-types"></a></h3>
+<ul>
+<li>
+<p>There are different records that can be stored in DNS:</p>
+<ul>
+<li>
+<p>Nameserver (NS) - allow delegation to occur end to end in DNS. e.g example.com → ns1.example.com, ns2.example.com</p>
+</li>
+<li>
+<p>A and AAAA Records - A record will point to a v4 IP address and the AAAA will point to the v6 IP address. For example:</p>
+<p><strong> A Record:</strong> example.com → 192.168.1.1</p>
+<p><strong> AAAA Record:</strong> example.com → 2001:db8::1</p>
+</li>
+<li>
+<p>CNAME - Canonical Name - lets you create the equivalent of DNS shortcuts by pointing to the same A record. E.g. <a href="http://www.example.com">www.example.com</a> → example.com</p>
+</li>
+<li>
+<p>MX Record - how a server can find a mail server for a specific domain. Includes a priority number</p>
+<pre><code>example.com
+  Priority: 10 → mail1.example.com
+  Priority: 20 → mail2.example.com
+</code></pre>
+</li>
+<li>
+<p>TXT - allow you to add arbitrary text to a domain that must be matched to prove domain ownership.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>TTL (Time To Live) is the time set by the DNS to determine how long a DNS record is cached by a resolver (DNS server o browser) before it must check for an updated record from an authoritative server.</p>
+</li>
+</ul>
+<h2 id="iam-accounts-and-aws-organisations">IAM, Accounts and AWS Organisations<a aria-hidden="true" class="anchor-heading icon-link" href="#iam-accounts-and-aws-organisations"></a></h2>
+<h3 id="iam-identity-policies">IAM Identity Policies<a aria-hidden="true" class="anchor-heading icon-link" href="#iam-identity-policies"></a></h3>
+<ul>
+<li>
+<p>IAM policies are a type of policy which get attached to identities in AWS</p>
+</li>
+<li>
+<p>Identities are IAM users, groups and roles</p>
+</li>
+<li>
+<p>IAM Policies:</p>
+<ul>
+<li>provides and denies access to features in AWS</li>
+<li>Policy documents are created using JSON containing one or more statements</li>
+<li>the first part of a statement is a Sid (Statement ID) which is an optional field that lets you identify a statement and what it does. Using these is best practice to inform the reader</li>
+<li>Every statement will have a resource you're interacting with and the action you're wanting to perform on that resource</li>
+<li>The action is in the format "service:operation" where the operation can possibly be a wild card or a list of multiple actions</li>
+<li>Resources is the same only it matches AWS resources. Individual resources are referred to using the ARN</li>
+<li>Effect is either allow or deny. It is possible to be allowed and denied at the same time</li>
+</ul>
+<pre class="language-json"><code class="language-json">&#x3C;!-- Policy document example -->
+<span class="token punctuation">{</span>
+  <span class="token property">"Version"</span><span class="token operator">:</span> <span class="token string">"2012-10-17"</span><span class="token punctuation">,</span>
+  <span class="token property">"Statement"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"Sid"</span><span class="token operator">:</span> <span class="token string">"FullAccess"</span><span class="token punctuation">,</span>
+      <span class="token property">"Effect"</span><span class="token operator">:</span> <span class="token string">"Allow"</span><span class="token punctuation">,</span>
+      <span class="token property">"Action"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"s3:*"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"Resource"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"*"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>when there is an overlap in permissions, then both of the statements are processed where the priority begins at explicit denies. Denies overrule everything else. The second priority are explicit allows. Allows take effect unless there are explicit denies. The default if no rules are in place, the default is DENY.</li>
+<li>With the exception of the account root user, aws identity start of with NO ACCESS to aws resources.</li>
+<li>Remember: explicit DENY > explicit ALLOW > DENY</li>
+</ul>
+</li>
+<li>
+<p>There are two types of policies: Inline policies and managed policies</p>
+</li>
+<li>
+<p>Inline policies are when you apply individual JSON policy documents to each individual account. This is good for exceptional or special access rights for an individual as opposed to a group or a number of people</p>
+</li>
+<li>
+<p>Managed policies are another JSON policy that you'd attach to identities in a reusable way. These should be used for the normal default rights in a business as they are low overhead</p>
+</li>
+<li>
+<p>There are two types of managed policies: AWS managed policies and customer managed policies which you can create and manage for exact requirements</p>
+</li>
+</ul>
+<h3 id="iam-users-and-arns">IAM Users and ARNs<a aria-hidden="true" class="anchor-heading icon-link" href="#iam-users-and-arns"></a></h3>
+<ul>
+<li>IAM users are an identity used for anything required long term AWS access e.g. humans, applications or service accounts</li>
+<li>A principal (a person/application) makes a request to IAM to authenticate to a resource</li>
+<li>Authentication for IAM users is done using either username and password or access keys. Access keys are usually used by applications or by humans using CLI tools.</li>
+<li>Once a principal goes through the access tools, they become an authenticated identity</li>
+<li>Once a principal is identified AWS knows which policies apply to an identity. This is the process of authorization.</li>
+<li>Authentication is how a principal can prove to IAM it's who they say they are where as Authorization checks the policies attached to the identity to give them permission for a resource</li>
+<li>ARN (Amazon Resource Name) uniquely identify resources within any AWS accounts.</li>
+<li>ARN is used to allow you to refer to a single or group of resources using wild cards</li>
+<li>ARNs are used in IAM policies</li>
+<li>The format is:
+<code>arn:partition:service:region:account-id:resource-id</code>
+<code>arn:partition:service:region:account-id:resource-type/resource-id</code>
+<code>arn:partition:service:region:account-id:resource-type:resource-id</code></li>
+<li>You can only have 5000 IAM users per account</li>
+<li>An IAM User can be a member of 10 groups</li>
+<li>If you have more than 5000 identifiable users then IAM users is not the right identity to use for that solution. You can fix this with IAM roles or Identity Federation.</li>
+</ul>
+<h3 id="iam-groups">IAM Groups<a aria-hidden="true" class="anchor-heading icon-link" href="#iam-groups"></a></h3>
+<ul>
+<li>IAM groups are containers for IAM users</li>
+<li>You can't log into IAM groups nor do they have credentials of their own</li>
+<li>They are used solely to manage and organise IAM users</li>
+<li>an IAM user can be part of multiple IAM groups</li>
+<li>Groups can have policies attached to them, both inline and managed</li>
+<li>You can also have individual inline/managed policies at the user level</li>
+<li>You should collect all the policies that apply to a user from their groups and individual policies and apply the same deny-allow-deny rule to work out what their permissions are</li>
+<li>There is no limit for the amount of users in an IAM group but the IAM user limit of 5000 exists for the whole account</li>
+<li>There is no such 'all users' group in IAM built in. You can create this and manage it manually</li>
+<li>You cannot have any nesting in groups</li>
+<li>There is a limit of 300 groups per account but it can be increased with a support ticket</li>
+<li>Policies can be attached to resources as well for example a bucket can have a policy attached to it where it allows and denies identities access to that bucket.</li>
+<li>A resource can be refer to a user or role to give permission to itself but it cannot give it to a group. This is because a group is not a true identity and they can't be referenced as a principal in a policy</li>
+</ul>
+<h3 id="iam-roles">IAM Roles<a aria-hidden="true" class="anchor-heading icon-link" href="#iam-roles"></a></h3>
+<ul>
+<li>
+<p>A role is a type of identity that exists inside an IAM account</p>
+</li>
+<li>
+<p>IAM user is when a single principal wants to use AWS</p>
+</li>
+<li>
+<p>IAM roles are best suited to be used by multiple principals e.g. multiple users in the aws account or users, apps or services inside or outside of the aws account.</p>
+</li>
+<li>
+<p>If you can't identify the number of principals that use an identity or if you have more than 5000 principals you could consider using an IAM role</p>
+</li>
+<li>
+<p>Usually roles are used on a temporary basis to borrow permissions</p>
+</li>
+<li>
+<p>IAM roles have two types of policies that can be attached:</p>
+<ol>
+<li>Trust policy - which identities can assume that role. This can be entities in AWS accounts, other accounts, anonymous users and SSO providers e.g. facebook, google etc</li>
+<li>Permissions policy - temporary credentials are given to identities assuming the role and these credentials are used to check the permissions</li>
+</ol>
+</li>
+<li>
+<p>temporary credentials are generated to roles using STS (Secure Token Service).</p>
+</li>
+</ul>
+<h3 id="when-to-use-iam-roles">When to use IAM Roles<a aria-hidden="true" class="anchor-heading icon-link" href="#when-to-use-iam-roles"></a></h3>
+<ul>
+<li>One of the most common uses of IAM roles is AWS services as they need permission and access rights to perform certain actions</li>
+<li>An example is AWS Lambda - it may start/stop ec2 instances, perform backups or other tasks that need permission</li>
+<li>Instead of hardcoding the access keys into the Lambda, the IAM role 'Lambda execution role' can grant access to aws product/services. It will use the sts:AssumeRole operation to generate temporary credentials to use AWS services.</li>
+<li>This is a better approach than using access keys as it's more secure and it won't need key rotation</li>
+<li>Roles are also useful for emergency or unusual situations. A person can assume an emergency role when absolutely required for a short time.</li>
+<li>Roles are useful for an existing corporate environment. If a corporate has over 5000 staff you cant assign each of them an IAM user.</li>
+<li>You could allow an IAM role inside your AWS account to be used by an external identity e.g. active directory</li>
+<li>If you create an app with over 5000 users that needs AWS access, you can use web identity federation which uses IAM roles. Web identities can be providers such as google, facebook or twitter/X</li>
+<li>The pro of using web identities is that no AWS credentials are stored on the app and it uses existing accounts that customers have. This can scale to 100 million+ users</li>
+<li>If you want to use resources across aws accounts, aws roles can also be used.</li>
+</ul>
+<h3 id="service-linked-roles-and-passrole">Service-linked Roles and PassRole<a aria-hidden="true" class="anchor-heading icon-link" href="#service-linked-roles-and-passrole"></a></h3>
+<ul>
+<li>Service-linked roles are a special time of IAM role linked to a specific AWS service</li>
+<li>their permissions are pre-defined by an AWS service</li>
+<li>The main difference between a regular IAM role and a service-linked role is that you cannot delete a service-linked role until it's no longer required</li>
+<li>They are either created by a service or by you during set up</li>
+<li>Passrole permissions give the users the ability to use a service linked role without being able to create or edit the role. This is similar to using a pre-created role in a cloud formation stack. </li>
+</ul>
+<h3 id="aws-organisations">AWS Organisations<a aria-hidden="true" class="anchor-heading icon-link" href="#aws-organisations"></a></h3>
+<ul>
+<li>AWS organisations take a single AWS account (standard account) to create an organisation. This account becomes the management account (previously called Master account). </li>
+<li>The management account invites existing standard AWS accounts into the organisation. Once they join they change from being standard to member accounts.</li>
+<li>An AWS organisation has only ONE management account and zero or more member accounts</li>
+<li>An organisational root is not the same as an AWS account root user. The root of an AWS organisation is just a container for aws accounts and organisational units. It's the top level of the hierarchical structure of an organisation. </li>
+<li>Consolidating billing for organisations changes the billing methods for member accounts by removing them and passing them through to the management account. In the context of consolidated billing this is known as the Payer Account. </li>
+<li>Master, management and payment account refer to the same thing - the account that was used to create the organisation. </li>
+</ul>
+<h3 id="service-control-policies">Service Control Policies<a aria-hidden="true" class="anchor-heading icon-link" href="#service-control-policies"></a></h3>
+<ul>
+<li>SCPs are a feature of AWS organisations which allow restrictions to be placed on member accounts in the form of boundaries</li>
+<li>SCPs are policy documents or JSON that can be attached to the organisation as a whole or organisational units or individual AWS accounts</li>
+<li>They inherit down the organisation tree so that nested units will be affected by it and everything below it will be affected too</li>
+<li>Management accounts are special as they cannot be restricted and not affected by service control policies.</li>
+<li>They can limit what a root user can do though</li>
+<li>SCP do not grant permissions. They just control what an account can and cannot grant via identity policies</li>
+<li>By default, SCP applies FullAWsAccess which means no restrictions </li>
+<li>SCP also has implicit deny if there is an absence of an allow</li>
+<li>Only permissions allowed within the intersection of Identity policies and SCPs are allowed</li>
+</ul>
+<p><img src="/KnowledgeGarden/assets/images/SCP-policies-venn.png" alt="SCP and Identity Policies Venn"></p>
+<h3 id="cloudwatch-logs">CloudWatch Logs<a aria-hidden="true" class="anchor-heading icon-link" href="#cloudwatch-logs"></a></h3>
+<ul>
+<li>A public service that allows you to store, monitor and access logging data</li>
+<li>Has built in AWS integration with services eg EC2, VPC, Lambda, CloudTrail, R53</li>
+<li>Can generate metrics based on logs (metric filter)</li>
+<li>Log events are stored in log streams. Log streams are from one specific source e.g. one ec2 instance</li>
+<li>Log groups are containers for multiple log streams for the same type of logging </li>
+<li>Log groups are where we define retention and permission policies and metric filters</li>
+<li>Metrics can have associated alarms</li>
+</ul>
+<h3 id="cloudtrail-essentials">CloudTrail Essentials<a aria-hidden="true" class="anchor-heading icon-link" href="#cloudtrail-essentials"></a></h3>
+<ul>
+<li>A product which logs API calls and account events/activities e.g. creating, deleting s3 bucket, stopping a service etc</li>
+<li>A cloudtrail event is a call/activity on an aws account</li>
+<li>Stores 90 days of event history - enabled by default for no cost. You don't get any s3 storage unless you configure a trail. </li>
+<li>To customise this you must create 1 or more Trails</li>
+<li>Management Events and Data Events are the type of trails</li>
+<li>Management Events are control plane operations </li>
+<li>Data events are resource operations e.g. uploading objects, lambda functions being invoked</li>
+<li>By default, cloud trail only logs Management events</li>
+<li>A trail logs events for an AWS region it's created in</li>
+<li>Cloud trail is a regional service</li>
+<li>A trail can be set to all regions or one region </li>
+<li>By default, regional trails will log to the region they're in but global services will log to <strong>us-east-1</strong></li>
+<li>If you create a trail, it is stored in an s3 bucket as compressed JSON log files</li>
+<li>CloudTrail could also be integrated into Cloudwatch logs</li>
+<li>You can create an organisational trail which is a single management point for every event across the whole organisation </li>
+<li>CloudTrail is NOT real time. There can be a 15+ minute delay</li>
+</ul>
+<h3 id="aws-control-tower">AWS Control Tower<a aria-hidden="true" class="anchor-heading icon-link" href="#aws-control-tower"></a></h3>
+<ul>
+<li>AWS Control Tower gives an easy and quick way to set up a multi-account environment</li>
+<li>Control Tower orchestrates other services to provide this functionality e.g. Organizations, IAM identity center, cloudformation, config</li>
+<li>It's another evolution of AWS Organisation with more capability </li>
+</ul>
+<p>There are a few different parts of control tower:</p>
+<ul>
+<li>Landing zone - multi-account environment </li>
+<li>Guard Rails - detect/mandates rules and standards across all accounts</li>
+<li>Account Factory - automates and standardises new account creation </li>
+<li>Dashboard - single page oversight of the entire environment </li>
+</ul>
+<p><strong>Landing Zone</strong></p>
+<ul>
+<li>Home region - the region you deploy the region </li>
+<li>brings features of multiple AWS products together e.g. Organizations, AWS Config, Cloudformation</li>
+<li>Security OU - organisational unit that has log archive and audit accounts</li>
+<li>Sandbox OU - which is for testing and less rigid security</li>
+<li>You can create other OU's and Accounts</li>
+<li>Utilises the IAM Identity Center (AWS SSO) - SSO, multi account, ID Federation </li>
+<li>Monitoring and Notifications - cloudwatch and SNS</li>
+</ul>
+<p><strong>Guard Rails</strong> </p>
+<ul>
+<li>Come in either Mandatory, Strongly Recommended or Elective</li>
+<li>Function in two ways</li>
+</ul>
+<ol>
+<li>preventative - stop you from doing things - either enforced or not enabled</li>
+<li>detective - compliance check for identifying issues - either clear, in violation or not enabled </li>
+</ol>
+<p><strong>Account Factory</strong></p>
+<ul>
+<li>Automate account provisioning</li>
+<li>Can be done with cloud admins or end users with appropriate permissions</li>
+<li>This provisioning comes with Guardrails which are automatically added</li>
+<li>Account admin given to a named user to allow people in the organisation to provision accounts</li>
+<li>Accounts are set up with standard configuration</li>
+<li>Accounts can be closed or repurposed</li>
+<li>Can be fully integrated with a business SDLC</li>
+</ul>
+<h2 id="simple-storage-service">Simple Storage Service<a aria-hidden="true" class="anchor-heading icon-link" href="#simple-storage-service"></a></h2>
+<h3 id="s3-security-resource-policies-and-acls">S3 Security (Resource Policies and ACLs)<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-security-resource-policies-and-acls"></a></h3>
+<ul>
+<li>S3 is private by default </li>
+<li>The only identity which has any access to s3 by default is the account root user</li>
+<li>You can grant permission to s3 via S3 <strong>Bucket Policies</strong> which are:
+<ul>
+<li>A form of resource policies</li>
+<li>like identity policies but attached to a bucket</li>
+<li>From the perspective of the resource  - you control who can access that resource </li>
+<li>Identity policies are limited by only being able to give control to the current account, so you cannot give another account access to an s3 bucket. Resource policies allows this for the current or different accounts. </li>
+<li>Resource policies can ALLOW/DENY anonymous principals. This can't be done with identity policies since they need to be attached to a valid identity in AWS. Therefore the resource policies can be given to external access.  </li>
+<li>Resource policies have a 'principal' component which specifies which principals this policy applies to</li>
+<li>An identity policy doesn't have a principal because the policy always applies to the account that created it. A good way to identify identity vs resource policy is checking the absence of principal</li>
+<li>Identity policy as well as the bucket policy applies to both internal and cross account access. For anonymous only the bucket policy applies. </li>
+</ul>
+</li>
+</ul>
+<p>Access Control Lists (ACLs):</p>
+<ul>
+<li>Another form of s3 security used less frequently these days. They aren't recommended any more by AWS</li>
+<li>A sub-resource of an object or bucket.</li>
+<li>You cannot use ACLs on a group of objects </li>
+</ul>
+<p>Block Public Access:</p>
+<ul>
+<li>Another layer of permission to block all public access as a fail safe </li>
+</ul>
+<p>Choosing between resource or identity policies depends on the business' requirements and personal preference but sometimes choosing one over the other makes sense in specific situations:</p>
+<ul>
+<li>If you're granting/denying permissions on lots of different resources across an aws account, then you will need to use identity as not all services support resource policies. </li>
+<li>If you prefer to manage resources from one place then identity makes sense because this is done in IAM</li>
+<li>If you're managing a specific product then resource makes sense</li>
+<li>Cross account or anonymous resources should use resource policies</li>
+<li>Do not use ACLs unless you MUST  </li>
+</ul>
+<h3 id="s3-static-hosting">S3 Static Hosting<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-static-hosting"></a></h3>
+<ul>
+<li>Without static hosting, you access S3 Via AWS APIs</li>
+<li>With static hosting, you can access those resources via HTTP e.g. websites, blogs etc </li>
+<li>You must set an Index and Error document for s3 hosting. We point the index document to a specific html file object in the bucket as well as Error</li>
+<li>A website endpoint is created for hosting</li>
+<li>You can use a custom domain via R53 but the bucket name MUST match the domain name</li>
+</ul>
+<p>There are two scenarios that are perfect for s3</p>
+<ol>
+<li>Offloading - moving large data from a compute service to s3 is cheaper</li>
+<li>Out-of-band pages - if a server is offline for maintenance or has performance bugs we can point users to a static page on s3 that contains something like a status message</li>
+</ol>
+<p>Pricing:</p>
+<ul>
+<li>Per GB per month charge</li>
+<li>Transfer fee - in is free, out is per gig charge</li>
+<li>Request and data retrieval - every operation e.g. GET, POST incurs a cost</li>
+</ul>
+<h3 id="object-versioning-and-mfa-delete">Object Versioning and MFA Delete<a aria-hidden="true" class="anchor-heading icon-link" href="#object-versioning-and-mfa-delete"></a></h3>
+<ul>
+<li>
+<p>Disabled by default. <strong>Once enabled you cannot disable it</strong> </p>
+</li>
+<li>
+<p>You can suspend it and a suspended bucket can be re-enabled
+<img src="/KnowledgeGarden/assets/images/s3-versioning-state.png" alt="S3 versioning state"></p>
+</li>
+<li>
+<p>Versioning let's you store multiple version of objects within a bucket where as without it, there is a unique object name and the object gets replaced each time.</p>
+</li>
+<li>
+<p>the 'id' is null if versioning is disabled, if it is enabled then s3 will allocate an id </p>
+</li>
+<li>
+<p>newer versions will have a new ID</p>
+</li>
+<li>
+<p>The newest version is known as Latest or current version</p>
+</li>
+<li>
+<p>If you don't specify to s3 a specific version, you always get the latest. You can access individual versions by specifying the ID</p>
+</li>
+<li>
+<p>If we delete an object, the object is not deleted, it's just hidden and  marked with a delete marker. This is when we don't specify an ID/version</p>
+</li>
+<li>
+<p>if we specify a version ID then an object is actually deleted </p>
+</li>
+<li>
+<p>Important: <strong>versioning CANNOT be switched off - only suspended*</strong></p>
+</li>
+<li>
+<p>Space is consumed by ALL versions and you are billed for ALL versions</p>
+</li>
+<li>
+<p>Only way to remove all costs is to delete the bucket. Suspending does not remove the old versions</p>
+</li>
+<li>
+<p>MFA Delete - enabled in versioning configuration which means you need an MFA token to change bucket versioning state or delete version</p>
+</li>
+<li>
+<p>You would need to pass in MFA and the code passed with API calls to do these actions</p>
+</li>
+</ul>
+<h3 id="s3-performance-optimization">S3 Performance Optimization<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-performance-optimization"></a></h3>
+<ul>
+<li>Default upload in s3 is using single data stream to s3. The issue with this is if the stream fails the entire upload fails and you need a full restart</li>
+<li>A single PUT upload in AWS is limited to 5GB as a maximum </li>
+<li>A solution to a single stream is using a <strong>multi-part upload</strong></li>
+<li>This breaks the original blob into individual parts</li>
+<li>The <strong>minimum</strong> data size to use multi part upload is 100MB. It's recommended to use it for anything over 100mb. </li>
+<li>An upload can be split into a maximum of 10,000 parts with each part between 5mb -> 5gb</li>
+<li>Each individual part is treated as it's own isolated upload and can be restarted in isolation </li>
+<li>It also improves transfer rates by uploading in parallel </li>
+<li>S3 Accelerated transfer 
+<ul>
+<li>using the public internet is not the most ideal way to get data from source to destination as the route chosen by ISPs is not always optimal. S3 transfer acceleration uses the network of AWS Edge locations located in convenient areas. This feature needs to be switched on. </li>
+<li>Edge locations then use AWS Network as an 'express train' to get to the destination</li>
+</ul>
+</li>
+</ul>
+<h3 id="key-management-system">Key Management System<a aria-hidden="true" class="anchor-heading icon-link" href="#key-management-system"></a></h3>
+<ul>
+<li>
+<p>A regional and Public service</p>
+</li>
+<li>
+<p>Let's you create, store and manage keys</p>
+</li>
+<li>
+<p>Handles both Symmetric and Asymmetric keys</p>
+</li>
+<li>
+<p>Capable of performing cryptographic operations (encrypt, decrypt)</p>
+</li>
+<li>
+<p><strong>Keys never leave KMS</strong></p>
+</li>
+<li>
+<p>Uses a FIPS 140-2 (L2) - the L2 matters for the exam</p>
+</li>
+<li>
+<p>KMS Keys are the keys that KMS manages </p>
+</li>
+<li>
+<p>These are logical containers which contain ID, date, policy, desc and state. </p>
+</li>
+<li>
+<p>KMS keys are backed by physical key material</p>
+</li>
+<li>
+<p>The material is generated or imported and can be used for up to 4kb of data</p>
+</li>
+<li>
+<p>KMS Keys do not leave the KMS product and the unencrypted form is never stored on disk</p>
+</li>
+<li>
+<p>Data Encryption Keys (DEKs) are another type of key in KMS</p>
+</li>
+<li>
+<p>DEK uses GenerateDataKey which can be used to encrypt and decrypt data more than 4kb in size</p>
+</li>
+<li>
+<p>KMS does NOT store DEK, it provides it to you and discards it. </p>
+</li>
+<li>
+<p>KMS will provide you with the plaintext and ciphertext version of this key</p>
+</li>
+<li>
+<p>KMS does not do the encryption or decryption using DEK - you do or the service using KMS does</p>
+</li>
+<li>
+<p>Services such as s3 use DEK for every object</p>
+</li>
+<li>
+<p>KMS keys are isolated to a region and never leave</p>
+</li>
+<li>
+<p>KMS keys CAN be multi region</p>
+</li>
+<li>
+<p>THey can be AWS owned or customer owned</p>
+</li>
+<li>
+<p>THere are two types of customer owned keys:</p>
+<ol>
+<li>AWS managed - created automatically by services</li>
+<li>Customer managed - created by customers and are more configurable</li>
+</ol>
+</li>
+<li>
+<p>Both of these keys support rotation - with AWS managed keys this cannot be disabled but with customer it is optional</p>
+</li>
+<li>
+<p>A KMS key contains a backing key which means previous backing keys can be used </p>
+</li>
+<li>
+<p>Can use alias</p>
+</li>
+<li>
+<p>Every KMS Key has a key policy (resource). For customer managed keys you can change it</p>
+</li>
+<li>
+<p>KMS has to be explicitly be told which AWS account to manage it</p>
+</li>
+<li>
+<p>Usually you use a combination of Key policies and IAM policies to manage KMS </p>
+</li>
+</ul>
+<h3 id="s3-object-encryption-csesse">S3 Object Encryption CSE/SSE<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-object-encryption-csesse"></a></h3>
+<ul>
+<li>Buckets aren't encrypted - objects are</li>
+</ul>
+<p>Data can be stored in disk in two different ways:</p>
+<ol>
+<li>Client side encryption - objects are being encrypted by the client before they ever leave. AWS receives it in a scrambled form and stores it in a scrambled form</li>
+<li>Server side encryption - in transit, the data is in it's original form, once it's hitting s3 it's encrypted by the s3 servers </li>
+</ol>
+<p><img src="/KnowledgeGarden/assets/images/s3-encryption.png" alt="S3 Encryption"></p>
+<p>There are 3 types of encryption for server side encryption:</p>
+<ol>
+<li>SSE-C - Server side encryption with customer provided keys </li>
+<li>SSE-S3 - with amazon s3 managed keys (this is the default)</li>
+<li>SSE-KMS - with KMS Keys stored in AWS Key management service </li>
+</ol>
+<p>SSE-C:</p>
+<ul>
+<li>Customer is responsible for the keys and S3 manages the s3 encryption/decryption processes. When you put an object into s3 you put it through as plaintext alongside the encryption key. When it goes through https it will be encrypted to an external observer. The key is destroyed at s3. </li>
+</ul>
+<p>SSE-S3: </p>
+<ul>
+<li>AWS handles both the encryption and the keys. You provide the plaintext data, the s3 encrypts it via a generated key for the object. You don't get to choose the key or customise it. </li>
+</ul>
+<p>SSE-KMS:</p>
+<ul>
+<li>You use KMS to create a key. Client sends data via plaintext and it's encrypted by S3 via the KMS key. That key is used by s3 to generate an encryption Key. Using this method, key managers can decide who can see the unencrypted data </li>
+</ul>
+<p>Summary of encryption types</p>
+<p><img src="/KnowledgeGarden/assets/images/s3-encryption-summary.png" alt="summary"></p>
+<h3 id="s3-bucket-keys">S3 Bucket Keys<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-bucket-keys"></a></h3>
+<ul>
+<li>
+<p>A way to help s3 scale with server side encryption</p>
+</li>
+<li>
+<p>using SSE-KMS, AWS KMS is called every single time a call is made to s3 to generate a DEK</p>
+</li>
+<li>
+<p>This starts to cost a lot upon scaling</p>
+</li>
+<li>
+<p>Instead of generating a new DEK from KMS every time, <strong>bucket keys</strong> will ask KMS to generate a time limited bucket key used to generate DEKs within s3</p>
+</li>
+<li>
+<p>This significantly reduces KMS API calls, reduces cost and increases scalability</p>
+</li>
+<li>
+<p>Using bucket keys means cloudtrail kms events now show the bucket not te object</p>
+</li>
+<li>
+<p>Bucket key works with replication, object encryption is maintained</p>
+</li>
+<li>
+<p>If you replicate a plain text bucket to a bucket that is encrypted, it will get encrypted at the destination side  </p>
+<h3 id="s3-object-storage-classes">S3 Object Storage Classes<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-object-storage-classes"></a></h3>
+</li>
+<li>
+<p><strong>S3 standard</strong> is the default storage class. This replicates objects across at least 3 availability zones (AZs) in the AWS region</p>
+</li>
+<li>
+<p>if s3 object is stored, a HTTP 1.1 200 OK response is provided by the s3 API endpoint</p>
+</li>
+<li>
+<p>You're billed a GB/m fee for data stored, a $ per GB charge for transfer OUT (in is free) and a price per 1,000 requests. No specific retrieval fee, no minimum duration, no minimum size </p>
+</li>
+<li>
+<p>S3 standards can be made publicly available</p>
+</li>
+<li>
+<p>S3 standard should be used for frequently accessed data which is important and non-replaceable. This should be used as the default and only investigate moving other classes if you need a specific use case. </p>
+</li>
+<li>
+<p><strong>S3 Standard-IA (infrequent Access)</strong></p>
+</li>
+<li>
+<p>The same as S3 standard in most ways however has a lower GB storage price and a retrieval fee that increases with frequent data access</p>
+</li>
+<li>
+<p>there is a minimum duration charge for using it (30 days)</p>
+</li>
+<li>
+<p>Has a min capacity charge of 128kb per object</p>
+</li>
+<li>
+<p>S3 Standard-ia should be used for long-lived data which is important but where access is infrequent</p>
+</li>
+<li>
+<p><strong>S3 One Zone-IA (infrequent Access)</strong></p>
+</li>
+<li>
+<p>Shares many of the considerations of standard-IA</p>
+</li>
+<li>
+<p>The big difference is that the data is stored in one AZ in the region </p>
+</li>
+<li>
+<p>Should be used for long-lived data which is non-critical and replaceable and where access is infrequent</p>
+</li>
+<li>
+<p>Examples could be intermediate data you can afford to use or for replica copies</p>
+</li>
+</ul>
+<ul>
+<li>
+<p><strong>S3 Glacier - Instant</strong></p>
+</li>
+<li>
+<p>Like s3 standard IA except it has cheaper storage, more expensive retrieval costs, and longer minimums</p>
+</li>
+<li>
+<p>more for when you want to access something once a quarter as opposed to once a month </p>
+</li>
+<li>
+<p><strong>S3 Glacier - Flexible</strong></p>
+</li>
+<li>
+<p>A cheaper storage solution</p>
+</li>
+<li>
+<p>Stored as if 'cold' and therefore cannot be made publicly accessible. Retrieving requires a retrieval process</p>
+</li>
+<li>
+<p>Retrieved to s3 standard-IA temporarily</p>
+</li>
+<li>
+<p>There are 3 different retrieval methods:</p>
+</li>
+</ul>
+<ol>
+<li>expedited - 1-5 minutes</li>
+<li>standard - 3-5 hours</li>
+<li>bulk - 5-12 hours</li>
+</ol>
+<ul>
+<li>the faster the retrieval the more expensive</li>
+<li>situations for when you need to store archival data where frequent or realtime access isn't needed (e.g. yearly) and the access takes time. </li>
+<li><strong>S3 Glacier - Deep Archive</strong></li>
+<li>If you consider Flexible to be a 'chilled' state, then data in Deep Archive is in a 'frozen' state </li>
+<li>180 day minimum duration</li>
+<li>The retrieval methods are:</li>
+</ul>
+<ol>
+<li>standard (12 hours)</li>
+<li>bulk (up to 48 hours)</li>
+</ol>
+<ul>
+<li>
+<p>best for data that rarely if ever needs to be accessed e.g. legal or regulation data storage</p>
+</li>
+<li>
+<p>it's a cheaper storage</p>
+<p><strong>Intelligent Tiering</strong>
+Monitors and automatically moves any objects not accessed for 30 days to a low cost infrequent access tier and eventually to archive instant access, archive access or deep archive tiers. If objects start to become more popular and frequently accessed, they will be moved back up the tiers to frequent access at no charge</p>
+</li>
+<li>
+<p>Designed for long lived data with changing or unknown patterns</p>
+<h3 id="s3-lifecycle-configuration">S3 Lifecycle Configuration<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-lifecycle-configuration"></a></h3>
+</li>
+<li>
+<p>You can create life cycle rules on objects in an s3 bucket </p>
+</li>
+<li>
+<p>A set of rules that consist of actions based on a criteria</p>
+</li>
+<li>
+<p>Can be applied on a bucket or group of objects</p>
+</li>
+</ul>
+<p>two types of actions can be applied</p>
+<ul>
+<li>Transition actions - change the storage class of the object(s) e.g. from s3 standard to s3 IA after 30 days
+<ul>
+<li>all the transitions transition 'downward' in a waterfall fashion, not upward</li>
+<li>the only exception of a transition not available downward is one zone-IA into S3 Glacier Instant Retrieval </li>
+<li>if you transition objects you need to be aware of the minimum days before transition for example s3 standard to standard IA or one zone IA it would need to have been in s3 standard for at least 30 days</li>
+<li>smaller objects can cost more upon transitioning due to minimum sizes</li>
+<li>moving from s3 to IA also requires an additional 30 days before you can move them again to glacier classes </li>
+</ul>
+</li>
+<li>Expiration actions - delete object(s) or versions</li>
+</ul>
+<p>You can't apply these rules based on 'access frequency' in the same way intelligent tiering does</p>
+<h3 id="s3-replication">S3 Replication<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-replication"></a></h3>
+<p>S3 has two replication features which allow objects to be replicated between source and destination buckets in the same or different AWS accounts:</p>
+<ol>
+<li>
+<p>Cross region replication (CRR) - allows the replication of objects from a source bucket to one or more destination buckets in different AWS regions</p>
+</li>
+<li>
+<p>Same region replication (SSR) - as above but same region</p>
+</li>
+</ol>
+<p>The architecture replication is applied to the source bucket. It specifies:</p>
+<ul>
+<li>the destination bucket</li>
+<li>an IAM role to use for the replication process - s3 assumes that role</li>
+<li>For replication across AWS accounts, the role isn't by default trusted by the destination account, therefore there needs to be a bucket policy in the destination account to allow the role to replicate into it </li>
+</ul>
+<p>Replication Options:</p>
+<ul>
+<li>What to replicate - all objects or subset</li>
+<li>which storage class the destination bucket will use - the default is the destination uses the same class as the source</li>
+<li>you can define the ownership of the objects in the destination. Across accounts, the bucket objects will by default be owned by the source bucket account</li>
+<li>Replication time control (RTC) - adds a guaranteed 15 minute SLA on to the replication process.</li>
+</ul>
+<p>Replication consideration:</p>
+<ul>
+<li>By default, it's not retroactive - only from the point you enable replication will objects in the bucket be replicated. Objects prior to that time will not. </li>
+<li>Versioning MUST be enabled for replication</li>
+<li>batch replication can be turned on to replicate existing objects</li>
+<li>objects are replicated only one way i.e. source to destination - there is a bi-directional setting that can be configured</li>
+<li>replication can be unencrypted, SSE-S3, SSE-KMS (with extra config) and SSE-C</li>
+<li>Source bucket owner needs permission to the object they replicate</li>
+<li>It will not replicate system events that are made by life cycle management. Neither can it replicate glacier or glacier deep archive objects</li>
+<li>Delete markers are not replicated - but can be enabled</li>
+</ul>
+<p>Why use replication?</p>
+<ul>
+<li>SSR (Same region replication) - Log aggregation - sync logs into a single s3 bucket</li>
+<li>SSR - Prod and test sync</li>
+<li>SSR - resilience with strict sovereignty </li>
+<li>CRR (Cross region replication) - global resilience improvements</li>
+<li>CRR - Latency reduction by replicating data to buckets closer to source</li>
+</ul>
+<h3 id="s3-presigned-urls">S3 PreSigned URLs<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-presigned-urls"></a></h3>
+<ul>
+<li>Presigned URLS in s3 are a way to generate a URL with access permissions in a safe way. </li>
+<li>If a bucket is not public, only an authenticated aws user can access it</li>
+<li>AWS offers pre-signed urls for the case where we don't want to give someone short term access to the bucket without making it public or creating an aws identity for them </li>
+<li>This can be used for both PUT and GET operations</li>
+<li>Pre-signed urls allow someone to access a certain object in a private bucket with the same access rights as the user who generated the url for a certain period of time</li>
+<li>You can create a pre-signed url for an object you don't have access to where the url will also not provide access to the object </li>
+<li>the url has the same permissions of the identity as of the time the url was made</li>
+<li>Don't generate pre-signed urls with a role - URLs will stop working when temporary credentials expire - because assuming an IAM role gives you temporary credentials and the pre-signed url may expire far later than the credentials. It's best to use long term identities i.e. an IAM user</li>
+</ul>
+<h3 id="s3-select-and-glacier-select">S3 Select and Glacier Select<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-select-and-glacier-select"></a></h3>
+<ul>
+<li>Ways you can retrieve parts of objects rather than all of an object</li>
+<li>S3 can store objects up to 5TB in size</li>
+<li>Retrieving a whole object will take time</li>
+<li>S3/Glacier select lets you use SQL like statements to select part of an object</li>
+<li>Works on many file types such as CSV, JSON, Parquet, BZIP2 compression for CSV and JSON</li>
+</ul>
+<h3 id="s3-events">S3 Events<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-events"></a></h3>
+<ul>
+<li>Allows you to create event notifications on a bucket</li>
+<li>When enabled, a notification is delivered when something happens on a bucket. It can be delivered to SNS, SQS and lambda functions</li>
+<li>Can be generated when objects are created (PUT, POST, COPY and Multi part upload)</li>
+<li>Can be generated on Delete (as well as delete markers)</li>
+<li>For object restores (start and end)</li>
+<li>Replication events</li>
+</ul>
+<h3 id="s3-access-logs">S3 Access Logs<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-access-logs"></a></h3>
+<ul>
+<li>Access logging provides detailed records for the requests that are made to a bucket. They are best effort - they are usually logged in target bucket within a few hours </li>
+<li>Let you help the access patterns of your customer base</li>
+</ul>
+<h3 id="s3-object-lock">S3 Object Lock<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-object-lock"></a></h3>
+<ul>
+<li>Enable on new S3 buckets only otherwise you will need to contact AWS for an existing</li>
+<li>You cannot disable object lock or versioning </li>
+<li>Write Once Read Many (WORM) - No delete, no overwrite</li>
+<li>Requires versioning to be enabled and individual versions are locked</li>
+<li>An object version can have one, both or none of <strong>retention period</strong> or <strong>legal hold</strong></li>
+</ul>
+<p>Retention Locking:</p>
+<ul>
+<li>Specified in days and years</li>
+<li>The two types you can do:
+<ol>
+<li>Compliance mode - an object version can't be adjusted, deleted or overwritten for that period. The retention period and mode cannot be changed even by the account root user. This is the most strict form of object lock. This could be good for compliance reasons e.g. medical or legal </li>
+<li>Governance - can grant special permissions to allow locking settings to be adjusted (s3:ByPassGovernanceRetention). Useful if you want to prevent accidental deletions</li>
+</ol>
+</li>
+</ul>
+<p>Legal Hold Locking:</p>
+<ul>
+<li>Set on object version either on or off, no retention period</li>
+<li>You can't delete or change until removed</li>
+<li>You need permission to add or remove the legal hold</li>
+<li>Good to prevent accidental deletion of critical object versions</li>
+</ul>
+<h3 id="s3-access-points">S3 Access Points<a aria-hidden="true" class="anchor-heading icon-link" href="#s3-access-points"></a></h3>
+<ul>
+<li>A feature of S3 which improves the manageability of s3 buckets</li>
+<li>Rather than having 1 bucket with 1 bucket policy you can conceptually split it into many access points with different policies</li>
+<li>Each access point can be limited in terms of where they can be accessed from with it's own endpoint address</li>
+<li>Can be created via the console of via the cli: <code>aws s3control create-access-point --name secretcats --account-id 12355423 --bucket catpics</code></li>
+<li>You can think of access points as mini buckets or views. The DNS of each AP is given to a section of users and those mini buckets are individually controlled</li>
+<li>Any definitions defined in the access point policy need to be defined in the bucket policy e.g. giving permission to certain users for the access point </li>
+</ul>
+<h2 id="virtual-private-cloud-vpc-basics">Virtual Private Cloud (VPC) Basics<a aria-hidden="true" class="anchor-heading icon-link" href="#virtual-private-cloud-vpc-basics"></a></h2>
+<h3 id="vpc-sizing-and-structure">VPC Sizing and Structure<a aria-hidden="true" class="anchor-heading icon-link" href="#vpc-sizing-and-structure"></a></h3>
+<ul>
+<li>
+<p>A private network inside AWS</p>
+</li>
+<li>
+<p>You need to decide what IP range to use in advance - it's not easy to change later. There are a few things you should keep in mind:</p>
+<ul>
+<li>What size should the VPC be? This influences how many services can fit into the VPC</li>
+<li>Are there any networks we can't use? Duplicate or overlapping ranges complicate things</li>
+<li>Be mindful of other VPC ranges, other cloud envs, on premises, partners and vendors and their IP ranges</li>
+<li>Try to plan for the future</li>
+<li>Consider the VPC structure - tiers and resiliency </li>
+</ul>
+</li>
+<li>
+<p>A VPC can be at the smallest a /28 network (16 IP) and at most /16 (65536 IPs)</p>
+</li>
+<li>
+<p>Avoid common ranges </p>
+</li>
+<li>
+<p>Ranges can be determined by the number of regions a business operates in. A suggestion is to reserve 2+ networks per region being used per account
+e.g. 3 US, Europe, Australia - 5 regions x 2 - Assume 4 accounts - total 40 ranges ideally </p>
+</li>
+<li>
+<p>Deciding what size VPC to get, you should ask:</p>
+<ul>
+<li>How many subnets will you need in each VPC?</li>
+<li>How many IP Addresses will you need in total ad how many per subnet?</li>
+</ul>
+</li>
+<li>
+<p>Services use subnets and subnets operate in 1 availability zone. THerefore you need to consider regions as some regions have more availability zones than others.</p>
+<ol>
+<li>pick how many AZs yours would use - possibly use 4 as a default. This means you need 4 smaller networks </li>
+<li>A suggested default is to start with four tiers - Web, application, database and a spare. If you only used 1 az then you would each tier would need it's own subnet so 4 subnets</li>
+</ol>
+</li>
+</ul>
+<p><img src="/KnowledgeGarden/./assets/images/vpc-design.png" alt="VPC Design"></p>
+<h3 id="custom-vpcs">Custom VPCs<a aria-hidden="true" class="anchor-heading icon-link" href="#custom-vpcs"></a></h3>
+<ul>
+<li>VPCs are a regionally isolated and regionally resilient service</li>
+<li>Lets you create an isolated network in AWS</li>
+<li>Nothing is allowed IN or OUT without explicit configuration</li>
+<li>Flexible configuration </li>
+<li>Hybrid networking </li>
+<li>You have the option of created default or dedicated tenancy - allows you to either put the VPC in shared or dedicated hardware - If you put default you can change this later. If you put dedicated <strong>it's locked in and any resources on this vpc will have to be dedicated too</strong>. Only choose this if you really need it as it comes at a premium cost </li>
+<li>Can use IPv4 private and public IPs</li>
+<li>Private CIDR block is the main method of communication for the VPC</li>
+<li>This primary block at it's smallest can be /28 (16 IP) and max /16 (65,536 IP)</li>
+<li>You can create optional secondary IPv4 block</li>
+<li>Can be configured to use IPv6 (/56). However, you can't pick a range, AWS chooses them for you unless you own specific IPv6 IPS</li>
+</ul>
+<p>DNS in a VPC:</p>
+<ul>
+<li>Provided by R53</li>
+<li>Available on the base IP address of the VPC +2</li>
+<li>enableDnsHostnames - gives public DNS hostnames to instances</li>
+<li>enableDnsSupport - enables DNS resolution in VPC - if not then the dns won't work </li>
+</ul>
+<h3 id="vpc-subnets">VPC Subnets<a aria-hidden="true" class="anchor-heading icon-link" href="#vpc-subnets"></a></h3>
+<ul>
+<li>Subnets in VPCs start of entirely private and you need to configure them to be public </li>
+<li>A subnet is an AZ resilient feature of the VPC</li>
+<li>It's a subnetwork of a VPC within a particular AZ</li>
+<li>1 subnet is created a specific AZ in that region. It can never be changed and can never ben in multiple AZs. ONE SUBNET => ONE AZ. Although one AZ can have 0 or more subnets</li>
+<li>Allocated an IPv4 CIDR - it has to be within the range of the VPC</li>
+<li>The CIDR that a subnet uses can't overlap with other subnets in that VPC</li>
+<li>Can optionally be allocated an IPv6 CIDR block. A /64 subset of the /56 is allocated (256)</li>
+<li>Subnets can communicate with other subnets in the VPC</li>
+<li>Sizes of networks are based on the prefix</li>
+<li>Some IPs in every VPC network are reserved</li>
+</ul>
+<p>Every VPC subnet has five addresses that cannot be used. Assuming the subnet we use is 10.16.16.0/20, the following can't be used:</p>
+<ol>
+<li>the network address (starting address) e.g. 10.16.16.0</li>
+<li>Network + 1 (10.16.16.1) - used by the VPC router </li>
+<li>Network + 2 (10.16.16.2) - Reserved by the DNS </li>
+<li>Network + 3 (10.16.16.3) - For future use</li>
+<li>Broadcast address 10.16.31.255 (Last IP in subnet)</li>
+</ol>
+<p>A VPC has a configuration object applied to it called a DHCP option set - (dynamic host configuration protocol) - how computing devices receive IP addresses automatically. </p>
+<ul>
+<li>On every subnet you can define two important allocation options:
+<ol>
+<li>Auto assign public IPv4 - allocated public addresses as well as their private automatically</li>
+<li>Auto assign public IPv6 </li>
+</ol>
+</li>
+</ul>
+<h3 id="vpc-routing-internet-gateway--bastion-hosts">VPC Routing, Internet Gateway &#x26; Bastion Hosts<a aria-hidden="true" class="anchor-heading icon-link" href="#vpc-routing-internet-gateway--bastion-hosts"></a></h3>
+<p>VPC Router:</p>
+<ul>
+<li>Every VPC has a VPC router - it's highly available</li>
+<li>In every subnet, the network+1 address is reserved for the vpc router</li>
+<li>It routes traffic between subnets</li>
+<li>It's controllable, you create route tables which influences what to do with traffic when it leaves the subnet </li>
+<li>A VPC is created with a main route table - if you don't explicitly associate it, then it uses the main route table of the vpc. Otherwise if you create your own, the old one is dissociated. A subnet can only be associated with one route table at a time but a route table can be associated with many subnets</li>
+<li>A route table is a list of routes - the vpc looks at the destination address, looks at the route table for the destination address and propagates the data to those destinations. It can be either to a single route or a range. The prefix is used as a priority - the higher the prefix the higher the priority </li>
+<li>The target field in a route table is either pointing to a gateway or to local </li>
+<li>All route tables have at least 1 route - the local route which matches the VPC CIDR range</li>
+<li>If it's also ipv6 enabled it will have another default local route for ipv6</li>
+<li>These local routes can never be updated, and those two will ALWAYS take priority</li>
+</ul>
+<p>Internet Gateway:</p>
+<ul>
+<li>Regional resilient gateway which can be attached to a VPC </li>
+<li>you do not need a gateway per availability zone</li>
+<li>a vpc can have no internet gateways or just one</li>
+<li>a gateway can have no attachments or 1 at a time </li>
+<li>Runs from the border of the VPC and the aws public zone - allows services to be reached from the internet (AWS public zone)</li>
+<li>it's a managed gateway, aws handles the performance</li>
+<li>Public ipv4 internet addresses never actually touch the services inside the VPC. A record is created which the internet gateway maintains. The instance itself is not configured with a public IP. </li>
+</ul>
+<p>baston Host / Jump boxes</p>
+<ul>
+<li>An instance in a public subnet inside a vpc </li>
+<li>used to manage incoming connections</li>
+<li>this allows you to access internal vpc resource - it's a management or entry point to private vpcs</li>
+<li>It used to be the only way in to a vpc </li>
+</ul>
+<h3 id="stateful-vs-stateless-firewalls">Stateful vs Stateless Firewalls<a aria-hidden="true" class="anchor-heading icon-link" href="#stateful-vs-stateless-firewalls"></a></h3>
+<ul>
+<li>TCP and IP work together where TCP connection send IP packets</li>
+<li>TCP runs on top of IP</li>
+<li>A stateless firewall does not understand the state of connections. It needs two rules per inbound connection, an inbound and an outbound and 2 per outbound connection (inbound and outbound). </li>
+<li>You will have to allow the full range of ephemeral ports allowed in stateless firewall since responding to a request in a stateless server goes back to a random requester port. This can be a security concern. </li>
+<li>A stateful firewall is intelligent enough to identify the request and response components of a connection</li>
+<li>you will only have to allow the request meaning the response is automatically allowed </li>
+<li>You don't need to allow the full ephemeral port range because a stateful firewall is smart enough to know which port to open up for a request/response </li>
+</ul>
+<h3 id="network-access-control-lists-nacls">Network Access Control Lists (NACLs)<a aria-hidden="true" class="anchor-heading icon-link" href="#network-access-control-lists-nacls"></a></h3>
+<ul>
+<li>Can be thought of as a traditional firewall available in AWS vps </li>
+<li>Connections within a subnet are not affected by NACLs but inbound/outbound crossing the subnet boundary are filtered by NACLs</li>
+<li>NACLs have inbound and outbound rules - data entering and leaving the subnet. Remember a request and a response can be both inbound and outbound. </li>
+<li>A VPC is created with a default NACL. Inbound/outbound rules have the implicit deny (*) and an ALLOW ALL rule. The result is all traffic is allowed, the NACL has no effect </li>
+<li>Custom NACLs are created for a specific VPC and are initially associated with no subnets. The default rule for inbound and outbound is an implicit deny (*). This means all traffic is denied by default</li>
+<li>NACL crossing subnets needs the correct inbound/outbound rules</li>
+<li>NACLs can only be assigned to subnets in AWS</li>
+<li>They can be used together with security groups to add explicit DENY</li>
+<li>Each subnet can have one NACL associated to it (default or custom)</li>
+<li>A single NACL can be associated with many subnets</li>
+</ul>
+<h3 id="security-groups-sg">Security Groups (SG)<a aria-hidden="true" class="anchor-heading icon-link" href="#security-groups-sg"></a></h3>
+<ul>
+<li>A second type of security filtering feature used in AWS VPC</li>
+<li>SG's are stateful - they detect response traffic automatically for a given request</li>
+<li>that means any IN or OUT request that is allowed will automatically allow a response - you don't have to worry about configuring ephemeral ports </li>
+<li>The major limitation of SG's are that there is no EXPLICIT deny. You cannot block specific bad actors e.g. a range of or a single  IP</li>
+<li>Usually SGs and NACLs are used in conjunction for this reason</li>
+<li>SG support iP/CIDR AND logical resources</li>
+<li>This includes other security groups as well as itself</li>
+<li>SGs are not attached to instances nor subnets, they are attached to specific elastic network interfaces known as ENIs</li>
+<li>SG can use logical references - it can refer to other security groups so that you don't explicitly put IP ranges, any resource in that SG is allowed </li>
+</ul>
+<h3 id="network-address-translation-nat--nat-gateway">Network Address Translation (NAT) &#x26; NAT Gateway<a aria-hidden="true" class="anchor-heading icon-link" href="#network-address-translation-nat--nat-gateway"></a></h3>
+<ul>
+<li>A set of different processes by changing their source/destination IP addresses </li>
+<li>IP Masquerading is a subset of NAT. IT can hide CIDR IP Blocks behind one IP i.e. many private IP to one public IP</li>
+<li>Since IPv4 addresses are running out, giving many private CIDR range <strong>outgoing</strong> internet access </li>
+<li>A NAT gateway takes all the incoming packets from all the instances it's managing and it records all the information about the communication. It takes those packets, changes the source address from those instances to it's own IP address (external facing address). </li>
+<li>NAT Gateways need to be run from a public subnet so that you can assign an external IPv4 for it </li>
+<li>Uses Elastic IPs (static ipv4 public)</li>
+<li>AZ resilient service - to make it region resilient, you should but a nat gateway in each AZ and a routing table for each AZ in that NAT gateway as a target</li>
+<li>Can get costly if you have a lot of AZs</li>
+<li>They are a managed service, you deploy and AWS takes care of them </li>
+</ul>
+<p><img src="/KnowledgeGarden/./assets/images/natgw-resilience.png" alt="NATGW Full resilience"></p>
+<ul>
+<li>A NAT instance is when you make an EC2 instance run as a NAT instance </li>
+<li>It's much easier and scalable to use a NAT gateway except for when:
+<ul>
+<li>cost is an issue</li>
+<li>for test purposes </li>
+<li>need something free tier eligible </li>
+<li>you need to connect to them like normal ec2 instances - NAT Gateway cannot be used as a bastion host nor can they do port forwarding </li>
+<li>NAT Gateways don't support security groups, they can only use NACLs</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>NAT is not required for IPv6</li>
+<li>In AWS IPv6 addresses are all publicly routable</li>
+<li><strong>Nat gateways DON'T work with IPV6</strong></li>
+<li>if you add ::/0 route, that will give an internet gateway bidirectional connectivity for ipv6</li>
+<li>You can use Egress Only internet gateway if you want outbound only connection for IPv6</li>
+</ul>
+<h2 id="elastic-compute-cloud-ec2-basics">Elastic Compute Cloud (EC2) Basics<a aria-hidden="true" class="anchor-heading icon-link" href="#elastic-compute-cloud-ec2-basics"></a></h2>
+<h3 id="virtualization-101">Virtualization 101<a aria-hidden="true" class="anchor-heading icon-link" href="#virtualization-101"></a></h3>
+<ul>
+<li>EC2 provides virtualisation as a service (IaaS)</li>
+<li>Virtualization is the process of running more than one operating system on a piece of physical hardware (a server)</li>
+<li>Before virtualization, Applications would run on top of an OS in user mode. They cannot directly access hardware resources. If apps try to do that it would cause a system wide error or crash the application</li>
+<li>Virtualization fixes this by allowing a single piece of hardware to run multiple OS' where each is separate.</li>
+<li>Historically, virtualization was done in two ways:</li>
+</ul>
+<ol>
+<li>Emulated Virtualization (software) - the OS still ran on the hardware on top of a hypervisor. The software ran in privileged mode. Each OS ran inside in a virtual machines. They have emulated hardware provided by the hypervisor. The main issue was that this method was slow. </li>
+<li>Para-virtualization - only works on a small subset of OS that can be modified. </li>
+</ol>
+<p>The major improvement in virtualization came when the physical hardware became virtualization aware. This is known as hardware assisted virtualization. The CPU itself knowns virtualization exists. The hardware redirects privileged calls to the hypervisor.
+The process of where the hardware devices themselves become virtualization aware is known as SR-IOV - single route I/O virtualization. Allows a network card or any other I/O card to present itself as not a single card but as several mini cards. These are presented to the guest operating system as real cards and hence the hypervisor doesn't need to be used - the OS can directly use it's card when it wants. </p>
+<h3 id="ec2-architecture-and-resilience">EC2 Architecture and Resilience<a aria-hidden="true" class="anchor-heading icon-link" href="#ec2-architecture-and-resilience"></a></h3>
+<ul>
+<li>
+<p>EC2 instances are virtual machines (OS + Resources)</p>
+</li>
+<li>
+<p>Run on EC2 Hosts which are either shared or dedicated</p>
+</li>
+<li>
+<p>Shared hosts are used by different AWS customers so you don't get ownership of hardware and you pay for usage and resource. There is still no visibility between customers when using shared hosts. Shared host is the default type of hosting</p>
+</li>
+<li>
+<p>Dedicated hosts is dedicated to your account and you pay for the whole thing. You don't share it with any AWS customers.</p>
+</li>
+<li>
+<p>EC2 is an <strong>AZ resilient service</strong> - Hosts run in a single AZ. If that AZ fails then hosts will fail and any instances on those hosts will fail or be impacted</p>
+</li>
+<li>
+<p>EC2 have some local hardware: cpu, memory and storage (instance store). The instance store will be lost if the instance moves to another host. They also have storage and data networking. </p>
+</li>
+<li>
+<p>EC2 can connect to network storage known as Elastic Block Store (EBS). EBS also rus inside an AZ. You can't access it cross zone.</p>
+</li>
+<li>
+<p>If an availability zone in AWS has issues, it impacts ec2, subnets, storage and volumes. </p>
+</li>
+<li>
+<p>An instance runs in a specific host and it will stay on that host when you restart it. It stays there unless it fails or is taken down by AWS. Also if it is stopped and started which is different to restarting. In that instance it will be relocated to another host but it will still be in the same AZ</p>
+</li>
+<li>
+<p>You can never connect network interfaces or EBS storage in one AZ to an ec2 instance in another AZ</p>
+<p>EC2 is good when:</p>
+</li>
+<li>
+<p>When you have a traditional OS and compute need</p>
+</li>
+<li>
+<p>Long running compute needs as it's designed for persistent long running compute requirements</p>
+</li>
+<li>
+<p>You have server style applications</p>
+</li>
+<li>
+<p>For burst or steady state load</p>
+</li>
+<li>
+<p>For monolithic application stacks </p>
+</li>
+<li>
+<p>For migrating application workloads or disaster recovery</p>
+</li>
+<li>
+<p>EC2 tends to be the default compute service in AWS unless you have niche requirements. </p>
+</li>
+</ul>
+<h3 id="ec2-instance-types">EC2 Instance Types<a aria-hidden="true" class="anchor-heading icon-link" href="#ec2-instance-types"></a></h3>
+<p>Factors in choosing instances:</p>
+<ul>
+<li>CPU, memory, local storage capacity and type will influence which instance type you choose</li>
+<li>Resource ratios can give you different ratios of different o resource which will also affect your decision</li>
+<li>The amount of storage, data and network bandwidth </li>
+<li>The architecture and vendor the instance is run on - x86, ARM, intel, AMD </li>
+<li>Additional features and capabilities - GPUs, FPGAs </li>
+</ul>
+<p>EC2 instances are grouped into 5 main categories:</p>
+<ol>
+<li>General Purpose - default - should be first choice. even resource ratio, diverse workloads</li>
+<li>Compute Optimized - Media Processing, High performance computing, scientific modelling, gaming, machine learning. Ratio is higher towards CPU</li>
+<li>Memory Optimized - inverse of compute - ideal for applications for processing large in-memory datasets, database workloads</li>
+<li>Accelerated computing - for additional capabilities e.g. hardware GPUs field programmable gate arrays (FPGAs)</li>
+<li>Storage Optimized - fast local storage needs - sequential and random IO. Data warehouses, elastic search, data analytics </li>
+</ol>
+<p>Decoding EC2 Types:
+Example: "R5dn.8xlarge"</p>
+<ul>
+<li>Letter at the start is the instance family - specific type/types of computing </li>
+<li>Next (5) is the generation e.g. 5th generation of the family. The latest generation should ideally always be used</li>
+<li>the part of the dot - the size "8xlarge" - the instance size</li>
+<li>the "dn" - additional capability e.g n could mean network optimized </li>
+</ul>
+<p><img src="/KnowledgeGarden/./assets/images/ec2-instance-types.png" alt="EC2 Instance Types"></p>
+<h3 id="storage-refresher">Storage Refresher<a aria-hidden="true" class="anchor-heading icon-link" href="#storage-refresher"></a></h3>
+<p>Storage terms:</p>
+<ul>
+<li>Direct (local) attached storage - Storage on the EC2 Host. Fast but prone to loss</li>
+<li>Network attached storage - volumes delivered over the network (EBS). Resilient but slower</li>
+<li>Ephemeral Storage - temporary storage</li>
+<li>Persistent Storage - Permanent storage - lives on past the lifetime of the instance</li>
+</ul>
+<p>Three main categories of storage available in AWS:</p>
+<ol>
+<li>Block storage - Create a volume that has addressable blocks. No structure provided. The OS usually takes the block storage and creates a file storage on it. Can be HDD or SSD or a logical storage that's backed by physical storage. You can mount and boot off this volume. </li>
+<li>File storage - presented as a file server with a structure already there. Mountable but not bootable since the OS doesn't have low level access to it. </li>
+<li>Object storage - Flat collection of objects. Not mountable or bootable.</li>
+</ol>
+<p>Storage Performance terms:</p>
+<ul>
+<li>I/O (block) size - the size of the blocks of data that you're writing to disk - KB/MB. </li>
+<li>IOPS - input output operations per second - how many reads/writes a disk or storage system can accommodate in a second </li>
+<li>Throughput - amount of data that can be transferred per second - MB/s. Relies on using the right block size and then maximising the number of IOPS</li>
+</ul>
+<p>IO X IOPS = THROUGHPUT</p>
+<h3 id="elastic-block-store-ebs-service-architecture">Elastic Block Store (EBS) Service Architecture<a aria-hidden="true" class="anchor-heading icon-link" href="#elastic-block-store-ebs-service-architecture"></a></h3>
+<ul>
+<li>Provides block storage which can be addressed using block IDs. It takes raw physical discs, and presents a raw allocation of those disks known as volumes. These volumes can be written to or read from using a block number. They can be encrypted</li>
+<li>When you attach a volume to an EC2 they see a block device and they can use it to create a file system on top of it (ext3/4, xfs). They appear just like any other storage design</li>
+<li>Storage is provisioned in ONE AZ. It is separate and isolated within that AZ. </li>
+<li>You can attach to one EC2 instance (or other service) over a storage network. There is a multi attach feature which allows to attach to multiple at a time but it needs to be managed so that there aren't multi writes</li>
+<li>You can de-attach and reattach the EBS to another volume. EBS are persistent so if an instance moves or stops, restarts, the EBS is maintained</li>
+<li>Snapshots can be taken of EBS volumes and they can be regionally resilient by migrating them between AZs and regions </li>
+<li>EBS can provision different physical storage types, sizes and performance profiles</li>
+<li>You are billed based on GB-month (and sometimes performance)</li>
+</ul>
+<p>You can't communicate across AZs for EBS</p>
+<p><img src="/KnowledgeGarden/assets/images/ebs-sample-architecture.png" alt="EBS sample architecture"></p>
+<h3 id="ebs-volume-types---general-purpose">EBS Volume Types - General Purpose<a aria-hidden="true" class="anchor-heading icon-link" href="#ebs-volume-types---general-purpose"></a></h3>
+<p>GP2 - SSD:</p>
+<ul>
+<li>it's high performance storage for a low price. </li>
+<li>from 1GB - 16TB</li>
+<li>Allocated with IO credit of 16KB. IOPS is 16kb. 1 IOPS is 1 IO in 1 second</li>
+<li>IO Credit bucket has a capacity of 5.4 million IO credits</li>
+<li>Bucket fills with min 100 IO credits per second regardless of volume size</li>
+<li>GP2 can burst up to 3000 IOPS by depleting the bucket</li>
+<li>All volumes start with an initial 5.4 million IO credits</li>
+<li>Maximum IO per second is 16,000</li>
+<li>GP2 is flexible storage for general usage. It can be a default if GP3 isn't there yet</li>
+</ul>
+<p>GP3 - SSD:</p>
+<ul>
+<li>Removes the credit architecture of GP2</li>
+<li>Starts at 3000 IOPS &#x26; 125 MiB/s </li>
+<li>20% cheaper than GP2 </li>
+<li>You get benefits of GP2 with this</li>
+<li>Extra cost for up to 16,000 IOPS or 1,000 MiBs</li>
+</ul>
+<h3 id="ebs-volume-types---provisioned-iops">EBS Volume Types - Provisioned IOPS<a aria-hidden="true" class="anchor-heading icon-link" href="#ebs-volume-types---provisioned-iops"></a></h3>
+<p>io1/2 - SSD:</p>
+<ul>
+<li>IOPS is configured independently of the volume. Good for consistent low latency and jitter. </li>
+<li>4x IOPS of gp2/3 (up to 64,000)</li>
+<li>Block express gets you more IOPS and MiBs</li>
+<li>There is a maximum performance that can be achieved - a per instance performance </li>
+<li>Provisioned io can be good for low latency consistency with high levels of performance e.g. low volumes but high performance </li>
+</ul>
+<h3 id="ebs-volume-types---hdd-based">EBS Volume Types - HDD-Based<a aria-hidden="true" class="anchor-heading icon-link" href="#ebs-volume-types---hdd-based"></a></h3>
+<ul>
+<li>These volume types are slower</li>
+</ul>
+<p>Two types of storage in EBS:</p>
+<ol>
+<li>st1 - throughput optimised</li>
+</ol>
+<ul>
+<li>cheap</li>
+<li>125gb - 16tb</li>
+<li>maximum of 500 IOPS - 1mb blocks - max of 500 MB/s</li>
+<li>Useful for big data, data warehouses, log processing</li>
+</ul>
+<ol start="2">
+<li>sc1 - cold HDD</li>
+</ol>
+<ul>
+<li>cheaper</li>
+<li>125gb - 16tb</li>
+<li>designed for infrequent workloads - used for maximum economy where performance isn't as important</li>
+<li>max 250 IOPS - max 250 MB/s </li>
+<li>lowest cost ebs storage type</li>
+<li>cold data with few scans a day</li>
+</ul>
+<h3 id="instance-store-volumes---architecture">Instance Store Volumes - Architecture<a aria-hidden="true" class="anchor-heading icon-link" href="#instance-store-volumes---architecture"></a></h3>
+<ul>
+<li>Block storage devices - raw volumes presented to an instance that present TEMPORARY storage</li>
+<li>Like EBS except local</li>
+<li>physically connected to one EC2 host</li>
+<li>Instances on that host can access those volumes</li>
+<li>High storage performance</li>
+<li>Included in the instance price</li>
+<li>Have to be attached at launch time - CANNOT be attached after like EBS</li>
+<li>these are temporary volumes</li>
+</ul>
+<p><img src="/KnowledgeGarden/./assets//images/instance-store-volumes.png" alt="alt text"></p>
+<ul>
+<li>if you move an instance between hosts, that data is lost. They are given new ephemeral volumes. </li>
+<li>if a physical volume fails, then the instance would lose that data</li>
+<li>these should only be used for temporary data</li>
+<li>some instance types don't support these</li>
+<li>performance is a strength of instance store e.g. 4.6 GB/s - 16 GB/s throughput depending on HDD or SSD</li>
+<li>More IOPS and Throughput VS EBS</li>
+<li>Local to EC2 HOST</li>
+<li>if the volume is resized the data is also lost</li>
+<li>You pay for it with the instance so there is no advantage to not using them</li>
+</ul>
+<h3 id="choosing-between-the-ec2-instance-store-and-ebs">Choosing between the EC2 Instance Store and EBS<a aria-hidden="true" class="anchor-heading icon-link" href="#choosing-between-the-ec2-instance-store-and-ebs"></a></h3>
+<ul>
+<li>Persistence required - default to EBS (avoid Instance store)</li>
+<li>Resilience - as above</li>
+<li>If you need storage isolated from instance lifecycles then use EBS</li>
+<li>If your instance requires resilience but your app supports built-in replication, you could use lots of instances </li>
+<li>If you need high performance - both could be good although super high performance, instance store makes more sense</li>
+<li>If cost is a concern, instance store makes sense as it comes with the instance</li>
+</ul>
+<p>REMEMBER these figures: </p>
+<ul>
+<li>If you need cheap storage but with EBS, use ST1 or SC1 because they are cheaper</li>
+<li>Throughput or streaming should default to DT1</li>
+<li>if you need a boot volume NEITHER ST1 OR SC1 are suitable</li>
+<li>GP/2 - can deliver up to 16,000 IOPS </li>
+<li>IO1/2 - up to 64,000 IOPS (*256,000 for block express for large instance types)</li>
+<li>RAID0 + EBS can achieve 260,000 IOPS (io1/2-BE/GP2/3 combination)</li>
+<li>If you need more than 260,000 and you can deal with less resilience or no persistence, then use Instance Store </li>
+</ul>
+<p>These figures are important to remember:
+<img src="/KnowledgeGarden/./assets/images/instance-store-ebs.png" alt="ec2 instance store vs ebs"></p>
+<h3 id="snapshots-restore--fast-snapshot-restore-fsr">Snapshots, Restore &#x26; Fast Snapshot Restore (FSR)<a aria-hidden="true" class="anchor-heading icon-link" href="#snapshots-restore--fast-snapshot-restore-fsr"></a></h3>
+<ul>
+<li>Backup volumes to s3</li>
+<li>Protect against AZ issues, migrate data between AZs</li>
+<li>Snapshots become region resilient </li>
+<li>Incremental in nature - the first is a full copy of the data on the volume</li>
+<li>Future snapshots only store the difference - consume less space and are quicker to perform</li>
+<li>If you accidentally delete a snapshot, future snapshots will fix any lost saves</li>
+<li>EBS volumes can be blank or based on a restored snapshot </li>
+<li>Snapshots can be copied between regions</li>
+</ul>
+<p><img src="/KnowledgeGarden/./assets/images/EBS-snapshots.png" alt="Ebs Snapshot architecture"></p>
+<p>Nuances to Snapshot/volume performance:</p>
+<ul>
+<li>Snaps restore lazily - fetched gradually</li>
+<li>Fast Snapshot Restore (FSR) is an option to immediately restore</li>
+<li>Up to 50 FSR snaps per region can be restored. Set on the Snap and AZ. </li>
+<li>FSR costs extra and can get expensive</li>
+<li>You can achieve the same end result by manually getting the OS to read all the data in s3 which forces the requested blocks to be pulled in </li>
+<li>Snapshots are billed at Gigabyte per month </li>
+<li>The data stored is the USED not the allocated data e.g if you use 10 of 40gb only 10gb is stored and billed on</li>
+</ul>
+<h3 id="ebs-encryption">EBS Encryption<a aria-hidden="true" class="anchor-heading icon-link" href="#ebs-encryption"></a></h3>
+<ul>
+<li>EBS is not encrypted by default</li>
+<li>EBS Encryption uses a KMS key using either a default KMS/EBS key or a customer managed key</li>
+<li>The key is used to create a data encrypted key (DEK)</li>
+<li>What is stored in the EBS is encrypted and what is in the instance's memory is the decrypted version </li>
+<li>Any snapshot of the EBS will also be encrypted with the same key</li>
+<li>It doesn't cost anything to use so you should use it by default</li>
+<li>Accounts can be set up to encrypt EBS by default</li>
+<li>Each volume uses a 1 unique DEK </li>
+<li>If you create any EBS volumes from a snapshot with an encryption key, it uses that same DEK</li>
+<li>You can't change a volume NOT to be encrypted</li>
+<li>OS isn't aware of the encryption therefore there is no performance loss </li>
+</ul>
+<h3 id="network-interfaces-instance-ips-and-dns">Network Interfaces, Instance IPs and DNS<a aria-hidden="true" class="anchor-heading icon-link" href="#network-interfaces-instance-ips-and-dns"></a></h3>
+<ul>
+<li>
+<p>Instances all start of with 1 network interface (a primary ENI - Elastic Network Interface)</p>
+</li>
+<li>
+<p>Network interfaces need to be in the same AZ as an instance</p>
+</li>
+<li>
+<p>Network instances have a MAC address which is the hardware address</p>
+</li>
+<li>
+<p>Network instances have a primary IPv4 Private IP</p>
+</li>
+<li>
+<p>0 or more secondary private IPs - doesn't change for the lifetime of the instance</p>
+</li>
+<li>
+<p>0 or 1 public IPv4 address - dynamic and will change e.g. when you stop and start an instance (not restarts)</p>
+</li>
+<li>
+<p>1 elastic IP per private IPv4 address - assigning this means the instance will remove the dynamic public IPv4 </p>
+</li>
+<li>
+<p>0 or more Ipv6 addresses (these are publicly routable)</p>
+</li>
+<li>
+<p>Security groups</p>
+</li>
+<li>
+<p>Per interface you can enable/disable source/destination check </p>
+</li>
+<li>
+<p>Secondary interfaces can be moved to other instances</p>
+</li>
+<li>
+<p>you might use different network interfaces for different security groups </p>
+</li>
+<li>
+<p>OS never sees the public IPv4 - this is performed by the internet gateway - You will NEVER configure an IPv4 public address </p>
+</li>
+<li>
+<p>Public DNS will resolve to the primary private IP in the VPC. Instance to instance communication will not leave the VPC because of this. Everywhere else, it resolves to the public IP address. </p>
+</li>
+</ul>
+<h3 id="amazon-machine-images-ami">Amazon Machine Images (AMI)<a aria-hidden="true" class="anchor-heading icon-link" href="#amazon-machine-images-ami"></a></h3>
+<ul>
+<li>Images of EC2 - you can create a template of an instance configuration and use that template to create other instances</li>
+<li>When you create an instance you're using AWS provided AMIs but you can create your own</li>
+<li>AMIs can be AWS or Community provided as well e.g. Redhat, Centos, Ubuntu</li>
+<li>Marketplace also provide AMIs which include commercial software</li>
+<li>AMIs are regional and they have a unique ID (ami-[letters, numbers])</li>
+<li>AMIs can control permissions (public, your account, specific accounts)</li>
+<li>You can create an AMI from an existing EC2 instance</li>
+</ul>
+<p>AMI Lifecycle:</p>
+<ol>
+<li>Launch - create an instance from AMI</li>
+<li>Configure - Customising your instance </li>
+<li>Create image - Creating a new AMI from the instance - Snapshots are also taken of EBS volumes and they are references by the AMI as block device mapping</li>
+<li>Launch - when the AMI is used to create a new instance, it will have the same EBS volume as the original </li>
+</ol>
+<ul>
+<li>AMI's are in ONE region. Only works in that region but it can be used to deploy into all AZs in that region</li>
+<li>AMI Baking - creating an AMI from configured instance</li>
+<li>AMI <strong>can't be edited</strong> - you need to launch an instance, update the config and make a new AMI </li>
+<li>AMI can be copied between regions but they become SEPARATE AMIs </li>
+<li>Permissions of AMI by default is your account - it can be private, public or given to specific accounts</li>
+</ul>
+<h3 id="ec2-purchase-options">EC2 Purchase Options<a aria-hidden="true" class="anchor-heading icon-link" href="#ec2-purchase-options"></a></h3>
+<ul>
+<li>Sometimes known as launch types
+On demand:
+<ul>
+<li>default</li>
+<li>Instances of different sizes run on the same EC2 hosts with different AWS customers.</li>
+<li>On demand uses per second billing while instances are running. Associated storage e.g. storage will charge even when the instances are shut down</li>
+<li>For all projects, assume on demand and move only when needed</li>
+<li>No interruptions</li>
+<li>Will not give you priority access if there are any failures</li>
+<li>Predictable pricing, upfront costs but no discounts</li>
+<li>Good for short term workloads or unknown workloads</li>
+<li>For apps that can't be interrupted</li>
+</ul>
+</li>
+</ul>
+<p>Spot pricing:</p>
+<ul>
+<li>Cheapest </li>
+<li>AWS sells spare capacity in an EC2 host at a discounted rate (up to 90% discount)</li>
+<li>Will charge up to your maximum price before terminating any of your instances</li>
+<li>Never use SPOT for workloads which can't tolerate interruptions</li>
+<li>Good fits for SPOT workloads are things that are not time critical or can tolerate interruption/re-run e.g. media processing</li>
+</ul>
+<p>Reserved instances:</p>
+<ul>
+<li>For long term consistent usage of EC2</li>
+<li>Reduce the per-second cost or remove it entirely </li>
+<li>It's possible to reserve and not use and therefore still be built</li>
+<li>You can commit for 1 year of 3 years - the longer the more discounted but you need to be careful of wasted resource</li>
+<li>You can choose to pay no upfront - per second fee </li>
+<li>You can choose upfront means no per second fee so you get the greatest discount here</li>
+<li>Partial upfront - pay a smaller lump sum in advance for a lower per-second cost</li>
+</ul>
+<p>Dedicated host:</p>
+<ul>
+<li>An EC2 host that is dedicated to you in it's entirety </li>
+<li>You pay for the host - the instances on the host you don't pay for so they can be any size up until the capacity</li>
+<li>You have a feature called host affinity - stopping and starting instances means that they can stay on the same host</li>
+<li>A good use case for dedicated host is you are using software that has licensing based on socket and core</li>
+</ul>
+<p>Dedicated Instances:</p>
+<ul>
+<li>A middle ground - instances run on ec2 hosts with other instances of yours and no other customers use the same hardware. You don't pay for the host nor share. You don't to manage the host itself </li>
+<li>You have to pay one off hourly fee for any regions where you use them</li>
+<li>A fee for the dedicated industry itself</li>
+<li>This is where you may be an industry where you cannot use the same underlying hardware as other customers</li>
+</ul>
+<p>Focus : On-demand, spot and reserved for the exam</p>
+<h3 id="reserved-instances---the-rest">Reserved Instances - the rest<a aria-hidden="true" class="anchor-heading icon-link" href="#reserved-instances---the-rest"></a></h3>
+<ul>
+<li>If you need access to the cheapest ec2 running all the time then you would pick standard reserved</li>
+<li>Scheduled reserved:</li>
+<li>are great for when you have long term requirements but when it doesn't need to be run constantly e.g. batch processing</li>
+<li>If you reserve for that time window that's the only time you can use it </li>
+<li>Doesn't support all instance types and regions. 1,200 hours per year and 1 year minimum terms</li>
+<li>Capacity reservations
+<ul>
+<li>have a requirement for some compute that you can guarantee you can launch when you need</li>
+<li>You can purchase a reservation and make it a regional one, you get billing discounts on instances in the AZ. They don't reserve capacity within an AZ which is risky during major faults when capacity can be limited</li>
+<li>You can pick a zonal reservation - only apply to one AZ providing billing discounts and capacity reservation in that AZ</li>
+<li>Regional/AZ are both 1 or 3 year commitment - you can choose on demand capacity reservation  - can be booked to ensure you always have access to capacity in an AZ when you need it but at full on demand price. You will pay regardless of whether you consume it </li>
+</ul>
+</li>
+</ul>
+<p>Savings plan: </p>
+<ul>
+<li>an hourly commit for 1-3 years and you get a reduction </li>
+<li>You can make a reservation for general compute amounts </li>
+<li>Or a specific EC2 savings plan </li>
+</ul>
+<h3 id="instance-status-checks--auto-recovery">Instance Status Checks &#x26; Auto Recovery<a aria-hidden="true" class="anchor-heading icon-link" href="#instance-status-checks--auto-recovery"></a></h3>
+<ul>
+<li>Every instance has two high level per instance checks:
+<ol>
+<li>Systems status - failure could mean loss of system power, loss of network connectivity, host software issues, hardware issues</li>
+<li>Instance status - corrupt file system, incorrect instance networking, OS kernel issues </li>
+</ol>
+</li>
+<li>You can manually stop/restart an instance to fix status checks otherwise you can set up auto-recovery </li>
+</ul>
+<h3 id="horizontal--vertical-scaling">Horizontal &#x26; Vertical Scaling<a aria-hidden="true" class="anchor-heading icon-link" href="#horizontal--vertical-scaling"></a></h3>
+<ul>
+<li>Two different ways to handle increasing and decreasing load on the system</li>
+</ul>
+<p>Vertical scaling: </p>
+<ul>
+<li>Use a bigger server e.g. using a different ec2 instance i.e. go from t3.large to t3.xlarge</li>
+<li>There will be downtime when you do this - you should do it during an outage window </li>
+<li>Larger instance carry a price premium </li>
+<li>there is an upper cap on the performance of an instance</li>
+<li>No application modification required</li>
+<li>works for all applications even monolithic </li>
+</ul>
+<p>Horizontal scaling:</p>
+<ul>
+<li>Instead of increasing the size of an individual instance, you add more instances with load</li>
+<li>Instead of one running copy of your application you will have multiple that need to work together</li>
+<li>For that reason you will need a load balancer usually so that the load is distributed across the instances</li>
+<li>Sessions handling is important - since you may be shifting between instances constantly - you would need application support or <strong>off-host sessions</strong> which means that the session is stored somewhere else e.g. another db</li>
+<li>Using off-host sessions would mean the application is stateless - the application doesn't care which instance you connect to </li>
+<li>You have no disruption while you're scaling - customer connections remain unaffected and if the sessions are externally hosted it wouldn't matter if you scale down either</li>
+<li>There are no real limits to horizontal scaling </li>
+<li>Often less expensive - no large instance premium </li>
+<li>more granular in terms of resource management </li>
+</ul>
+<h3 id="instance-metadata">Instance Metadata<a aria-hidden="true" class="anchor-heading icon-link" href="#instance-metadata"></a></h3>
+<ul>
+<li>A service EC2 provides to instances where you can access data about an instance</li>
+<li>Used to configure and manage an instance</li>
+<li>Accessible inside all instances - you access it via the IP: <a href="http://169.254.169.254">http://169.254.169.254</a> -> <a href="http://169.254.169.254/latest/meta-data/">http://169.254.169.254/latest/meta-data/</a></li>
+<li>Data/information provided:
+<ul>
+<li>environment</li>
+<li>networking</li>
+<li>authentication</li>
+<li>user-data</li>
+<li>NOT AUTHENTICATED or ENCRYPTED - if you connect to an ec2 you can access this. You can restrict it with a firewall for extra money</li>
+</ul>
+</li>
+</ul>
+<h2 id="containers--ecs">Containers &#x26; ECS<a aria-hidden="true" class="anchor-heading icon-link" href="#containers--ecs"></a></h2>
+<h3 id="introduction-to-containers">Introduction to Containers<a aria-hidden="true" class="anchor-heading icon-link" href="#introduction-to-containers"></a></h3>
+<ul>
+<li>A container is similar to a VM in that in provides an isolated environment </li>
+<li>Where virtual machines run a whole isolated OS, a container runs as a process within the host operating system </li>
+<li>The processes are like isolated OS</li>
+<li>Containers are much lighter than virtual machines since they don't need to run a full OS</li>
+<li>A container is a running copy of a docker image</li>
+<li>Docker images are a stack of layers created using a docker file</li>
+<li>Docker images are how we create a docker container - a running copy of a docker image</li>
+<li>A container registry is a hub of container images - it can be private or public e.g. docker hub</li>
+</ul>
+<p>Container key concepts:</p>
+<ul>
+<li>Dockerfiles are used to build images</li>
+<li>Containers are portable, self contained and always run as expected</li>
+<li>Containers and images are super lightweight</li>
+<li>Containers only run the application and environment it needs</li>
+<li>Provide much of the isolation VMs do</li>
+<li>Ports are 'exposed' to the host and beyond</li>
+</ul>
+<h3 id="ecs---concepts">ECS - Concepts<a aria-hidden="true" class="anchor-heading icon-link" href="#ecs---concepts"></a></h3>
+<ul>
+<li>
+<p>ECS is a product that allows you to run containers fully or partially managed by AWS - it takes away much of the admin overhead of managing containers</p>
+</li>
+<li>
+<p>ECS to containers is what ec2 is to virtual machines</p>
+</li>
+<li>
+<p>ECS uses clusters which runs in two modes: ec2 mode which uses ec2 instances as container hosts or fargate mode which is a serverless way of running docker containers </p>
+</li>
+<li>
+<p>ECS lets you create a cluster</p>
+</li>
+<li>
+<p>AWS also have a container registry called ECR (elastic container registry)</p>
+</li>
+<li>
+<p>A task in ECS represents the container as a whole </p>
+</li>
+<li>
+<p>A task role is the IAM role a task can assume to interact with AWS resources - a task role is the best way to give permission to containers</p>
+</li>
+<li>
+<p>Tasks and containers are separate things. A task can include one or more containers. </p>
+</li>
+<li>
+<p>A service definition is how we can define a task to scale and how we want it to run </p>
+</li>
+<li>
+<p>A container definition - defines the image and ports that will be used for a container - points to a container image in a registry</p>
+</li>
+<li>
+<p>A task definition applies to the application as a whole. It can be a single container definition or multiple containers and multiple container definitions. It's also where you define a task role and the resources that your task is going to consume</p>
+</li>
+<li>
+<p>A task role is the IAM role which hte task assumes </p>
+</li>
+<li>
+<p>Service - how many copies of a task you want to run, High availability, restarts </p>
+</li>
+</ul>
+<h3 id="ecs---cluster-mode">ECS - Cluster Mode<a aria-hidden="true" class="anchor-heading icon-link" href="#ecs---cluster-mode"></a></h3>
+<p>EC2 cluster types defines a number of things but one of them is how much admin overhead surrounding running a set of container hosts that you manage vs how many AWS manage. </p>
+<p>EC2 Mode:</p>
+<ul>
+<li>Start with an ECS management component (also exists in fargate) - handle high level tasks</li>
+<li>An ECS cluster is created within VPC in your AWS account  - benefits from the multiple AZs</li>
+<li>EC2s are used to run containers</li>
+<li>Auto scaling groups are used </li>
+<li>If you want to use containers in your infrastructure but you want to also manage host capacity and availability then EC2 mode is the appropriate choice</li>
+<li>With EC2 mode, even if you're not running any tasks or services in your containers, you will still be paying for them while they're running</li>
+</ul>
+<p>Fargate mode:</p>
+<ul>
+<li>removes more overhead </li>
+<li>you have no servers to manage - you won't have to pay for EC2 instances</li>
+<li>AWS have a shared fargate infrastructure</li>
+<li>Fargate still operates in VPC and across AZ</li>
+<li>Tasks and services run on the shared infrastructure platform and are then injected into your VPC - they're given network interfaces inside the VPC</li>
+<li>You only pay for the containers you are using based on the resources they consume - you don't need to manage or provision hosts</li>
+</ul>
+<p>EC2 vs ECS (EC2) vs Fargate:</p>
+<ul>
+<li>if you use containers, use ECS over EC2</li>
+<li>Pick EC2 mode when you have a large workload and price conscious organisation - you can use reserved pricing and try to optimise </li>
+<li>Large workload but overhead conscious - use fargate </li>
+<li>Small or burst style workloads - fargate makes sense as you only use for the resources the container uses</li>
+<li>batch/periodic workloads - fargate</li>
+</ul>
+<h3 id="elastic-container-registry-ecr">Elastic Container Registry (ECR)<a aria-hidden="true" class="anchor-heading icon-link" href="#elastic-container-registry-ecr"></a></h3>
+<ul>
+<li>ECR is a managed container image registry service - like docker hub but for AWS</li>
+<li>We have public and private registries - each aws is provided with one of each. </li>
+<li>Each registry can have many repositories (think of github)</li>
+<li>Inside each repo you can have many container images and these can have several tags. </li>
+<li>The tags need to be unique within your repository</li>
+<li>public registry means that anyone can have read only access to anything within that repo (read write needs permission)</li>
+<li>private registry means permission required for read only OR read write</li>
+<li>ECR is integrated with IAM for permission</li>
+<li>Image scanning is either in basic or enhanced (using inspector product)</li>
+<li>ECR provides near real time metrics - delivered into cloud watch (auth, push, pull)</li>
+<li>ECR logs all api actions into cloud trail</li>
+<li>Generates events that are pushed to eventbridge</li>
+<li>offers replication cross region and cross-account</li>
+</ul>
+<h3 id="kubernetes-101">Kubernetes 101<a aria-hidden="true" class="anchor-heading icon-link" href="#kubernetes-101"></a></h3>
+<ul>
+<li>Open source container orchestration system - use it to automate the deployment, scaling and management of containerised applications</li>
+<li>A cloud agnostic product so you can use it on many cloud platforms </li>
+<li>A kubernetes cluster is a highly available cluster of compute resources which are organised to work as one unit</li>
+<li>The cluster starts with a cluster control plane - it manages the cluster, scheduling, applications, deploying</li>
+<li>Cluster nodes are VM or Physical servers which function as a worker in the cluster - they run the containerized applications</li>
+<li>containerd or docker is the software for handling container operations </li>
+<li>kubelet is the agent to interact with the cluster control plane </li>
+<li>kubelet interacts with the control plane using kubernetes API </li>
+<li>Pods are the smallest unit of computing in kubernetes. It's common to see one container one pod architecture </li>
+<li>You could run multiple containers in a pod but it's usually when they're tightly coupled and are in close proximity </li>
+<li>You will rarely manage pods directly - they are temporary</li>
+<li>kube-api server is the front end for kubernetes control plane</li>
+<li>etcd provides a highly available key-value store - main backing store</li>
+<li>kube-scheduler - responsible for checking pods that don't have a node assigned - will assign based on constraints</li>
+<li>optional component - cloud-controlled-manager - provides cloud specific control logic i.e. AWS/azure/GCP </li>
+<li>kube controller manager - cluster controller processing - node controller, job controller, endpoint controller, service account &#x26; token controllers</li>
+<li>on every node - kube proxy is a network proxy - it coordinates networking with the control plane </li>
+</ul>
+<p>summary terms:</p>
+<ul>
+<li><strong>cluster</strong> deployment of kubernetes</li>
+<li><strong>node</strong> - resources: pods are placed on nodes</li>
+<li><strong>pods</strong> - smallest unit in kubernetes - often 1 container 1 pod </li>
+<li><strong>services</strong> - an abstraction from pods - service running on 1 or more pods</li>
+<li><strong>job</strong> - ad-hoc, creates one or more pods until completion</li>
+<li><strong>ingress</strong> - exposes a way into a service </li>
+<li><strong>ingress controller</strong> - used to provide ingress e.g. AWS LB controller</li>
+<li><strong>Persistent storage (PV)</strong> - provision long running storage to your applications</li>
+</ul>
+<h3 id="elastic-kubernetes-service-eks-101">Elastic Kubernetes Service (EKS) 101<a aria-hidden="true" class="anchor-heading icon-link" href="#elastic-kubernetes-service-eks-101"></a></h3>
+<ul>
+<li>A fully-managed kubernetes implementation that simplifies the process of building, securing, operating and maintaining kubernetes clusters </li>
+<li>Can run on AWS, outposts, EKS anywhere, EKS distro - open source</li>
+<li>Control plane is managed by AWS and scales based on load across multiple AZs</li>
+<li>Integrates with other AWS services - ECR, ELB, IAM, VPC</li>
+<li>EKS Cluster = EKS Control Plane &#x26; EKS Nodes</li>
+<li>etcd is distributed across multiple AZs</li>
+<li>Nodes can be self managed, or managed groups or fargate pods - deciding between these is checking the node type and what it needs</li>
+<li>For persistent storage - can use EBS, EFS, FSx</li>
+</ul>
+<h2 id="advanced-ec2">Advanced EC2<a aria-hidden="true" class="anchor-heading icon-link" href="#advanced-ec2"></a></h2>
+<h3 id="bootstrapping-ec2-using-user-data">Bootstrapping EC2 using User Data<a aria-hidden="true" class="anchor-heading icon-link" href="#bootstrapping-ec2-using-user-data"></a></h3>
+<ul>
+<li>
+<p>Bootstrapping is the process of bringing an instance with a certain pre-configured state</p>
+</li>
+<li>
+<p>Bootstrapping is a general term outside of AWS</p>
+</li>
+<li>
+<p>Within EC2 it can allow build automation</p>
+</li>
+<li>
+<p>Bootstrapping in EC2 is enabled using ec2 User Data - accessed via the meta-data IP (169.254.196.254/latest/user-data)</p>
+</li>
+<li>
+<p>Anything in the user data is executed by the instance OS </p>
+</li>
+<li>
+<p>Executed ONLY on the FIRST initial launch </p>
+</li>
+<li>
+<p>EC2 doesn't interpret, the OS needs to understand the User Data</p>
+</li>
+<li>
+<p>EC2 on launch checks User Data and executes it or errors on a bad config</p>
+</li>
+<li>
+<p>User data:</p>
+<ul>
+<li>is opaque to EC2 - it is just a block of data</li>
+<li>not secure - don't use it for passwords or long term credentials</li>
+<li>limited to 16kb in size</li>
+<li>can be modified but the contents are only executed ONCE on launch</li>
+</ul>
+</li>
+</ul>
+<p>Boot time to service time - how quickly after you launch an instance is it ready to use</p>
+<ul>
+<li>For an aws managed AMI it's usually in minutes</li>
+<li>You can do the work in advance by AMI baking</li>
+<li>the optimal way is to combine bootstrapping and baking - use AMI baking for any part of the process that is time intensive</li>
+</ul>
+<h3 id="enhanced-bootstrapping-with-cfn-init">Enhanced Bootstrapping with CFN-INIT<a aria-hidden="true" class="anchor-heading icon-link" href="#enhanced-bootstrapping-with-cfn-init"></a></h3>
+<ul>
+<li>A way you can pass complex bootstrapping instructions to EC2 instances</li>
+<li>cfn-init is a helper script which is installed on EC2 OS</li>
+<li>User data is procedural where as cfn-init is the desired state (declarative)</li>
+<li>can work with packages, groups, users, sources, files, commands and services</li>
+<li>Provided with directives via Metadata and AWS::CLoudFormation:Init on a CFN resource</li>
+<li>Unlike with user-data that only works on first launch, cfn-init can work with stack updates so that it can execute again and update the configuration of that instance</li>
+</ul>
+<p>Cloudformation creation policies and signals:</p>
+<ul>
+<li>Creation policies is something that is added to a logical resource with a timeout value. It waits for a signal from the resource as either a success or error. The resource in cloud formation will show that there is an error if there is one</li>
+</ul>
+<h3 id="ec2-instance-roles--profile">EC2 Instance Roles &#x26; Profile<a aria-hidden="true" class="anchor-heading icon-link" href="#ec2-instance-roles--profile"></a></h3>
+<ul>
+<li>EC2 instance roles are roles that an instance can assume and anything running in that instance has those permissions</li>
+<li>An instance profile is a wrapper around an IAM role, it's a way to put the credentials into an instance. This is what gets attached to an ec2 instance. </li>
+<li>The credentials are delivered by tbe instance meta-data. The credentials are always renewed before they expired. It will never be in a position where they expire. (automatically rotated)</li>
+<li>Credentials are in /iam/security-credentials/role-name</li>
+<li>Always use roles where possible - they are always preferable to use as opposed to long term credentials </li>
+<li>CLI tools use ROLE credentials automatically </li>
+</ul>
+<h3 id="ssm-parameter-store">SSM Parameter Store<a aria-hidden="true" class="anchor-heading icon-link" href="#ssm-parameter-store"></a></h3>
+<ul>
+<li>Parameter store is a storage for configuration and secrets</li>
+<li>Many AWS services integrate with Parameter store natively</li>
+<li>Allows you to store 3 different types of parameters: String, StringList, SecureString</li>
+<li>You can store License codes, database strings, full configs and passwords</li>
+<li>Allows you to store in hierarchies and use versioning</li>
+<li>Can store plaintext and ciphertext (can integrate with KMS)</li>
+<li>Public parameters available e.g latest AMIs per region</li>
+<li>anything using it needs to be an AWS service or have access to the public endpoints</li>
+</ul>
+<h3 id="system-and-application-logging-on-ec2">System and Application Logging on EC2<a aria-hidden="true" class="anchor-heading icon-link" href="#system-and-application-logging-on-ec2"></a></h3>
+<ul>
+<li>Cloudwatch is for metrics and cloudwatch logs is for logging</li>
+<li>Neither of those products natively capture data inside an instance</li>
+<li>A cloudwatch agent is required - it runs in the ec2 instance and captures OS visible data and sends it to cloudwatch or cloudwatch logs</li>
+<li>It needs the configuration and permissions to be able to access and send that data</li>
+</ul>
+<h3 id="ec2-placement-groups">EC2 Placement Groups<a aria-hidden="true" class="anchor-heading icon-link" href="#ec2-placement-groups"></a></h3>
+<ul>
+<li>EC2 usually selects an AZ for you when you launch an instance</li>
+<li>Placement groups ensure that instances are physically close together or not</li>
+<li>There are three types of placement groups:</li>
+</ul>
+<ol>
+<li>Cluster - any instances in a single cluster placement group are physically close together</li>
+<li>Spread - the inverse where instances are kept separate </li>
+<li>Partition - for distributed and replicated applications where each group is on different hardware </li>
+</ol>
+<p>Best practice with cluster group is to launch all the instances at the same time.
+Typically instances in the same group are usually on the same rack, sometimes the same host. They have a direct connection to each other which ensures there is speedy communication between them. Lowest latency and max PPS possible in AWS. </p>
+<p><strong>Cluster placement groups</strong> are used when you really need performance. The con is that there are little resilience because if the AZ goes down the whole cluster goes down.</p>
+<ul>
+<li>You can't span cluster placement groups across AZs - they must be on ONE AZ only and this is locked when launching first instance </li>
+<li>You can span VPC peers but it will signifcantly impact performance</li>
+<li>Not supported on every instance type</li>
+<li>You should use the same type of instance (although it's not mandatory)</li>
+<li>You should launch them at the same time (this is again not mandatory but <strong>very recommended</strong>). </li>
+<li>Offer 10gbps single stream performance</li>
+<li>Use cases: Performance, fast speeds, low latency e.g. high compute</li>
+</ul>
+<p><strong>Spread placement groups</strong>: </p>
+<ul>
+<li>designed to ensure the maximum amount of availability and resilience </li>
+<li>Can be across availability zones</li>
+<li>Instances are on separate racks so if a rack fails, it won't affect the other instances</li>
+<li>There is a limit to 7 instances per AZ</li>
+<li>Provides infrastructure isolation - every instance will be entirely separate from every other instance in that spread placement group</li>
+<li>each instance runs from a different rack with its own network and power source</li>
+<li>You can't use dedicated instances or hosts </li>
+<li>Use case: small number of critical instances that need to be kept separate from each other </li>
+</ul>
+<p><strong>Partition placement groups</strong>:</p>
+<ul>
+<li>Similar to spread groups </li>
+<li>Designed for when you have infrastructure where you have more than 7 instances per AZ but you still have a requirement to separate them </li>
+<li>Can be created across multiple AZs and you must specify the number of partitions per AZ with a maximum of 7 partitions per AZ.</li>
+<li>Each partition has it's own rack and power </li>
+<li>You can launch as many instances as you need per partition and you can either select the partition explicitly or have AWS make that decision on your behalf </li>
+<li>Great for topology aware applications such as HDFS, HBase and Cassandra </li>
+<li>Can help topology aware applications contain the impact of a failure to part of an application </li>
+</ul>
+<h3 id="dedicated-hosts">Dedicated Hosts<a aria-hidden="true" class="anchor-heading icon-link" href="#dedicated-hosts"></a></h3>
+<ul>
+<li>A dedicated host is an EC2 host that is dedicated to you in it's entirety</li>
+<li>the host is designed for a specific family of instances e.g. a1, c5, m5 etc </li>
+<li>No instance charges - you pay for the host</li>
+<li>Can either pay on demand or reserve options</li>
+<li>Host hardware comes with a certain number of physical sockets and cores - this dictates how many instances can be run and some software is licensed on the number of sockets and cores of the hardware </li>
+<li>Older hosts required all the instances to be the same size but newer ones allow you to mix sizes</li>
+</ul>
+<p>Limitations and features:</p>
+<ul>
+<li>AMI Limits - you can't use RHEL, SUSE linux, Windows AMIs</li>
+<li>Can't use Amazon RDS instances</li>
+<li>Can't use placement groups </li>
+<li>Hosts can be shared with other accounts in the org using RAM (resource access manager) and those other accounts can create instances on that host. They can only see the instances they created only. You as the owner of the host cannot control the ones that are created by other accounts </li>
+<li>Dedicated hosts are generally used for software licensing / licensing issues. It's not typically the approach you would take just for running EC2 instances</li>
+</ul>
+<h3 id="enhanced-networking--ebs-optimized">Enhanced Networking &#x26; EBS Optimized<a aria-hidden="true" class="anchor-heading icon-link" href="#enhanced-networking--ebs-optimized"></a></h3>
+<ul>
+<li>Enhanced network is a feature which is designed to improve the overall performance of EC2 networking</li>
+<li>Required for any high end performance features such as cluster placement groups</li>
+<li>Uses SR-IOV - Makes it so a physical network interface in an EC2 instance is aware of virtualization</li>
+<li>Offers logical cards per physical card - gives each instance exclusive access to each logical card. Handles the process end to end without consuming the host process' CPU</li>
+<li>Higher I/O and lower host CPU usage as a result</li>
+<li>more bandwidth </li>
+<li>higher packets per second (PPS)</li>
+<li>Consistent lower latency</li>
+<li>Available at no charge for EC2 and available on most EC2 types but needs to be configured</li>
+</ul>
+<p>EBS Optimized </p>
+<ul>
+<li>Historically,  network used to be shared by data and EBS</li>
+<li>EBS Optimisation means a dedicated capacity is provided for EBS usage</li>
+<li>This means faster speeds for EBS and it doesn't impact the data side</li>
+<li>Most instances support and have enabled by default </li>
+<li>Some older instances its supported but enabling costs extra</li>
+</ul>
+<h2 id="route-53---global-dns">Route 53 - Global DNS<a aria-hidden="true" class="anchor-heading icon-link" href="#route-53---global-dns"></a></h2>
+<h3 id="r53-public-hosted-zones">R53 Public Hosted Zones<a aria-hidden="true" class="anchor-heading icon-link" href="#r53-public-hosted-zones"></a></h3>
+<ul>
+<li>
+<p>There are two types of DNZ Zones in Route 53 - public and private. </p>
+</li>
+<li>
+<p>A hosted zone is a DNS database for a given section of the global DNS database e.g. animals4life.org</p>
+</li>
+<li>
+<p>A globally resilient service</p>
+</li>
+<li>
+<p>Hosted zones are created automatically via R53 - or separately and R53 will host it</p>
+</li>
+<li>
+<p>A zone hosts DNS records e.g. A, AAAA, MX, NS, TXT</p>
+</li>
+<li>
+<p>A hosted zone is what the dns system references and it's authoritative for that domain</p>
+</li>
+<li>
+<p>A public hosted zone is a DNS database hosted by R53 on public name servers</p>
+</li>
+<li>
+<p>Accessible from public internet and VPC</p>
+</li>
+<li>
+<p>Hosted on 4 x r53 name servers (NS) specific for the zone</p>
+</li>
+<li>
+<p>Use the ns records to point at those 4 x route</p>
+</li>
+<li>
+<p>To integrate it with the public DNS system, you change the NS records to point at the 4 name servers</p>
+</li>
+<li>
+<p>Inside a public hosted zone, you create resource records which DNS uses</p>
+</li>
+<li>
+<p>You can use route 53 to host zone files for externally registered domains</p>
+</li>
+</ul>
+<h3 id="r53-private-hosted-zones">R53 Private Hosted Zones<a aria-hidden="true" class="anchor-heading icon-link" href="#r53-private-hosted-zones"></a></h3>
+<ul>
+<li>Operates the same way as a public zone except it's not public </li>
+<li>It's associated with VPCs within AWS and it's only accessible there</li>
+<li>Can also associate it to different accounts</li>
+<li>Can use a split-view technique where you can have overlapping public and private for public and internal use with the same zone name e.g. private intranet websites</li>
+<li>Private zone is inaccessible from the internet - but it can be made accessible with VPCs. </li>
+<li>VPC can access the private zone via route53 resolver</li>
+<li>If you create a public hosted zone with the same name that is how a split view could work. You have specific records in each.</li>
+</ul>
+<h3 id="cname-vs-r53-alias">CNAME vs R53 Alias<a aria-hidden="true" class="anchor-heading icon-link" href="#cname-vs-r53-alias"></a></h3>
+<p>If we only use CNAMES:</p>
+<ul>
+<li>In DNS an A record maps a name to an IP address i.e. catagram.io => 1.3.3.7</li>
+<li>CNAME maps a NAME to another NAME e.g. <a href="http://www.catagram.io">www.catagram.io</a> => catagram.io</li>
+<li>You can't use CNAME for the APEX of the domain i.e. you can't have catagram.io pointing at something else</li>
+<li>Many AWS services use a DNS Name (ELB)</li>
+<li>Therefore if you only use CNAME - catagram.io => ELB would be invalid </li>
+<li>Alias record fixes this</li>
+</ul>
+<p>An ALIAS record:</p>
+<ul>
+<li>Maps a NAME onto an AWS resource</li>
+<li>Can be used for naked/apex and normal records</li>
+<li>For non apex/naked it functions like CNAME</li>
+<li>There is no charge for ALIAS requests pointing to AWS resources</li>
+<li>For AWS services e.g. cloudfront, gateway, s3 buckets - you should default to picking ALIAS</li>
+<li>An ALIAS is a subtype - you need to manage the record type with the type youre pointing to e.g. elastic balancer is A record therefore you need to create an A record ALIAS</li>
+<li>Can only use ALIAS if you're using route 53</li>
+</ul>
+<h3 id="simple-routing">Simple Routing<a aria-hidden="true" class="anchor-heading icon-link" href="#simple-routing"></a></h3>
+<ul>
+<li>Simple routing supports 1 record per name</li>
+<li>Each record can have multiple values</li>
+<li>Simple routing should be used when you want to route request to one single service e.g a web server</li>
+<li>It doesn't support health checks </li>
+<li>simple to implement and manage</li>
+</ul>
+<h3 id="r53-health-checks">R53 Health Checks<a aria-hidden="true" class="anchor-heading icon-link" href="#r53-health-checks"></a></h3>
+<ul>
+<li>Separate from but are used by records in route 53</li>
+<li>Performed by a fleet of health checkers distributed globally</li>
+<li>Not limited to just AWS targets - can check anything that is accessible by IP</li>
+<li>Check every 30s but can be every 10s (cost extra)</li>
+<li>Test TCP, HTTP/HTTPS, HTTP/HTTPS with string matching </li>
+<li>An endpoint is either healthy or unhealthy</li>
+<li>Types of checks: Endpoint, Cloudwatch Alarm, checks of checks </li>
+<li>if 18%+ of distributed checkers report a healthy then the health check is healthy</li>
+<li>Commonly uses s3 as a back up</li>
+</ul>
+<h3 id="failover-routing">Failover Routing<a aria-hidden="true" class="anchor-heading icon-link" href="#failover-routing"></a></h3>
+<ul>
+<li>You can add a backup/failure resource with the inclusion of a health check on the primary record </li>
+<li>Use this when you want to configure active-passive failover </li>
+</ul>
+<h3 id="multi-value-routing">Multi value routing<a aria-hidden="true" class="anchor-heading icon-link" href="#multi-value-routing"></a></h3>
+<ul>
+<li>A mix of simple and failover</li>
+<li>Can create many records with the same name</li>
+<li>Each record can have an associated health check</li>
+<li>Up to 8 healthy records are randomly selected</li>
+<li>Client chooses and uses 1 value</li>
+<li>Any failed health check records won't be returned</li>
+<li>More of an active-active method</li>
+<li>Not a replacement for a load balancer</li>
+<li>Improves availability of an application </li>
+</ul>
+<h3 id="weighted-routing">Weighted Routing<a aria-hidden="true" class="anchor-heading icon-link" href="#weighted-routing"></a></h3>
+<ul>
+<li>A simple form of load balancing</li>
+<li>You're able to specify a weight for each record</li>
+<li>The total weight is calculated for a given name </li>
+<li>A record with the weight of 0 never gets returned</li>
+<li>Each record is returned based on it's record weight vs total weight</li>
+<li>If a record returned is unhealthy, it repeats until a healthy record is chosen</li>
+<li>Useful for when you have records with the same name and want to test the distribution </li>
+</ul>
+<h3 id="latency-routing">Latency Routing<a aria-hidden="true" class="anchor-heading icon-link" href="#latency-routing"></a></h3>
+<ul>
+<li>When you want to optimise for performance and user experience</li>
+<li>For each of the records with the same name, you can use different regions </li>
+<li>In the background, aws maintains a latency between different regions </li>
+<li>A record that has the lowest latency based on region is chosen for a user</li>
+<li>If a record is unhealthy then the second lowest latency is returned</li>
+<li>The database AWS maintains is not real time</li>
+</ul>
+<h3 id="geolocation-routing">Geolocation Routing<a aria-hidden="true" class="anchor-heading icon-link" href="#geolocation-routing"></a></h3>
+<ul>
+<li>Similar to latency except the location of customers and resources is the influencing factor</li>
+<li>With geolocation routing, records are tagged with a location e.g. country, continent or default </li>
+<li>When a user is making a request, the IP check verifies the location of the user. Then the relevant record is returned (not the closest) - it checks the state first, the country next and then the continent. Optionally it returns the default you defined. If there is no default then a NO ANSWER is returned. </li>
+<li>This is ideal for restricting content e.g. to the usa only</li>
+<li>For language specific content or balancing across regional locations</li>
+<li>This is about location not proximity. E.G. if you're not based in a specific state the record is defined for in the state, then you wont get that record</li>
+</ul>
+<h3 id="geoproximity">Geoproximity<a aria-hidden="true" class="anchor-heading icon-link" href="#geoproximity"></a></h3>
+<ul>
+<li>Aims to return records as close to your users as possible</li>
+<li>Records can be tagged by AWS region or lat and long coordinates</li>
+<li>Allows us to define a bias - how route 53 handles a calculation .e.g + - bias where "+" increases the region size and "-" decreases neighbouring regions </li>
+<li>Bias expands/shrinks the region to direct traffic to</li>
+</ul>
+<h3 id="r53-interoperability">R53 Interoperability<a aria-hidden="true" class="anchor-heading icon-link" href="#r53-interoperability"></a></h3>
+<ul>
+<li>
+<p>Using route 53 to register domain or host domain files when the other part of that is not with route 53</p>
+</li>
+<li>
+<p>Usually these things are done together with Route 53 but it can do one or the other</p>
+</li>
+<li>
+<p>When you register a domain with route 53 it does two jobs: <em>domain registrar</em> and <em>domain hosting</em></p>
+</li>
+<li>
+<p>It can do BOTH or either</p>
+</li>
+<li>
+<p>If you register a domain using route 53</p>
+<ul>
+<li>it accepts your money (domain registration fee)</li>
+<li>allocates 4 x Name Servers (domain hosting)</li>
+<li>Creates a zone file (domain hosting) on the NS servers</li>
+</ul>
+</li>
+<li>
+<p>Domain registration:</p>
+<ul>
+<li>R53 communicates with the registry of TLD (domain registrar)</li>
+</ul>
+</li>
+<li>
+<p>typically r53 doesn't isn't just used as a domain registar but sometimes used purely for hosting where the domain is registered via a 3rd party</p>
+</li>
+</ul>
+<h3 id="implementing-dnssec-using-route53">Implementing DNSSEC using Route53<a aria-hidden="true" class="anchor-heading icon-link" href="#implementing-dnssec-using-route53"></a></h3>
+<ul>
+<li>DNSSEC strengthens authentication in DNS using digital signatures based on public key cryptography. </li>
+<li>Asymmetric keys are created in the us-east-1 region  (Using KMS)</li>
+<li>Route53 creates the zone signing keys internally (KMS isn't involved)</li>
+<li>Adds the key signing key and zone signing key public parts within a DNS record </li>
+<li>Cloudwatch alarms should be enabled for DNSECInternalFailure or KeySigningKeysNeedingAttention</li>
+</ul>
+<h2 id="relational-database-service-rds">Relational Database Service (RDS)<a aria-hidden="true" class="anchor-heading icon-link" href="#relational-database-service-rds"></a></h2>
+<h3 id="database-refresher--models---part1">Database Refresher &#x26; MODELS - PART1<a aria-hidden="true" class="anchor-heading icon-link" href="#database-refresher--models---part1"></a></h3>
+<p>Relational (SQL) vs Non-Relational (NoSQL)</p>
+<ul>
+<li>SQL - Structured Query Language</li>
+<li>Relational - structure in and between tables of data - Rigid Schema </li>
+<li>Fixed relationship between tables and defined in advance</li>
+<li>NoSQL - is not one single thing - it covers alternative database models</li>
+<li>They have a more relaxed schema and relationships between tables is handled differently</li>
+</ul>
+<h3 id="database-refresher--models---part2">Database Refresher &#x26; MODELS - PART2<a aria-hidden="true" class="anchor-heading icon-link" href="#database-refresher--models---part2"></a></h3>
+<p>Examples of nosql/non-relational DB models:</p>
+<ul>
+<li>Key Value databases consist of sets of keys and values. </li>
+<li>unstructured and are key/value pairs</li>
+<li>good for simple data, no structure, name/value pairs </li>
+<li>Good for in-memory caching</li>
+</ul>
+<p>Wide Column Store</p>
+<ul>
+<li>A variation on key value </li>
+<li>you can have additional keys as well as a partition key </li>
+<li>DynamoDB uses this</li>
+<li>Has tables which are groupings of data </li>
+<li>tables containing attributes but they don't have to be the same. It can have all of the same attributes or a mixture or none </li>
+<li>No fixed structure on the attribute side</li>
+<li>Every item has to use the same key structure and needs to include a key that is unique</li>
+<li>DynamoDB is a wide column store</li>
+</ul>
+<p>Document</p>
+<ul>
+<li>Store and query data as documents</li>
+<li>Formatted using json or XML and can have different structure within the same DB</li>
+<li>Interacted with via it's ID</li>
+<li>Work best for order or collections or contact style DB </li>
+<li>Good for deep attributes within a nested structure i.e. orders or contacts </li>
+<li>Have flexible indexing for deep nested data</li>
+</ul>
+<p>Column </p>
+<ul>
+<li>Row based DBs are when you interact with data based on rows</li>
+<li>Rows are ideal when you operate on rows</li>
+<li>Column stores data in columns i.e. a grouping column for orderID, Product, Colour Size </li>
+<li>Good for reporting where you need a particular column </li>
+<li>An AWS column db is RedShift</li>
+<li>Column db is great for reporting and analytics</li>
+</ul>
+<p>Graph</p>
+<ul>
+<li>Good for social media or HR systems</li>
+<li>Can store complex relationships between data</li>
+<li>Quicker for running queries on relationships</li>
+<li>Relationships are fluid and dynamic and are stored along the data</li>
+</ul>
+<h3 id="acid-vs-base">ACID vs BASE<a aria-hidden="true" class="anchor-heading icon-link" href="#acid-vs-base"></a></h3>
+<ul>
+<li>Database transaction models</li>
+<li>CAP Theorem - consistency, availability and partition tolerance - choose 2
+<ul>
+<li>Consistency means it will receive the most recent write otherwise an error</li>
+<li>Availability - every request will receive a response but it may not be the most recent write</li>
+<li>Partition tolerance - can be made of multiple network partitions and continues to operates even if there is a drop of packets</li>
+</ul>
+</li>
+</ul>
+<p>ACID</p>
+<ul>
+<li>Atomic - all of the transaction parts must be successful otherwise none are</li>
+<li>Consistent - transactions move the db from one valid state to another - no in between state is allowed </li>
+<li>Isolated - concurrent executions leave the db in the same state as if they were executed sequentially</li>
+<li>Durable - once a transaction has been committed, it will remain so even in the event of a system failure </li>
+<li>Generally refers to RDS DB and it limits a database to scale</li>
+</ul>
+<p>BASE</p>
+<ul>
+<li>Basically available - R/W operations are available as much as possible but without any consistency guarantees</li>
+<li>Soft state - the DB doesn't enforce consistency, it's offloaded to the developer</li>
+<li>Eventually consistent - if we wait long enough, reads from a system will be consistent </li>
+<li>highly scalable and performant</li>
+<li>Dynamo DB usually works in a BASE like way but does offer consistent reads and other ACID functionality </li>
+<li>typically no-sql and acid mentioned together would be referring to a dynamo db database</li>
+</ul>
+<h3 id="databases-on-ec2">Databases on EC2<a aria-hidden="true" class="anchor-heading icon-link" href="#databases-on-ec2"></a></h3>
+<ul>
+<li>Running databases directly on EC2 is considered bad practice</li>
+<li>There may be some small scenarios where it may benefit</li>
+<li>There needs to be reliable communication between your app and DB
+Why you might do it:</li>
+<li>Access to the DB Instance OS</li>
+<li>Advanced DB Option tuning - you don't have these with managed DBs but AWS does allow you to control them without root access in managed DBs</li>
+<li>The app vendor might require it </li>
+<li>DB or DB version which AWS doesn't provide</li>
+<li>specific OS/DB combination that AWS doesn't provide</li>
+<li>Architecture AWS don't provide</li>
+<li>Decision makers just want it </li>
+</ul>
+<p>Why you shouldn't:</p>
+<ul>
+<li>admin overhead - managing EC2 and DBHost/server</li>
+<li>Backup / DR management adds additional complexity </li>
+<li>EC2 is single AZ - access to DB can fail</li>
+<li>Features - AWS DB products have a extensive features which achieve more than what can be done in an ec2 instance</li>
+<li>EC2 is on or off - no serverless so you can't scale up or down easily</li>
+<li>Replication - admin overhead</li>
+<li>performance - aws has advanced performance features for managed DBs</li>
+</ul>
