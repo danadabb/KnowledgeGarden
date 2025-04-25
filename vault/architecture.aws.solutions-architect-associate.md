@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1745460285355
+updated: 1745477287344
 created: 1734484581601
 ---
 
@@ -2103,3 +2103,142 @@ DMS + Snowball:
 
 - Larger migrations (multi TB)
 - DMS Can use snowball products (Uses schema conversion tool). You move data to a snowball device and ship it back to AWS to perform the migration
+
+## Network Storage & Data Lifecycle
+
+### EFS Architecture
+
+- Elastic File System (EFS)
+- Provides network based file systems which can be mounted and used by multiple instances at once
+- Implementation of NFSv4
+- Can be mounted on Linux instances (Linux only)
+- Shared between many EC2 instances
+- Exists separately from the EC2 instance
+- Private service and accessed via mount targets inside a VPC
+- Can be accessed on premiss via VPN or DX
+- Offers general purpose and Max I/O performance mode
+- General purpose is default and good for 99.9% of uses
+- Bursting and provisioned throughput modes (pick bursting generally)
+- Standard (default) and Infrequent Access (IA) classes
+- Lifecycle policies can be used with classes
+
+### AWS Backup
+
+- fully managed data protection service (backup/restore)
+- Consolidate management of data into one place - across accounts and across regions
+- Supports a wide range of AWS products - Compute, block storage, file storage, databases, object storage
+
+Key concepts:
+
+- Backup plans - frequency, window, lifecycle, vault, region copy
+- Backup resources - what resources are backed up
+- Vaults - destination (container) - assign a KMS key for encryption
+- Vault lock - write once read many (WORM) - No one, including AWS can delete anything from the vault after 72 hour cool off
+- On demand - manual backups created as needed
+- PITR - point in time recovery
+
+## HA & SCALING
+
+### Regional and Global AWS Architecture
+
+Architectural components to consider:
+
+- Global service location and discovery
+- Content delivery (CDN) and optimisation
+- Global health checks and failover
+- Regional entry point
+- Regional scaling and resilience
+- Application services and components
+
+Netflix can be thought of as a global application also made up of blocks of regional services:
+
+- Uses a global DNS for service/discovery (R53)
+- CDN layer at a global level (cloudfront)
+- Once a region is entered, user enters via web tier at the regional level
+- Web tier talks to compute tier eg ec2, lambda
+- compute tier consumes storage services e.g. EFS, S3
+- talks to DB tier
+- Sometimes gets data via caching layer
+- App services are used like SNS, Queues
+
+### Evolution of the Elastic Load Balancer
+
+Three different types of ELBS split between v1 (avoid this) and v2 (prefer)
+
+1. Classic load Balancer (CLB) - v1 - not really layer 7 devices and lack advanced functionality - can only use 1 SSL cert per load balancer. Default to NOT using this
+2. Application Load Balancer (ALB) - v2 - layer 7 devices that support HTTP/S/Websocket
+3. Network Load Balancer (NLB) - v2 - TCP, TLS & UDP - good for any load balancing of anything that's not using HTTP(s)
+
+v2 = faster, cheaper and support target groups and rules
+In exam you should be able to choose between ALB and NLB
+
+### Elastic Load Balancer Architecture
+
+- Accepts connections from customers and distributes them
+- When you provision a load balancer, you need to select which AZs it goes into and you do this by selecting ONE subnet in each AZ
+- Each ALB is configured with an A record DNS name which resolves to the ELB nodes
+- You must decide whether the ELB is internet facing or internal - if it's public facing then the ELB nodes have public and private IPs where as internal will only have private
+- LBs need at least 8+ free IPs per subnet - you should use a /27 or larger subnet to allow for scale
+- Internal LBs are usually used to separate application tiers
+- without LBs, the tiers need to have awareness of each other and they need to connect to specific instances. Tiers can then scale independently on each other
+
+Cross zone load balancing - allows each load balancer node to distribute connections evenly between all instances across availability zones. This is enabled as standard in load balancers. Without this, if you have two load balancer nodes and one zone has more instances than the other, the nodes in that instance will get a smaller distribution of traffic as opposed to the other zone.
+
+- When you provision as an ELB, you see a DNS A record pointing at 1+ Nodes per AZ
+- Nodes in one subnet per AZ can scale
+- EC2 doesn't need to be public to work with an internet facing load balancer
+- Load balancers are configured by listener configuration which controls what it should listen to
+- 8+ free IPs per subnet /28 is enough but AWS docs recommend /27 for scaling
+
+### Application Load balancing (ALB) vs Network Load Balancing (NLB)
+
+Consolidation of LBs:
+
+- Classic load balancers don't scale because each unique https name requires an individual CLB (1 SSL per CLB)
+- v2 load balancers support rules and target groups
+
+Application load balancer (ALB):
+
+- Layer 7 which listens on HTTP/S
+- Can't understand any other layer 7 protocols e.g. SMTP, SSH, Gaming, TCP, UDP, TLS
+- Can understand l7 content e.g. cookies, custom headers, user location and app behaviour (protocol info)
+- Any incoming connections are always terminated on the ALB - you can't have an unbroken SSL connection
+- A new connection is made to the application
+- ALBs MUST have SSL certs if HTTPs is used
+- Slower than NLB as they are more levels of network stack to process
+- They can evaluate application health
+- Have the concept of rules
+- processed in priority order
+- Default rule is catch-all
+- Rule conditions - host-header, http-header, request method, path pattern, query string and source IP
+- Actions - forward, redirect, fixed-response, authenticate-oidc and incognito
+
+Network load balancer (NLB):
+
+- Function at layer 4 - TCP, TLS, UDP, TCP_UDP
+- They have no visibility or understanding of HTTP or HTTPs
+- They can't interpet headers, cookies, session sticiness
+- They're very fast (millions of rps, 25% of ALB latency)
+- Ideal to deal with anything thats not http(s) e.g. game servers, smtp, ssh, financial apps
+- Health checks only check ICMP/TCP handshake - they're not app aware
+- They can be allocated with static IPs which is useful for whitelisting
+- They can forward TCP through to instances - unbroken end to end encryption - it can accept tcp only traffic so any layers above will not be terminated
+- Used with private link to provide services to other VPCs
+
+ALB vs NLB:
+
+- Unbroken encryption- NLB
+- static IP for whitelisting - NLB
+- Fastest performing - NLB
+- protocols that arent http(s) - NLB
+- Privatelink requirement - NLB
+
+otherwise - ALB
+
+### Launch Configuration and Templates
+
+- LC and LT at a high level perform the same task - they allow you to define the configuration of EC2 instances in advance e.g AMI, instance type, storage and keypair, networking and security groups, userdata and IAM role
+- Both are not editable
+- LT provides newer features - T2/T3 unlimited, placement groups, capacity reservations and elastic graphics
+- LC provide configuration to be used by auto scaling groups - they are not editable nor do they have any versioning
+- LT can be used for the same thing but they can also be used to launch EC2 instances directly
