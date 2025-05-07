@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1745477287344
+updated: 1746515745677
 created: 1734484581601
 ---
 
@@ -2242,3 +2242,116 @@ otherwise - ALB
 - LT provides newer features - T2/T3 unlimited, placement groups, capacity reservations and elastic graphics
 - LC provide configuration to be used by auto scaling groups - they are not editable nor do they have any versioning
 - LT can be used for the same thing but they can also be used to launch EC2 instances directly
+
+### Auto-Scaling Groups
+
+- Provide auto scaling for ec2 and can be used for a self healing architecture
+- They use launch templates or configurations - always one at a time (one config definition)
+- Has 3 values - minimum, desired and maximum size e.g. (1:2:4)
+- Keeps number of running ec2 instances the same as desired capacity by provisioning and terminating instances
+- Scaling policies normally together with auto scaling groups to automate based on metrics
+
+Scaling policies are rules on ASG:
+
+- manual scaling - manually adjust the desired capacity
+- schedule scaling - time based adjustment e.g. sales
+- dynamic scaling:
+  - simple - e.g. either provision or terminate based on a metric (CPU, memory, disk I/O, length of SQS queue)
+  - stepped scaling - more +/- which allows you to react quicker
+  - target tracking - desired aggregate e.g.CPU = 40% and ASG handles it
+- Cool down period - waits a certain amount of seconds before doing another action
+
+ASG + Load Balancers:
+
+- ASG can use the load balancer health checks rather than EC2 status checks
+
+Scaling processes:
+
+- Launch and terminate- SUSPEND and RESUME
+- AddToLoadBalancer - add to LB on launch
+- AlarmNotification -accept notification from CW
+- AZRebalance - Balances instances evenly across AZs
+- Healthcheck - instance health checks on/off
+- ReplaceUnhealthy - Terminate unhealthy and replace
+- Standby - use this for instances InService vs Standby - can be used for maintenance
+
+FInal points
+
+- ASG are free
+- Only the resource created are billed, use cool down to avoid rapid scaling
+- Think about more, smaller instances - smaller instances mean more granularity
+- Use ALB for elasticity - abstraction
+- ASG defines when and where, LT defines what
+
+### ASG Scaling Policies
+
+- ASGs don't NEED scaling policies - they can have none
+- WIthout policies they have static values
+- Manual scaling means manually adjusting min, max desired
+- Dynamic scaling:
+- Simple scaling - define actions which occur when alarm moves into alarm state and adds/removes a static amount
+- step scaling - adds and removes based on steps with upper and lower bounds
+- Target tracking - predefined set of metrics and you define an ideal value, the ASG calculates the scaling for you based on this
+- It's possible to scale based on SQS - ApproximateNumberOfMessagesVisible - scales up and down based on messages
+
+### ASG Lifecycle hooks
+
+- Allow you to configure custom actions on instances during ASG actions
+- e.g. during instance launch or instance terminate transitions
+- When you create lifecycle hooks, instances are paused and they wait until a timeout and either continue or abandon, alternatively you resume the ASG process
+
+### ASG HealthCheck Comparison - EC2 vs ELB
+
+Three different types of health checks on ASG:
+
+- EC2 (default), ELB (can be enabled) & custom
+- EC2 - if anything other than status running then it's viewed as unhealthy
+- ELB - instance must be both running and passing ELB health check - this way it can be more application aware
+- Custom - instances marked as healthy and unhealthy by an external system
+
+- A health check grace period is the amount of time to delay before starting checks (default 300s) - allows system launch and bootstrap. You need to make sure this is a sufficient amount so that instances don't keep terminating and restarting over and over again
+
+### SSL Offload & Session Stickiness
+
+SSL Offload - there are three ways a load balancer can handle secure connections:
+
+1. bridging
+
+- default mode of ELB
+- secure connection between the client and the load balancer - the LB needs an SSL certificate and a domain name that the application uses
+- AWS technically have access to that security certificate
+- It also creates new encrypted with the backend instances. This means that all the EC2 instances also need an SSL certificate which matches the domain name
+
+positives:
+
+- ELB gets to see unecrypted HTTP
+  Negatives:
+- Cert has to be stored on the ELB itself which is a security risk
+- SSL certs need to be installed on the instances themselves which is an overhead since they need to perform the cryptographic operations
+
+2. pass-through
+
+- Client connects but the LB passes it to the backend instance. The LB doesn't need an SSL cert but the backend instances do
+- This LB must be a network load balancer
+- The LB is configured to use TCP. AWS never need to see the cert that you use
+- Negative is that you don't get to use load balancing based on the http part.
+
+3. offload
+
+- Clients connect to ELB using HTTPS
+- LB connects to backend instances via HTTP (unencrypted)
+- LB requires SSL but backend instances don't
+- downside is data is in plaintext in backend network
+
+Connection stickiness
+
+- If state is stored on a specific server rather than being stateless, you need session stickiness
+- ELBs can pass a cookie to clients which ensures that users are always being passed to a specific server until there is a server failure (in which case the user is sent to a different server) or the cookie expires
+- It can cause uneven load on the backend servers - apps should be designed to use stateless by moving the session external to the ec2 instance e.g. dynamo DB
+
+### Gateway Load Balancer
+- A product which AWS provides to help you run and scale 3rd party security appliances e.g. firewalls, intrusion detection and prevention systems
+- You can use these for inbound and outbound traffic
+- Has endpoints where traffic enters/leaves - similar to VPC endpoints
+- GWLB balances across multiple backend applications
+- Traffic and metadata is tunnelled using GENEVE protocol
