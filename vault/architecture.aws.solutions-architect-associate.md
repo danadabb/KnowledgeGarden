@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1746515745677
+updated: 1746857392939
 created: 1734484581601
 ---
 
@@ -2350,8 +2350,120 @@ Connection stickiness
 - It can cause uneven load on the backend servers - apps should be designed to use stateless by moving the session external to the ec2 instance e.g. dynamo DB
 
 ### Gateway Load Balancer
+
 - A product which AWS provides to help you run and scale 3rd party security appliances e.g. firewalls, intrusion detection and prevention systems
 - You can use these for inbound and outbound traffic
 - Has endpoints where traffic enters/leaves - similar to VPC endpoints
 - GWLB balances across multiple backend applications
 - Traffic and metadata is tunnelled using GENEVE protocol
+
+## SERVERLESS AND APPLICATION SERVICES
+
+### Architecture Deep Dive
+
+**Monolithic architecture**:
+
+- is one entity that fails together since they are all contained together
+- scales together as they're highly coupled - you need to vertically scale the system
+- Bill together and use resources even if they're not running - tends to be the least effective architecture
+
+**Tiered architecture**:
+
+- A way to evolve a monolithic architecture - you break it apart and each tier can be on the same server or different
+- Still tightly coupled
+- can vertically scale each tier independently
+- Can use load balancers between each tier so that there isn't a direct comm between a specific instance
+- Can horizontally scale if load balancer is used between each tier
+- because each tier relies on the other, you cannot scale any tier down to 0
+
+**Queues**:
+
+- A tiered architecture can be evolved with a queue
+- A queue based architecture is decoupled - each tier pushes messages onto a queue
+- Each tier doesn't care about other tiers, it uses async comms to wait for messages from the queue
+
+**Microservice architecture**:
+
+- A way to further break down a monolithic architecture
+- microservices do individual things e.g. upload, process, store, manage
+
+**Event-driven architecture**:
+
+- Events are produced and consumed
+- Only consume resources as and when required - nothing is constantly running or waiting
+- Producers generate events when something happens e.g. clicks, errors, criteria met, uploads, actions
+- Events are delivered to consumers (usually using an event router)
+- Actions are taken
+- Mature event-driven architecture only consumes resources when handling events (key component of serverless architecture)
+
+### AWS Lambda
+
+- Lambda is a Function-as-a-service (FaaS) product - it's a short-running and focussed service
+- A lambda function - a piece of code that lambda runs
+- Functions use a runtime e.g. python 3.8
+- Functions are loaded and run in a runtime environment
+- environment has direct memory (and virtual CPU e.g. indirect CPU) allocation
+- You're only billed for the duration the function runs
+- A key part of serverless architectures
+- Docker is an anti-pattern for lambda - this will generally refer to ecs
+- Code loads, executes then terminates
+- Lambda functions are stateless so no data is left over from previous invocations - you need to make sure your code works in a new environment
+- This is the default but there are cases where it's not
+- memory is 128mb to 10240mb - you don't control the CPU, it's according to the memory you get
+- 900s (15m) function timeout for each lambda function
+- Typically used in conjunction with other serverless applications e.g. s3, api gateway
+- Often used for things like file processing
+- For database triggers - dynamo db, streams
+- serverless cron - eventbridge/cwEvents
+- real time stream data processing - kinesis
+
+Networking
+
+- Public and VPC networking
+- default is public networking - can access public space aws services and the internet
+- public networking offers the best performance because no customer specific vpc networking is required - however they won't have access to vpc based services unless public ips are allocated and security rules allow external access
+- lambda functions running in vpc can freely access other vpc resources but nothing outside unless it's specifically configured
+- You could use a natgateway and internet gateway or a vpc endpoint to be able to talk to anything outside the vpc
+- treat lambdas running in a vpc like anything running in a vpc
+
+Security
+
+- Permissions
+  - execution role (similar to an ec2 instance role)
+  - resource policies - like a bucket policy on s3 to allow external accounts or services to interface with lambda - can only be manipulated with cli or api
+- Lambda uses cloudwatch, cloudwatch logs and x-ray
+- Can be integrated with x-ray for distributed tracing
+- requires permissions via execution role in order to log to cloudwatch
+
+Invocation
+
+- Synchronous
+  - Result is returned during the request (success/failure). Errors and retries must be handled within the client.
+- asynchronous
+  - Typically used when AWS services invoke lambda functions on your behalf
+  - For example, s3 won't wait for a response from lambda and the lambda is responsible for any re-processing
+  - The function code needs to be idempotent
+  - Any retries could potentially be sent to a dead letter queue which repeat failed processing
+  - Lambda supports destinations where successful or failed events can be sent
+- event source mappings
+  - typically used on streams/queues which don't support events and polling is required
+  - event source mapping reads from a source and sends an event batch to lambda
+  - batches that fail can be sent to sqs or sns topics
+
+Versions
+
+- You can have different versions of lambda functions
+- each version is immutable
+- $latest points to the latest version
+- Can use Aliases to point to specific versions eg dev, stage, prod which can be changed
+
+startup times
+
+- execution context needs to be created
+- deployment package is downloaded
+- this process is known as a cold start
+- if a future invocation is done in a short time span it could possibly use the same execution context - this is known as a warm start
+- if too long between invocations then a new function will need to be executed causing a cold start
+- one function invocation runs at a time per context
+- provisioned concurrency can be used where aws will keep a certain amount of contexts warm to improve start up speeds
+- the /tmp storage can also hold the data between warm functions
