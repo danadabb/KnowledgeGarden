@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1746857392939
+updated: 1750483715476
 created: 1734484581601
 ---
 
@@ -2467,3 +2467,14 @@ startup times
 - one function invocation runs at a time per context
 - provisioned concurrency can be used where aws will keep a certain amount of contexts warm to improve start up speeds
 - the /tmp storage can also hold the data between warm functions
+
+### CloudWatchEvents and EventBridge
+- Cloudwatch events delivers a near real time stream of system events which describe changes in aws products and services e.g. terminate, start 
+- EventsBridge is the service which will replace CloudWatch Events
+- Can observe if X happens or at Y times ... do Z
+- EventBridge is basically Cloudwatch Events v2 - you should use it by default
+- Both of these use an event bus and there is a default one for the account
+- cloudwatch only has 1 bus and its implicit (not exposed)
+- EventBridge allows you to create additional busses and you can interact with them
+- You create rules for incoming events or schedule based rules
+- 
