@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1750483715476
+updated: 1750641398092
 created: 1734484581601
 ---
 
@@ -2477,4 +2477,93 @@ startup times
 - cloudwatch only has 1 bus and its implicit (not exposed)
 - EventBridge allows you to create additional busses and you can interact with them
 - You create rules for incoming events or schedule based rules
-- 
+
+### Serverless Architecture
+- Serverless is a software architecture which's aim is to manage few servers as possible
+- Applications are a collection of small and specialised functions 
+- The functions are run in stateless and ephemeral environments - they are billed via duration
+- Everything is event driven - things are only run when required
+- FaaS is used where possible for compute functionality 
+- No persistent usage of compute
+- Managed services should be used where possible e.g. s3, dynamo, SSO
+
+
+### Simple Notification Service (SNS)
+- A highly available, durable, secure pub sub service
+- It's on the Public AWS Service so you will need network connectivity with the public endpoint 
+- Coordinates the sending and delivery of message
+- Messages are <= 256kb  (it's made for small files)
+- SNS Topics are the base of entity of SNS - permission and configuration
+- Publishers sends things to a topic
+- Subscribers receive messages from a topic e.g. http(s), emails, sqs, mobile push, sms messages, lambda
+- Used across AWS services e.g. cloudwatch and cloudformation 
+
+Functionality it offers:
+- Delivery status 
+- Delivery retries - reliable delivery
+- HA and Scalable (Region)
+- SSE (server side encryption)
+- Cross-account via TOPIC policy 
+
+### Step Functions
+- Address some of the limitations/design decisions of Lambda
+- Lambda is FaaS - you should not be putting a full application in a function
+- 15 minute max execution time
+- They can be chained together
+- Chaining together can get messy at scale
+- Runtime environments are stateless
+- Step functions let you create state machines
+
+State Machines
+- State machines are like a workflow with start/end point and in between has states
+- States modify and output data
+- Maximum duration for state machine execution is 1 year
+- Standard workflow or express workflow available - standard is default, express is for high volume and they are for up to 5 minutes
+- They can be started via API gateway, IOT rules, Event bridge, lambda
+- Can be created via ASL (amazon states language) - JSON template
+- Interact with other services via IAM roles (permissions)
+
+States:
+- SUCCEED & FAIL - where it arrives
+- WAIT - period of time or until - pauses the workflow
+- CHOICE - takes a path depending on an input
+- PARALLEL - allows you to create parallel branches in a state machine - perform multiple sets of thing at the same time
+- MAP - accepts a list of things, performs action(s) on each item 
+- TASK - a single unit of work which allows you to perform action - integrates with many things e.g. lambda, batch, dynamodb, ecs, sns, sqs etc 
+
+### API Gateway 101
+- A service which lets you create and manage APIs
+- Act as an endpoint/entry point for applications 
+- Sit between application and integration (services)
+- Highly available, scalable, handles authorisation, throttling, caching, CORS, transformations, openAPI spec, direct integration and much more 
+- Can connect to services/endpoints in AWS or on-premises
+- Works with HTTP, REST and websockets
+
+Authentication:
+- Supports a range of methods and can also be open access
+
+Endpoint types:
+- Edge optimised - routed to the nearest cloudfront POP
+- Regional - clients in the same region 
+- Private - only accessible within a vpc via interface endpoint
+
+
+Stages:
+- APIs are deployed to stages each stage has one deployment e.g dev, prod
+- Can be rolled back
+- Allows canary deployments on stages and eventually be promoted 
+
+Errors:
+- 4xxx - client error - invalid requests on the client side
+- 5xxx - server errors - valid request, backend issue
+- 400 - Bad Request - Generic 
+- 403 - Access Denied - authorizer denied or its been filtered
+- 429 - API Gateway can throttle - its been exceeded
+- 502 - Bad gateway exception - bad output returned by lambda 
+- 503 - service unavailable - endpoint offline or major service issues 
+- 504 - integration failure/timeout - 29s limit on lambda 
+
+Caching:
+- Configured per stage
+- Without a cache, applications make requests to the stage and the backend integrations will be used on each and every request
+- With cache, you can specify a size between 500mb-237GB - caching for 300s by default (otherwise 0-3600s). Can be encrypted. Calls are only made to backend if request is a cache miss
