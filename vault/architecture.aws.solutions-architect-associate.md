@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1750641398092
+updated: 1759877198108
 created: 1734484581601
 ---
 
@@ -2469,7 +2469,8 @@ startup times
 - the /tmp storage can also hold the data between warm functions
 
 ### CloudWatchEvents and EventBridge
-- Cloudwatch events delivers a near real time stream of system events which describe changes in aws products and services e.g. terminate, start 
+
+- Cloudwatch events delivers a near real time stream of system events which describe changes in aws products and services e.g. terminate, start
 - EventsBridge is the service which will replace CloudWatch Events
 - Can observe if X happens or at Y times ... do Z
 - EventBridge is basically Cloudwatch Events v2 - you should use it by default
@@ -2479,33 +2480,36 @@ startup times
 - You create rules for incoming events or schedule based rules
 
 ### Serverless Architecture
+
 - Serverless is a software architecture which's aim is to manage few servers as possible
-- Applications are a collection of small and specialised functions 
+- Applications are a collection of small and specialised functions
 - The functions are run in stateless and ephemeral environments - they are billed via duration
 - Everything is event driven - things are only run when required
-- FaaS is used where possible for compute functionality 
+- FaaS is used where possible for compute functionality
 - No persistent usage of compute
 - Managed services should be used where possible e.g. s3, dynamo, SSO
 
-
 ### Simple Notification Service (SNS)
+
 - A highly available, durable, secure pub sub service
-- It's on the Public AWS Service so you will need network connectivity with the public endpoint 
+- It's on the Public AWS Service so you will need network connectivity with the public endpoint
 - Coordinates the sending and delivery of message
-- Messages are <= 256kb  (it's made for small files)
+- Messages are <= 256kb (it's made for small files)
 - SNS Topics are the base of entity of SNS - permission and configuration
 - Publishers sends things to a topic
 - Subscribers receive messages from a topic e.g. http(s), emails, sqs, mobile push, sms messages, lambda
-- Used across AWS services e.g. cloudwatch and cloudformation 
+- Used across AWS services e.g. cloudwatch and cloudformation
 
 Functionality it offers:
-- Delivery status 
+
+- Delivery status
 - Delivery retries - reliable delivery
 - HA and Scalable (Region)
 - SSE (server side encryption)
-- Cross-account via TOPIC policy 
+- Cross-account via TOPIC policy
 
 ### Step Functions
+
 - Address some of the limitations/design decisions of Lambda
 - Lambda is FaaS - you should not be putting a full application in a function
 - 15 minute max execution time
@@ -2515,6 +2519,7 @@ Functionality it offers:
 - Step functions let you create state machines
 
 State Machines
+
 - State machines are like a workflow with start/end point and in between has states
 - States modify and output data
 - Maximum duration for state machine execution is 1 year
@@ -2524,46 +2529,233 @@ State Machines
 - Interact with other services via IAM roles (permissions)
 
 States:
+
 - SUCCEED & FAIL - where it arrives
 - WAIT - period of time or until - pauses the workflow
 - CHOICE - takes a path depending on an input
 - PARALLEL - allows you to create parallel branches in a state machine - perform multiple sets of thing at the same time
-- MAP - accepts a list of things, performs action(s) on each item 
-- TASK - a single unit of work which allows you to perform action - integrates with many things e.g. lambda, batch, dynamodb, ecs, sns, sqs etc 
+- MAP - accepts a list of things, performs action(s) on each item
+- TASK - a single unit of work which allows you to perform action - integrates with many things e.g. lambda, batch, dynamodb, ecs, sns, sqs etc
 
 ### API Gateway 101
+
 - A service which lets you create and manage APIs
-- Act as an endpoint/entry point for applications 
+- Act as an endpoint/entry point for applications
 - Sit between application and integration (services)
-- Highly available, scalable, handles authorisation, throttling, caching, CORS, transformations, openAPI spec, direct integration and much more 
+- Highly available, scalable, handles authorisation, throttling, caching, CORS, transformations, openAPI spec, direct integration and much more
 - Can connect to services/endpoints in AWS or on-premises
 - Works with HTTP, REST and websockets
 
 Authentication:
+
 - Supports a range of methods and can also be open access
 
 Endpoint types:
+
 - Edge optimised - routed to the nearest cloudfront POP
-- Regional - clients in the same region 
+- Regional - clients in the same region
 - Private - only accessible within a vpc via interface endpoint
 
-
 Stages:
+
 - APIs are deployed to stages each stage has one deployment e.g dev, prod
 - Can be rolled back
-- Allows canary deployments on stages and eventually be promoted 
+- Allows canary deployments on stages and eventually be promoted
 
 Errors:
+
 - 4xxx - client error - invalid requests on the client side
 - 5xxx - server errors - valid request, backend issue
-- 400 - Bad Request - Generic 
+- 400 - Bad Request - Generic
 - 403 - Access Denied - authorizer denied or its been filtered
 - 429 - API Gateway can throttle - its been exceeded
-- 502 - Bad gateway exception - bad output returned by lambda 
-- 503 - service unavailable - endpoint offline or major service issues 
-- 504 - integration failure/timeout - 29s limit on lambda 
+- 502 - Bad gateway exception - bad output returned by lambda
+- 503 - service unavailable - endpoint offline or major service issues
+- 504 - integration failure/timeout - 29s limit on lambda
 
 Caching:
+
 - Configured per stage
 - Without a cache, applications make requests to the stage and the backend integrations will be used on each and every request
 - With cache, you can specify a size between 500mb-237GB - caching for 300s by default (otherwise 0-3600s). Can be encrypted. Calls are only made to backend if request is a cache miss
+
+### Simple Queue Service (SQS)
+
+- Provides managed message queues
+- Public service
+- Fully managed
+- Highly available and highly performant - you don't need to worry about replication or resiliency
+- Either standard or FIFO - fifo guarantee an order. Standard is best effort but could be out of order
+- Msgs can be up to 256kb in size - you want to keep them small
+- Clients can send and other clients can poll the queue
+- Received messages are hidden (VisibilityTimeout) - if a client doesn't delete the message then it can reappear int he queue
+- Dead letter queues can be used for problem messages which means that different sets of processing can occur on problematic messages
+- Auto scaling groups can scale based on the queue lengths
+
+- Standard - at least once delivery , FIFO - exactly once delivery
+- FIFO performance is limited - 3000 messages per second with batching or up to 300 messages per second without
+- Billed based on requests
+- 1 request = 1-10 messages up to 64kb total
+- Short (immediate) vs long (waitTimeSeconds) polling - waitTimeSeconds can be up to 20 second. Long polling is how you SHOULD poll SQS
+- Encryption at rest (KMS) & in transit. Data is encrypted by default in transit but not at rest
+- Queue policy can be used
+
+### SQS Standard vs FIFO Queues
+
+- FIFO are single lane highways and standard are multi lane
+- Standard is scalable as wide as required near unlimited TPS
+- FIFO queues have to have a FIFO suffix to be a fifo queue
+- Great for workflow ordering, command ordering, price adjustments
+- Standard queues are faster however there is no rigid order of messaging.
+- Good for decoupling, worker pools, batch for future processing
+
+### SQS Delay Queues
+
+- Allow you to postpone the delivery of messages to consumers
+- A delay queue has a DelaySeconds where messages are conceptually parked - they are not available on the queue. Maximum value is 15 minutes. 
+- You cannot use it on FIFO queues
+
+### SQS Dead-Letter Queues
+- Dead letter queues are designed to allow you to handle problematic messages 
+- You can use a dead letter queue whereby when the recievecount of a message is more than maxRecieveCount it moves to a dead letter queue
+- It's a separate area to analyse/diagnose the messaging issues 
+- All sqs have retention periods for messages which starts at the enqueue timestamp of the original queue.
+- A DLQ can be used for multiple source queues
+
+
+### Kinesis Data Streams
+- Often confused with SQS
+- A scalable streaming service
+- Designed to ingest data from lots of devices and applications
+- streams can scale from low to near infinite data rates
+- public service & highly available by design 
+- Provide a level of persistence - 24 hour moving window of data
+- Can be increased to 365 days for an additional cost
+- multiple consumers can access the data from that moving window 
+- great for analytics and dashboards
+- Uses a shard architecture with each shard taking on more data 
+- Kineses data records are max of 1mb
+- Questions about ingesting data is about kineses otherwise it could be sqs
+- SQS has 1 production group, 1 consumption group
+- SQS usually are used for decoupling and asynchronous communications
+- SQS doesn't really use any persistence or windows
+- Kinesis is designed for huge scale ingestion for multiple consumers over a rolling window
+- Kinesis is good for data ingestion, analytics, monitoring or app clicks 
+
+### Kinesis Data Firehose
+- Kinesis does not provide a default way to store data
+- Firehose is a fully managed service used to load data for data lakes, data stores and analytics services
+- Scales automatically - fully serverless, resilient
+- Near real time delivery (~60 seconds delay)
+- Supports transformation of data on the fly using lambda - can add latency
+- Billing - volume through firehose
+
+Valid destinations for firehose:
+- HTTP endpoints
+- Splunk
+- Redshift
+- ElasticSearch
+- Destination Bucket s3
+
+- Kinesis data stream integrates with firehose to delegate the data
+- Firehose can also recieve data directly from sources 
+- Even though it receives things in real time, firehose does not deliver in real time unlike kinesis data stream (~200ms vs ~60s)
+- Lambda can be used to transform data coming from firehose and back
+- The only exception to kineses firehose data store is redshift where s3 is used as an intermediary storage before it's saved onto redshift
+
+- Firehose is good for permanent storage of data, for transforming data (using lambda) to store, or if you want to put it into one of the supported products
+- remember it is not REAL TIME
+ 
+### Kinesis Data Analytics
+- Real time data processing product
+- Uses SQL
+- Ingests from kineses data streams or firehose
+- Can be sent on in real time to destinations - firehose, s3, redshift, elasticsearch & splunk
+- AWS Lambda
+- Kineses data streams
+- It's realtime unless you use firehose
+- Allows you to use sql in real time on source streams
+- Kineses analaytics app can also take data from static resources e.g. s3 bucket 
+- Static data can be used to enrich the real time streaming input
+- It processes input, performs application code on the data and outputs streams and puts them to kineses streams or kinesis firehose
+
+
+scenarios where you may use kineses data analytics:
+- streaming data that needs reeal time sql processing
+- time series analytics - elections/e-sports
+- real time dashboards - leaderboards for games
+- real time metrics - security and response 
+- Lambda is limited to simple manipulations, kineses data analytics is good for complex real time data manipulation 
+
+### Kinesis Video Streams
+- Kineses video streams ingests live video from producers
+- These can be security cameras, smartphones, cars, drones, time-serialised audio, thermal, depth and RADAR data
+- Consumers can access data frame-by-frame or as needed 
+- Can persist and encrypt data in transit and at rest
+- You can't access the video data directly via storage you can only do it via apis
+- Integrates with AWS products - rekognition and Connect
+
+
+### Amazon Cognito - User and Identity Pools
+- Cognito provides authentication, authorization and user management for web and mobile apps
+
+There are two parts of cognito:
+1. User pools - sign in and get a JWT (json web token) - most aws services CANNOT use jwts.
+  - used for sign up, sign in, MFA and other security features
+  - Allow SSO 
+  - Can't be used to access AWS resources
+2. Identity Pool - allows you to offer access to temporary AWS credentials
+- Unauthenticated identities for guest users 
+- Swap temporary identity for short term AWS credentials 
+- Assume an IAM role on behalf of an identity
+
+
+### AWS Glue 101
+- Serverless ETL (extract, transform and load) 
+- Datapipeline can do ETl but it uses servers
+- Moves and transforms data between source and destination 
+- Crawls data sources and generates the AWS glue data catalog
+- Data sources can be any store e.g. s3, rds, jdbc compatible & dynamo db 
+- Data sources can also be streams e.g. kinesis data streams & apache kafka
+- Data targets can be s3, rds, jdbc databases
+
+Data Catalog
+- A collection of metadata combined with search tools
+- One catalog per region per account 
+- Helps avoid data silos
+- AWS can use glue for etl and catalogue related services e.g. athena, redshift spectrum, aws lake formation
+
+
+### Amazon MQ 101
+- A merge between SQS and SNS but using open standards
+- SNS/SQS utilise aws apis
+- SNS provides topics and sqs provides queues
+- SNS/SQS are both public srrvices annd can be accessed from anywhere
+- Both highly scalable and AWS integrated
+- Many orgs already use topics and queues (an on premise messaging system)
+- If they want to migrate to AWS, sns and sqs won't work out of the box
+- Amazon MQ is an open-source message broker
+- Based on managed apache activeMQ
+- Provides both queues and topics (1-1 and 1-many)
+- Provided with message broker service - either a single instance for test/dev/cheap or Highly available Pair (active/standbye)
+- Not a public service - runs in a VPC - requires private networking
+- no AWS native integration
+
+- Your default implementation should be SNS or SQS (new implementations)
+- SNS or SQS if AWS integration is required e.g. logging, permissions, encryption, service integration
+- Use Amazon MQ if you neeed to migrate from an existing system with little to no change
+- If you need to use open APIs
+- Remember you need to have private networking configured to use amazon MQ 
+
+
+### Amazon AppFlow
+- Fully managed integration service
+- Exchange data between applications (connectors) using flow
+- Source/destination connector
+- Sync data across applications
+- Aggregate data from different sources
+- Uses public endpoints but works with PrivateLink (privacy)
+- Can use a custom connector SDK (build your own)
+- e.g. of usage - sync contact records from salesforce to redshift or support tickets from zendesk to s3
+
+- 
