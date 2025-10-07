@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1759877198108
+updated: 1759880042451
 created: 1734484581601
 ---
 
@@ -2758,4 +2758,57 @@ Data Catalog
 - Can use a custom connector SDK (build your own)
 - e.g. of usage - sync contact records from salesforce to redshift or support tickets from zendesk to s3
 
-- 
+## GLOBAL CONTENT DELIVERY AND OPTIMIZATION
+
+### Cloudfront Architecture
+- Content Delivery Network - improve the delivery - uses caching and an efficient global network
+
+Cloudfront terms:
+- Origin - the original location of content - S3 or Custom origin - S3 bucket or anywhere else
+- Distribution - The configuration unit of cloudfront - everything is configured in distribution (directly or indirectly)
+- Edge location - pieces of global infrastructure where content is cached
+- Regional Edge Cache - bigger than edge locations but designed to hold data that is accessed less frequently
+
+- Edge location is checked first, if there is a cache miss, the regional cache is checked, then finally its fetched from the origin if its not there. If its fetched from the origin then it's cached at regional and edge 
+
+- Cloudfront performs no write caching - only read caching
+
+- A behaviour is configuration or "subconfiguration" of distribution
+- Behaviours sit architecturally between origins and distributions - Cloudfronts have at least 1 behaviour
+- Default behaviour is * which matches everything
+
+### CloudFront - TTL and Invalidations
+- An edge location views an object as not expired if it's within it's TTL period
+- More frequent cache HITS = lower origin load
+- TTL default behaviour = 24 hours validity period
+- You can set Minimum TTL and Maximum TTL 
+- There are different headers that can be used to direct cloudfront to use different TTL values:
+  - Cache-Control max-age (seconds)
+  - Cache-Control s-maxage (seconds)
+  - Expires (Date & Time)
+- For all of these, the TTL minimum and maximum will be used instead of the per-object setting if these don't fall in the range 
+- Cache invalidations can be performed on a distribution - applies to all edge locations - takes time 
+- Takes a path with wildcards to invalidate everything in that path e.g. /images/* or /images/whiskers*
+- Invalidation should only be thought of as a way to correct errors - versioned file names are a good alternative to invalidation 
+- versioned file names is not the same as s3 object versioning
+
+### ACM - AWS Certificate Manager
+- HTTP was created as simple and secure
+- Once HTTP evolved, security vulnerabilities became an issue
+- HTTPS - SSL/TLS Layer of Encryption was added to HTTP
+- Data is encrypted in transit
+- Certificates prove identity 
+- Chain of trust - signed by a trusted authority 
+- ACM can function as a public or private certificate authority (CA) e.g. private can be used in an organisation
+- Private CA - applications need to trust your private CA
+- Public CA - browsers trust a list of providers 
+- ACM can generate or import certificates
+- If generated, ACM can auto renew on your behalf
+- If imported, you will have to renew them yourself
+- ACM can be deployed out to supported services
+- Supported AWS services ONLY e.g. cloudfront and ALB but not EC2
+- ACM is a regional service 
+- Certs cannot leave the region they are generated or imported in 
+- If you want to use a certificate in a service, it MUST be in the same region in ACM
+- there is one exception - cloudfront operates as though within us-east-1 - you need to use this region in ACM
+- S3 does not use ACM for any certificates
