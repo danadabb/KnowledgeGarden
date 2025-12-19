@@ -2812,3 +2812,55 @@ Cloudfront terms:
 - If you want to use a certificate in a service, it MUST be in the same region in ACM
 - there is one exception - cloudfront operates as though within us-east-1 - you need to use this region in ACM
 - S3 does not use ACM for any certificates
+
+### Securing CF and S3 using OAI
+- Origin Access Identity - OAI is a type of identity
+- Associated with cloudfront distribution 
+- cloudfront "becomes" that OAI
+- OAI can be used in S3 Bucket Policies
+- Uses DENY all BUT one or more OAIs
+- We can deny any access directly to s3 by using an OAI policy - explicit allow for the OAI 
+- when we have custom origns we can't use OAI
+
+With custom origins you can:
+- use custom headers 
+- and/or we have the IP ranges used by cloudfront so we can use a custom firewall
+
+### CloudFront - Private Distribution & Behaviours
+- cloudfront can be run in public mode or private mode
+- if its private it needs to be access via cookie or signed url
+- you can have a mixed of multiple behaviours e.g. public or private
+- you need a signer to sign cookies and urls
+- Old way was via a cloudfront key via the account root user - you need to remember the term TRUSTED SIGNER
+- new method is TRUSTED KEY GROUP(s) - you dont need to use the root user.
+
+signed urls vs signed cookies:
+- urls - provide access to ONE object only
+- use signed urls if your client doesnt support cookies
+- Cookies provides access to groups of objects
+- use cookies for groups of files/all files of a type
+- or if you want to maintain the application url 
+
+### Lambda@Edge
+- Allows you to run lightweight lambda functions at edge locations
+- can adjust traffic between the viewer and origin
+- Currently only support node js and python
+- you cannot access any VPC services since its in the public space
+- You can use it for A/B testing to change the viewer request and the url 
+- Can use it to migrate between S3 origins e.g. by a weighted value
+- Can use it to customise behaviour based on the type of device the customer is using
+- Vary content by country 
+
+### Global Accelerator
+- used to optimise flow of data
+- this is an alternative to cloudfront
+- global accelerators use anycast IP addresses - they allow single IPs to be used in multiple locations
+- when we create a global accelerator, its allocated an anycast IP address
+
+Key Concepts:
+- moves AWS betwork closer to customers
+- Aims to get users onto the global aws network as quickly and as close to their location as posisble
+- its transited over AWS backbone to 1+ location 
+- global accelerator is a network product and can be used for non http(s) e.g. TCP/UDP - if you need TCP/UDP youi will need global accelerator. 
+- cloudfront only caches HTTP, HTTP(S) content 
+- GA does not cache anything , its just transitting network data quickly
