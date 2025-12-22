@@ -182,7 +182,7 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - HA is about maximizing a system's online time
 - System availability is usually expressed as a percentage of uptime e.g. 99.9% a year means 8.77 hours p/year downtime
 - Fault tolerance (FA) is the property that enables a system to continue operating properly in the event of the failure of one or more of its components
-- HA is just about maximizing uptime where as FA is operating through failure e.g. a aeroplane can't just be highly available it must be fault tolerant
+- HA is just about maximizing uptime where as FA is operating through failure e.g. a airplane can't just be highly available it must be fault tolerant
 - FA is much more complex and more costly to implement as you need to minimize outages but also design a system that will tolerate a failure
 - Disaster recovery (DR) is a set of policies, tools and procedures to enable the recovery or continuation of vital technology infrastructure and systems following a natural or human-induced disaster
 - You need to plan what should be done in the event of a failure. An example of DR planning is having off-site backup storage
@@ -1801,7 +1801,7 @@ Column
 
 - Row based DBs are when you interact with data based on rows
 - Rows are ideal when you operate on rows
-- Column stores data in columns i.e. a grouping column for orderID, Product, Colour Size
+- Column stores data in columns i.e. a grouping column for orderID, Product, Color Size
 - Good for reporting where you need a particular column
 - An AWS column db is RedShift
 - Column db is great for reporting and analytics
@@ -1985,7 +1985,7 @@ IAM Authentication:
 - Aurora is very different from RDS
 - Uses a cluster
 - Made up of a single primary instance and 0 or more replicas
-- Replicas are used for reads for normal operations - you don;t have to choose betwee nread scaling and availabiliy
+- Replicas are used for reads for normal operations - you don;t have to choose between read scaling and availability
 - Does not use local storage, uses shared cluster volume
 - This provides faster provisioning, improved availability and better performance
 - Has a max cluster volume of 128 TiB
@@ -2097,7 +2097,7 @@ SCT (Schema Conversion Tool):
 
 - A standalone tool when converting one database engine to another including DB -> S3
 - Not used for movements of data between compatible engines
-- different engines e.g. on premisis MSQL - RDS MYSQL
+- different engines e.g. on premiss MSQL - RDS MYSQL
 
 DMS + Snowball:
 
@@ -2730,7 +2730,7 @@ Data Catalog
 - A merge between SQS and SNS but using open standards
 - SNS/SQS utilise aws apis
 - SNS provides topics and sqs provides queues
-- SNS/SQS are both public srrvices annd can be accessed from anywhere
+- SNS/SQS are both public services and can be accessed from anywhere
 - Both highly scalable and AWS integrated
 - Many orgs already use topics and queues (an on premise messaging system)
 - If they want to migrate to AWS, sns and sqs won't work out of the box
@@ -2832,11 +2832,11 @@ With custom origins you can:
 - you can have a mixed of multiple behaviours e.g. public or private
 - you need a signer to sign cookies and urls
 - Old way was via a cloudfront key via the account root user - you need to remember the term TRUSTED SIGNER
-- new method is TRUSTED KEY GROUP(s) - you dont need to use the root user.
+- new method is TRUSTED KEY GROUP(s) - you don't need to use the root user.
 
 signed urls vs signed cookies:
 - urls - provide access to ONE object only
-- use signed urls if your client doesnt support cookies
+- use signed urls if your client doesn't support cookies
 - Cookies provides access to groups of objects
 - use cookies for groups of files/all files of a type
 - or if you want to maintain the application url 
@@ -2858,9 +2858,62 @@ signed urls vs signed cookies:
 - when we create a global accelerator, its allocated an anycast IP address
 
 Key Concepts:
-- moves AWS betwork closer to customers
-- Aims to get users onto the global aws network as quickly and as close to their location as posisble
+- moves AWS network closer to customers
+- Aims to get users onto the global aws network as quickly and as close to their location as possible
 - its transited over AWS backbone to 1+ location 
-- global accelerator is a network product and can be used for non http(s) e.g. TCP/UDP - if you need TCP/UDP youi will need global accelerator. 
+- global accelerator is a network product and can be used for non http(s) e.g. TCP/UDP - if you need TCP/UDP you will need global accelerator. 
 - cloudfront only caches HTTP, HTTP(S) content 
-- GA does not cache anything , its just transitting network data quickly
+- GA does not cache anything , its just transmitting network data quickly
+
+
+## ADVANCED VPC Networking
+### VPC Flow Logs
+- Capture metadata (Not contents) e.g. source ip, destination ip, anything to do with flow of data to vpc
+- Can attach a VPC - all ENIs in that VPC
+- Subnet - All ENIs in that subnet
+- ENIs directly
+- they're NOT real time 
+- can go to multiple destination - s3 or cloudwatch logs
+- can use athena for querying - ad hoc querying engine
+- A VPC flow logs has different fields e.g. srcaddr, dstaddr, srcport, dstport, protocol,action
+
+### Egress-Only Internet gateway
+- IPV4 addresses are private or public
+- NAT allows private IPs to access public networks 
+- Without allowing externally initiated connections (IN)
+- With IPv6, all IPS are public meaning internet gateways allows all IPs IN and OUT
+- Egress-only is outbound-only for IPV6 since NAT does not support this
+
+### VPC Endpoints (Gateway)
+- Provide provide private access to public endpoints. At this point for S3 and DynamoDB
+- They allow a private only resource inside a VPC to access S3 and DynamoDB
+- Normally you would need an internet gateway to the VPC 
+- Gateway endpoints allow you to access these services without creating a public infrastructure
+- A prefix list is added to route table for these subnets
+- that means any traffic leaving the subnet goes through the gateway endpoint rather than the internet gateway
+- It's HA across all AZs in a region by default 
+- Endpoint policy is used to control what it can access e.g. particular s3 buckets
+- Can only access in same region - can't access cross-region services
+- These prevent leaky buckets - s3 can be set to private only by allowing access ONLY from a gateway endpoint. 
+- gateway endpoints are NOT accessible outside the vpc 
+
+
+### VPC Endpoints (Inteface)
+- Similar to gateway but the way its done is different
+- Like gateway endpoints, they provide private access to AWS services
+- dynamoDB is still only available using gateway but interface can use s3
+- Allow private IP addressing to access public AWS services
+- interface endpoints are not highly available by default - they are added to specific subnets - ENI
+- One Interface Endpoint should be added to one subnet per AZ for high availability
+- Network access controlled via Security Groups - can't do this with gateway endpoints
+- Endpoint policies can be used to restrict what can be done with the endpoint
+- TCP and IPV4 ONLY
+- Uses PrivateLink
+
+### VPC Peering
+- A service that lets you create a private encrypted network link between two VPCs
+- One peering connection links two and ONLY two vpcs 
+- Works same/cross region and same/cross-account
+- Same region peers can reference peer Security Groups
+- VPC Peering does not support transitive peering e.g. A -> B and B -> C does NOT mean A -> C
+
