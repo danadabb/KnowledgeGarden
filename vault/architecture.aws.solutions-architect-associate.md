@@ -2917,3 +2917,234 @@ Key Concepts:
 - Same region peers can reference peer Security Groups
 - VPC Peering does not support transitive peering e.g. A -> B and B -> C does NOT mean A -> C
 
+## HYBRID ENVIRONMENTS AND MIGRATION
+
+### Border Gateway Protocol 101
+- Made up of Autonomous Systems (AS) - Routers controlled by one entity 
+- ASN (Autonomous system numbers) are unique and allocated by IANA
+- Reliable and distributed - operates over tcp/179
+- Not automatic - peering is manually configured 
+- Path-vector protocol - exchanges the best path to a destination between peers. This path is known as the ASPATH
+- iBGP - Internal BGP - routing within AS
+- eBGP - External BGP - routing between AS
+
+
+### IPSec VPN Fundamentals
+- A group of protocols that aim to set up secure tunnels across insecure networks
+- ...between two peers (local and remote)
+- Provides authentication and is encrypted
+- IPSEC has two main phases:
+  1. IKE Phase 1 - Internet Key Exchange (slow and heavy)
+    - Authenticate 
+    - Using asymmetric encryption to agree on 
+    - IKE SA created - phase 1 tunnel
+  2. IKE Phase 2 - (fast and agile)
+    - Uses keys agreed in phase 1
+    - Agreed encryption method used
+    - Created IPSEC SA - phase 2 tunnel 
+
+Policy vs route based VPNs:
+- Policy - rule sets match traffic - a pair of SAs
+- route based - target matching (prefix) - matches a single pair of SAs
+
+### AWS Site-to-Site VPN
+- Logical connection between a VPC and an on-premiss network - encrypted using IPSEC, running over public internet
+- Fully HA - if you design and implement correctly
+- Quick to provision - less than an hour
+- Virtual Private Gateway (VGW) - a logical gateway object that can be associated with a single VPC and one or more route tables
+- Customer Gateway (CGW) - logical config in AWS or physical device which it represents
+- VPN connection between VGW and CGW
+
+VPN Consideration:
+- Speed limitation 1.25Gbps
+- Latency - inconsistent
+- Cost - AWS hourly cost, GB out cost, data cap (on premises)
+- Speed of setup is quick and usually quicker than other private connection technologies- hours, all software configuration 
+- Can be used as a backup for direct connect (DX) 
+- Can be used with Direct Connect (DX)
+
+### Start Direct Connect (DX) Concepts
+- A physical connection into an AWS region - 1,10 or 100 Gbps
+- Business premises => DX location => AWS Region
+- You're given a port allocation at DX location 
+- Cost is hourly and outbound data transfer
+- Provisioning time - requires physical cables and there is no resilience as its physical. This could take weeks
+- Low & consistent latency + high speeds
+- Can be used to access AWS Private services - can't be used to access public internet without additional configuration
+- DX location is not owned by AWS but is rented out by it 
+
+### Direct Connect (DX) Resilience
+- Direct connect is not resilient, it's a physical connectivity that needs to be architected to be resilient
+- What could go wrong:
+  - DX location could fail e.g. power failure
+  - DX Router 
+  - Cross Connect - it'sa cable
+  - Customer DX router, 
+  - Extension
+  - Customer premises
+  - Customer router
+
+We can add resilience by:
+- Separate customer premises buildings - with separate routers
+- Several DX locations
+- Adding separate ports in each DX locations as well as premisses locations 
+
+### Direct Connect (DX) - Public VIF + VPN (Encryption)
+- Using a VPN gives you an encrypted and authenticated tunnel
+- OVer DX you will get low latency & consistency latency
+- This uses a public VIF
+- VPJ is transit agnostic - DX/Public internet
+- Public VIFs+IPSec VPN is a way to provide access to private VPC resources, using an encrypted IPSEC tunnel for transit.
+
+
+### Transit Gateway
+- A network transit hub which connects VPCs to each other and to on premises networks using site to site VPNs and direct connect
+- It's designed to reduce network complexity
+- It's a single network object - HA & Scalable
+- You create attachments to other network types
+- attachments - VPC, Site to site VPN and DX gateway
+- Supports transitive routing 
+- Can be used to create global networks
+- Share transit gateways between accounts using AWS RAM
+- you can peer different regions on same or cross accounts
+- It offers much less complexity than without TGW
+
+### Storage Gateway - Volume
+- Runs as a virtual machine on premises (although can be ordered as hardware appliance)
+- presents storage using iSCSI, NFS or SMB
+- Integrates with EBS, s3 and glacier
+- used for migrations, extensions, storage tier-ing, DR and replacement of backup systems 
+- When you're using volume storage in volume stored mode everything is stored locally
+- It asynchronously syncs to storage gateway endpoint which stores EBS snapshots in an s3 bucket
+- if you need full disk backups and DR, this is not the right solution
+- Volume cached mode - instead of local storage, it has a local cache but it stores all data in s3. The AWS bucket is an aws managed area so its not available to just look at 
+- the main difference between Volume stored vs volume cached is the location of the data
+- volume cache uses aws as the primary location 
+
+
+### Storage Gateway - Tape (VTL)
+- tapes - LTO - storing to tapes
+- this really only allows write as a whole or read as a whole as editing tapes is not really possible
+  
+### Storage Gateway - File
+- File bridges on premises file storage and s3
+- you create mount points (shares) available via NFS or SMB 
+- they map directly onto an S3 bucket
+- files stored into a mount point are visible as objects in an s3 bucket
+- does read/write caching and ensures LAN-like performance
+
+
+### Snowball / Edge / Snowmobile 
+- Designed to move large amounts of data in and out of AWS
+- The devices in this series are big physical storage
+- You can either order them empty, load and return 
+- or order with data, empty and return 
+
+Snowball:
+- ordered from AWS 
+- data encrypted using KMS
+- 50tb or 80tb capacity
+- 1GBPS or 10GBPS network
+- 10TB to 10PB of data transfer most economical - you can order multiple devices
+- You can move the devices to multiple premises
+- only storage is included in the device
+
+Snowball edge:
+- Comes with storage and compute 
+- Larger capacity
+- 10gbs, 10/25, 45/50/100 - faster network
+- storage optimized with EC2 
+- Compute optimized variant - for aggressive compute requirements
+- Compute with GPU 
+- Snowball is older, snowball edge is ideal for remote sites where data processing on ingestion is needed 
+
+Snowmobile:
+- Portable data center within a shipping container on a truck
+- ideal for single location when 10+ PB is required
+- up to 100PB per snowmobile
+- It's a single truck - not economical for multi site (unless huge) or sub 10pb
+
+### Directory Service
+directories:
+- store objects within a structure (domain/tree)
+- multiple trees can be grouped into a forest
+- Microsoft active directory domain service (AD DS) is a common implementation
+  
+- Directory Service is AWS managed implementation
+- Runs within a VPC
+-  Provides HA - deploys within multiple AZs
+-  some aws services need a directory e.g. amazon workplaces 
+-  can be isolated directory or integrated with existing on-premises 
+-  or act as a proxy back to on premises
+
+It can function in 3 modes:
+- Simple AD - an implementation of Samba 4
+- AWS Managed Microsoft AD - an actual microsoft AD DS implementation
+- AD Connector which proxies requests back to an on premises directory 
+
+- Start off with simple AD
+- Move to Microsoft AD if applications in AWS need MS DS or you need a trust relationship with AD DS
+- If you need a directory without storing any directory info in the cloud - use AD Connector 
+
+### DataSync
+- A data transfer service to transfer data into and out of AWS
+- Designed to work at huge scale
+- Keeps metadata (e.g. permissions and timestamps)
+- Built in data validation
+- Scalable - 10gbps per agent (~ 100TB per day)
+- can use bandwith limiters
+- incremental and scheduled transfer options
+- supports compression and encryption
+- automatic recovery
+- service integration - S3, EFS, FSx
+- Pay as you use
+
+### FSx for Windows Servers
+- fully managed native windows file servers/shares
+- designed for integration with windows environments
+- can integrate with directory service or self managed AD
+- Resilient and HA - single or multi AZ within a VPC
+- on demand and scheduled backups
+- Accessible over VPC, peering, DX
+- Highly performant
+- VSS - User driven restores - unique to Fsx - can do this without a sys admin
+- Native file system accessible over SMB 
+- Uses windows permission model
+- Supports DFS
+- Managed - no file server admin
+- can be integrated with DS and your own directory
+
+### FSx For Lustre
+- Managed implementation of Lustre - designed for HPC - Linux clients (POSIX)
+- For machine learning, big data, financial model
+- can scale to 100s GBs throughput and sub millisecond latency
+- Deployment types:
+  - scratch - highly optimised for short term, fast
+  - persistent - longer term, HA in one AZ and self healing
+- Available over a VPN or DX
+- Metadata is stored on metadata targets
+- objects are stored on object storage targets
+- baseline performance based on size 
+- Use scratch for short term or temp workloads - NO HA, NO REPLICATION
+- persistent has replication but within ONE AZ only
+- Auto heals when hardware failure occurs
+- You can backup to S3 with both
+
+### AWS Transfer Family
+- Provides managed file transfer service - supports transfers to and from s3 and efs
+- provides managed "servers"
+Protocols used:
+  - FTP
+  - FTPS 
+  - SSH (SFTP)
+  - AS2 - B2B data
+- Create servers / endpoints:
+  - public - via aws  - SFTP
+  - VPC - internet - SFTP, FTPS, AS2
+  - VPC - internal - SFTP, FTP, FTPS, AS2 
+- Multi az 
+- provisioned server per hour + data transfered
+- FTP and FTPS - directory service or custom IDP only
+- FTP - VPC only (cannot be public)
+- AS2 - VPC internal/internet only
+
