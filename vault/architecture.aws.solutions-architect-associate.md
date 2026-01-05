@@ -3148,3 +3148,143 @@ Protocols used:
 - FTP - VPC only (cannot be public)
 - AS2 - VPC internal/internet only
 
+## SECURITY, DEPLOYMENT & OPERATIONS
+### AWS Secrets Manager
+- Shares functionality with parameter store
+- designed specifically for secrets e.g. passwords, api keys
+- Usable via console, cli, api or sdks
+- supports automatic rotation 
+- directly integrates with some aws products e.g. rds
+
+### Application Layer (L7) Firewall
+
+Normal Firewalls (layer 3/4/5):
+- layer 3-4 requests to/from are seen as different streams of data
+- with layer 5, using a session, the two requests can be seen as one
+- each of these don't understand anything above the layer they operate at e.g. they cannot see HTTP, they just see general packet data
+- layer 7 fix many of these limitations
+
+Layer 7:
+- Layer 7 firewalls are aware of layer 7 protocl e.g. HTTP
+- can identify normal or abnormal requests and attacks
+
+### Web Application Firewall (WAF), WEBACLs, Rule Groups and Rules
+- A web application firewall that helps protect your web applications or APIs against common web exploits and bots
+- Outputs logs
+- A protection pack (web ACL) gives you fine-grained control over all of the HTTP(S) web requests that your protected resource responds to
+
+Web ACL:
+- Controls what traffic is allowed or blocked - (ALLOW or BLOCK)
+- Resource type - cloudfront or regional service 
+- Have to add rule groups or rules processed in order
+- WCU - acl capacity units - default is 1500 but can be increased via support tickets
+- WebACLS are associated with resources , this can take some time
+- Adjusting an existing WEBACL can take less time than creating a new one
+
+Rule groups:
+- rule groups contain rules
+- No default actions - thats defined when added to webacls
+- managed by aws, you, services owned
+- Can be reused by multiple webACLS
+- You have to define the WCU capacity upfront (max 1500*)
+
+WAF Rules:
+- Type, Statement, Action
+- Regular or Rate-based (e.g. x100 in a 5 minute period)
+- Statement: WHAT to match or COUNT
+- Action: Allow, block, count, captcha and custom responses
+
+- WebACL - monthly $5/month
+- Rule - $1 / month
+- Requests - monthly $0.6/million
+- Intelligent threat mitigation: bot control ($10/month) & $1/1 mil requests
+- Captcha, fraud control, marketplace groups extra costs
+
+### AWS Shield
+- Standard and Advance - DDOS Protection
+- Shield is free and advanced has a cost
+- Network volumetric attacks (L3) - Saturate Capacity
+- Network Protocol Attacks (L4) - TCP SYN FLood
+- ...Leave connections open, prevent new ones
+- Application Layer Attacks (L7) e.g. web request floods
+
+Standard:
+- Free
+- Protection at the perimeter at region/vpc or at AWS edge
+- Common network (L3) or Transport (L4)
+- Best protection using r53, cloudfront, aws global accelerator 
+
+
+Advanced:
+- $3000 per month per org - 1 year lock in
+- Protects CF, R53, Accelerator, anything associated with EIPS (ec2), ALBS, CLBs, NLBs
+- not automatic - must be explicitly enabled 
+- Cost protection for unmitigated attacks e.g. ec2 scaling
+- Proactive engagement & aws shield response team will contact you when attacks are detected
+- Integrates with WAF
+- Application Layer 7 ddos protection
+- real time visibility of DDOS events and attacks
+- Health based detection 
+- Protection groups
+
+### CloudHSM
+- with KMS its AWS managed. It's a shared service which means other AWS accounts use it 
+- CloudHSM - a true Single Tenant hardware security module (HSM)
+- AWS Provision but its fully customer managed
+- Fully FIPS 140-2 Level 3 compliant (KMS is l3 overall some l3)
+- CloudHSM has to be accessed via industry standard APIs - pks#11, java cryptography extensions JCE, microsoft cryptoNG (CNG) libraries
+- KMS can use cloudhsm as a custom key store and cloudhsm integration with KMS
+- Deployed on a cloud VPC you have no visibility of
+- AWS CloudHSM client needs to be installed on the VPC devices to be accessed
+
+Use cases:
+- No native integration e.g. no s3, SSE
+- Offload the SSL/TLS processing for web servers - more economical and efficient than doing on a general purpose ec2 instance
+- enable transparent data encryption (TDE) for oracle databases
+- protect the private keys for an issuing certificate authority (CA)
+
+For anything that requires aws integration then cloudHSM is not suitable 
+
+### AWS Config
+- A service which records config changes over time on resources
+- For auditing of changes, compliance with standards
+- does not prevent changes happening - no protection
+- Regional service - supports cross region and account aggregation
+- Can generate SNS notifications and near real time events via event bridge and lambda
+- Config rules can be used to evaluate resources and determining whether their non-compliant
+
+### Amazon Macie
+- data security and data privacy service
+- Discover, monitor and protect data stored in S3 buckets
+- Automated discovery of data i.e. PII, PHI, Finance
+- Managed data identifiers - build-in using ML/Patterns
+- Custom data identifiers - proprietary - regex based
+- Integrates - with security hub & finding events to event bridge
+- Uses a multi account architecture - centrally managed ether via aws ORG or one macie account inviting
+
+Identifiers:
+- Managed via AWS:
+  - via a growing list of common sensitive data types e.g. credentials, finance, health, personal identifiers
+- Custom - created by you
+  - regex
+  - Keywords - optional sequences 
+  - Maximum match distance
+  - ignore words
+
+Findings:
+- Policy or sensitive data findings
+- Policy e.g. S3BlockPublicAccessDisabled/EncryptionDIsabled/BucketSharedExternally etc...
+- Sensitive data - S3Object/Credentials, S3Object/CustomIdentifiers, S3Object/Financial etc...
+
+### Amazon Inspector
+- Designed to check EC2 instances and the instances OS
+- Provides report ordered by severity
+- Network assessment (agentless)
+- Network and Host assessment (agent)
+- Rules package - network reachability (no agent required)
+- Agent can provide additional OS visibility
+- Check reachability end to end
+- Packages - Host assessments, agent required:
+  - common vulnerabilities and exposures (CVE)
+  - Center for internet security (CIS) benchmarks
+  - Security best practices for amazon inspector e.g. password complexity checks
