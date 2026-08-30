@@ -2,7 +2,7 @@
 id: jeybygpftmwnk69ylywov78
 title: Solutions Architect Associate
 desc: "Notes for the SAA certification"
-updated: 1759880042451
+updated: 1788071121200
 created: 1734484581601
 ---
 
@@ -211,7 +211,6 @@ Inside every region, AWS also provide multiple availability zones. These give is
 ### DNS Record Types
 
 - There are different records that can be stored in DNS:
-
   - Nameserver (NS) - allow delegation to occur end to end in DNS. e.g example.com → ns1.example.com, ns2.example.com
 
   - A and AAAA Records - A record will point to a v4 IP address and the AAAA will point to the v6 IP address. For example:
@@ -238,7 +237,6 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - IAM policies are a type of policy which get attached to identities in AWS
 - Identities are IAM users, groups and roles
 - IAM Policies:
-
   - provides and denies access to features in AWS
   - Policy documents are created using JSON containing one or more statements
   - the first part of a statement is a Sid (Statement ID) which is an optional field that lets you identify a statement and what it does. Using these is best practice to inform the reader
@@ -314,7 +312,6 @@ Inside every region, AWS also provide multiple availability zones. These give is
 - If you can't identify the number of principals that use an identity or if you have more than 5000 principals you could consider using an IAM role
 - Usually roles are used on a temporary basis to borrow permissions
 - IAM roles have two types of policies that can be attached:
-
   1. Trust policy - which identities can assume that role. This can be entities in AWS accounts, other accounts, anonymous users and SSO providers e.g. facebook, google etc
   2. Permissions policy - temporary credentials are given to identities assuming the role and these credentials are used to check the permissions
 
@@ -779,7 +776,6 @@ Legal Hold Locking:
 
 - A private network inside AWS
 - You need to decide what IP range to use in advance - it's not easy to change later. There are a few things you should keep in mind:
-
   - What size should the VPC be? This influences how many services can fit into the VPC
   - Are there any networks we can't use? Duplicate or overlapping ranges complicate things
   - Be mindful of other VPC ranges, other cloud envs, on premises, partners and vendors and their IP ranges
@@ -931,7 +927,6 @@ baston Host / Jump boxes
 
 - A NAT instance is when you make an EC2 instance run as a NAT instance
 - It's much easier and scalable to use a NAT gateway except for when:
-
   - cost is an issue
   - for test purposes
   - need something free tier eligible
@@ -1743,7 +1738,6 @@ An ALIAS record:
   - allocates 4 x Name Servers (domain hosting)
   - Creates a zone file (domain hosting) on the NS servers
 - Domain registration:
-
   - R53 communicates with the registry of TLD (domain registrar)
 
 - typically r53 doesn't isn't just used as a domain registar but sometimes used purely for hosting where the domain is registered via a 3rd party
@@ -1887,7 +1881,6 @@ Costs:
 ### Relational Database Service (RDS) MultiAZ - Instance and Cluster
 
 - Historically, the only way to provide high availability to RDS is via multi az. This meant the primary rds instance replicates across AZs:
-
   - all access to DB is via the CNAME - with multi az you still only access the primary instance
   - data is written to primary and immediately replicated to standby
   - not included in free tier
@@ -2612,37 +2605,39 @@ Caching:
 ### SQS Delay Queues
 
 - Allow you to postpone the delivery of messages to consumers
-- A delay queue has a DelaySeconds where messages are conceptually parked - they are not available on the queue. Maximum value is 15 minutes. 
+- A delay queue has a DelaySeconds where messages are conceptually parked - they are not available on the queue. Maximum value is 15 minutes.
 - You cannot use it on FIFO queues
 
 ### SQS Dead-Letter Queues
-- Dead letter queues are designed to allow you to handle problematic messages 
+
+- Dead letter queues are designed to allow you to handle problematic messages
 - You can use a dead letter queue whereby when the recievecount of a message is more than maxRecieveCount it moves to a dead letter queue
-- It's a separate area to analyse/diagnose the messaging issues 
+- It's a separate area to analyse/diagnose the messaging issues
 - All sqs have retention periods for messages which starts at the enqueue timestamp of the original queue.
 - A DLQ can be used for multiple source queues
 
-
 ### Kinesis Data Streams
+
 - Often confused with SQS
 - A scalable streaming service
 - Designed to ingest data from lots of devices and applications
 - streams can scale from low to near infinite data rates
-- public service & highly available by design 
+- public service & highly available by design
 - Provide a level of persistence - 24 hour moving window of data
 - Can be increased to 365 days for an additional cost
-- multiple consumers can access the data from that moving window 
+- multiple consumers can access the data from that moving window
 - great for analytics and dashboards
-- Uses a shard architecture with each shard taking on more data 
+- Uses a shard architecture with each shard taking on more data
 - Kineses data records are max of 1mb
 - Questions about ingesting data is about kineses otherwise it could be sqs
 - SQS has 1 production group, 1 consumption group
 - SQS usually are used for decoupling and asynchronous communications
 - SQS doesn't really use any persistence or windows
 - Kinesis is designed for huge scale ingestion for multiple consumers over a rolling window
-- Kinesis is good for data ingestion, analytics, monitoring or app clicks 
+- Kinesis is good for data ingestion, analytics, monitoring or app clicks
 
 ### Kinesis Data Firehose
+
 - Kinesis does not provide a default way to store data
 - Firehose is a fully managed service used to load data for data lakes, data stores and analytics services
 - Scales automatically - fully serverless, resilient
@@ -2651,6 +2646,7 @@ Caching:
 - Billing - volume through firehose
 
 Valid destinations for firehose:
+
 - HTTP endpoints
 - Splunk
 - Redshift
@@ -2658,15 +2654,16 @@ Valid destinations for firehose:
 - Destination Bucket s3
 
 - Kinesis data stream integrates with firehose to delegate the data
-- Firehose can also recieve data directly from sources 
+- Firehose can also recieve data directly from sources
 - Even though it receives things in real time, firehose does not deliver in real time unlike kinesis data stream (~200ms vs ~60s)
 - Lambda can be used to transform data coming from firehose and back
 - The only exception to kineses firehose data store is redshift where s3 is used as an intermediary storage before it's saved onto redshift
 
 - Firehose is good for permanent storage of data, for transforming data (using lambda) to store, or if you want to put it into one of the supported products
 - remember it is not REAL TIME
- 
+
 ### Kinesis Data Analytics
+
 - Real time data processing product
 - Uses SQL
 - Ingests from kineses data streams or firehose
@@ -2675,58 +2672,64 @@ Valid destinations for firehose:
 - Kineses data streams
 - It's realtime unless you use firehose
 - Allows you to use sql in real time on source streams
-- Kineses analaytics app can also take data from static resources e.g. s3 bucket 
+- Kineses analaytics app can also take data from static resources e.g. s3 bucket
 - Static data can be used to enrich the real time streaming input
 - It processes input, performs application code on the data and outputs streams and puts them to kineses streams or kinesis firehose
 
-
 scenarios where you may use kineses data analytics:
+
 - streaming data that needs reeal time sql processing
 - time series analytics - elections/e-sports
 - real time dashboards - leaderboards for games
-- real time metrics - security and response 
-- Lambda is limited to simple manipulations, kineses data analytics is good for complex real time data manipulation 
+- real time metrics - security and response
+- Lambda is limited to simple manipulations, kineses data analytics is good for complex real time data manipulation
 
 ### Kinesis Video Streams
+
 - Kineses video streams ingests live video from producers
 - These can be security cameras, smartphones, cars, drones, time-serialised audio, thermal, depth and RADAR data
-- Consumers can access data frame-by-frame or as needed 
+- Consumers can access data frame-by-frame or as needed
 - Can persist and encrypt data in transit and at rest
 - You can't access the video data directly via storage you can only do it via apis
 - Integrates with AWS products - rekognition and Connect
 
-
 ### Amazon Cognito - User and Identity Pools
+
 - Cognito provides authentication, authorization and user management for web and mobile apps
 
 There are two parts of cognito:
+
 1. User pools - sign in and get a JWT (json web token) - most aws services CANNOT use jwts.
-  - used for sign up, sign in, MFA and other security features
-  - Allow SSO 
-  - Can't be used to access AWS resources
+
+- used for sign up, sign in, MFA and other security features
+- Allow SSO
+- Can't be used to access AWS resources
+
 2. Identity Pool - allows you to offer access to temporary AWS credentials
-- Unauthenticated identities for guest users 
-- Swap temporary identity for short term AWS credentials 
+
+- Unauthenticated identities for guest users
+- Swap temporary identity for short term AWS credentials
 - Assume an IAM role on behalf of an identity
 
-
 ### AWS Glue 101
-- Serverless ETL (extract, transform and load) 
+
+- Serverless ETL (extract, transform and load)
 - Datapipeline can do ETl but it uses servers
-- Moves and transforms data between source and destination 
+- Moves and transforms data between source and destination
 - Crawls data sources and generates the AWS glue data catalog
-- Data sources can be any store e.g. s3, rds, jdbc compatible & dynamo db 
+- Data sources can be any store e.g. s3, rds, jdbc compatible & dynamo db
 - Data sources can also be streams e.g. kinesis data streams & apache kafka
 - Data targets can be s3, rds, jdbc databases
 
 Data Catalog
+
 - A collection of metadata combined with search tools
-- One catalog per region per account 
+- One catalog per region per account
 - Helps avoid data silos
 - AWS can use glue for etl and catalogue related services e.g. athena, redshift spectrum, aws lake formation
 
-
 ### Amazon MQ 101
+
 - A merge between SQS and SNS but using open standards
 - SNS/SQS utilise aws apis
 - SNS provides topics and sqs provides queues
@@ -2745,10 +2748,10 @@ Data Catalog
 - SNS or SQS if AWS integration is required e.g. logging, permissions, encryption, service integration
 - Use Amazon MQ if you neeed to migrate from an existing system with little to no change
 - If you need to use open APIs
-- Remember you need to have private networking configured to use amazon MQ 
-
+- Remember you need to have private networking configured to use amazon MQ
 
 ### Amazon AppFlow
+
 - Fully managed integration service
 - Exchange data between applications (connectors) using flow
 - Source/destination connector
@@ -2761,72 +2764,79 @@ Data Catalog
 ## GLOBAL CONTENT DELIVERY AND OPTIMIZATION
 
 ### Cloudfront Architecture
+
 - Content Delivery Network - improve the delivery - uses caching and an efficient global network
 
 Cloudfront terms:
+
 - Origin - the original location of content - S3 or Custom origin - S3 bucket or anywhere else
 - Distribution - The configuration unit of cloudfront - everything is configured in distribution (directly or indirectly)
 - Edge location - pieces of global infrastructure where content is cached
 - Regional Edge Cache - bigger than edge locations but designed to hold data that is accessed less frequently
 
-- Edge location is checked first, if there is a cache miss, the regional cache is checked, then finally its fetched from the origin if its not there. If its fetched from the origin then it's cached at regional and edge 
+- Edge location is checked first, if there is a cache miss, the regional cache is checked, then finally its fetched from the origin if its not there. If its fetched from the origin then it's cached at regional and edge
 
 - Cloudfront performs no write caching - only read caching
 
 - A behaviour is configuration or "subconfiguration" of distribution
 - Behaviours sit architecturally between origins and distributions - Cloudfronts have at least 1 behaviour
-- Default behaviour is * which matches everything
+- Default behaviour is \* which matches everything
 
 ### CloudFront - TTL and Invalidations
+
 - An edge location views an object as not expired if it's within it's TTL period
 - More frequent cache HITS = lower origin load
 - TTL default behaviour = 24 hours validity period
-- You can set Minimum TTL and Maximum TTL 
+- You can set Minimum TTL and Maximum TTL
 - There are different headers that can be used to direct cloudfront to use different TTL values:
   - Cache-Control max-age (seconds)
   - Cache-Control s-maxage (seconds)
   - Expires (Date & Time)
-- For all of these, the TTL minimum and maximum will be used instead of the per-object setting if these don't fall in the range 
-- Cache invalidations can be performed on a distribution - applies to all edge locations - takes time 
-- Takes a path with wildcards to invalidate everything in that path e.g. /images/* or /images/whiskers*
-- Invalidation should only be thought of as a way to correct errors - versioned file names are a good alternative to invalidation 
+- For all of these, the TTL minimum and maximum will be used instead of the per-object setting if these don't fall in the range
+- Cache invalidations can be performed on a distribution - applies to all edge locations - takes time
+- Takes a path with wildcards to invalidate everything in that path e.g. /images/_ or /images/whiskers_
+- Invalidation should only be thought of as a way to correct errors - versioned file names are a good alternative to invalidation
 - versioned file names is not the same as s3 object versioning
 
 ### ACM - AWS Certificate Manager
+
 - HTTP was created as simple and secure
 - Once HTTP evolved, security vulnerabilities became an issue
 - HTTPS - SSL/TLS Layer of Encryption was added to HTTP
 - Data is encrypted in transit
-- Certificates prove identity 
-- Chain of trust - signed by a trusted authority 
+- Certificates prove identity
+- Chain of trust - signed by a trusted authority
 - ACM can function as a public or private certificate authority (CA) e.g. private can be used in an organisation
 - Private CA - applications need to trust your private CA
-- Public CA - browsers trust a list of providers 
+- Public CA - browsers trust a list of providers
 - ACM can generate or import certificates
 - If generated, ACM can auto renew on your behalf
 - If imported, you will have to renew them yourself
 - ACM can be deployed out to supported services
 - Supported AWS services ONLY e.g. cloudfront and ALB but not EC2
-- ACM is a regional service 
-- Certs cannot leave the region they are generated or imported in 
+- ACM is a regional service
+- Certs cannot leave the region they are generated or imported in
 - If you want to use a certificate in a service, it MUST be in the same region in ACM
 - there is one exception - cloudfront operates as though within us-east-1 - you need to use this region in ACM
 - S3 does not use ACM for any certificates
 
 ### Securing CF and S3 using OAI
+
 - Origin Access Identity - OAI is a type of identity
-- Associated with cloudfront distribution 
+- Associated with cloudfront distribution
 - cloudfront "becomes" that OAI
 - OAI can be used in S3 Bucket Policies
 - Uses DENY all BUT one or more OAIs
-- We can deny any access directly to s3 by using an OAI policy - explicit allow for the OAI 
+- We can deny any access directly to s3 by using an OAI policy - explicit allow for the OAI
 - when we have custom origns we can't use OAI
 
 With custom origins you can:
-- use custom headers 
+
+- use custom headers
 - and/or we have the IP ranges used by cloudfront so we can use a custom firewall
 
 ### CloudFront - Private Distribution & Behaviours
+
 - cloudfront can be run in public mode or private mode
 - if its private it needs to be access via cookie or signed url
 - you can have a mixed of multiple behaviours e.g. public or private
@@ -2835,70 +2845,77 @@ With custom origins you can:
 - new method is TRUSTED KEY GROUP(s) - you don't need to use the root user.
 
 signed urls vs signed cookies:
+
 - urls - provide access to ONE object only
 - use signed urls if your client doesn't support cookies
 - Cookies provides access to groups of objects
 - use cookies for groups of files/all files of a type
-- or if you want to maintain the application url 
+- or if you want to maintain the application url
 
 ### Lambda@Edge
+
 - Allows you to run lightweight lambda functions at edge locations
 - can adjust traffic between the viewer and origin
 - Currently only support node js and python
 - you cannot access any VPC services since its in the public space
-- You can use it for A/B testing to change the viewer request and the url 
+- You can use it for A/B testing to change the viewer request and the url
 - Can use it to migrate between S3 origins e.g. by a weighted value
 - Can use it to customise behaviour based on the type of device the customer is using
-- Vary content by country 
+- Vary content by country
 
 ### Global Accelerator
+
 - used to optimise flow of data
 - this is an alternative to cloudfront
 - global accelerators use anycast IP addresses - they allow single IPs to be used in multiple locations
 - when we create a global accelerator, its allocated an anycast IP address
 
 Key Concepts:
+
 - moves AWS network closer to customers
 - Aims to get users onto the global aws network as quickly and as close to their location as possible
-- its transited over AWS backbone to 1+ location 
-- global accelerator is a network product and can be used for non http(s) e.g. TCP/UDP - if you need TCP/UDP you will need global accelerator. 
-- cloudfront only caches HTTP, HTTP(S) content 
+- its transited over AWS backbone to 1+ location
+- global accelerator is a network product and can be used for non http(s) e.g. TCP/UDP - if you need TCP/UDP you will need global accelerator.
+- cloudfront only caches HTTP, HTTP(S) content
 - GA does not cache anything , its just transmitting network data quickly
 
-
 ## ADVANCED VPC Networking
+
 ### VPC Flow Logs
+
 - Capture metadata (Not contents) e.g. source ip, destination ip, anything to do with flow of data to vpc
 - Can attach a VPC - all ENIs in that VPC
 - Subnet - All ENIs in that subnet
 - ENIs directly
-- they're NOT real time 
+- they're NOT real time
 - can go to multiple destination - s3 or cloudwatch logs
 - can use athena for querying - ad hoc querying engine
 - A VPC flow logs has different fields e.g. srcaddr, dstaddr, srcport, dstport, protocol,action
 
 ### Egress-Only Internet gateway
+
 - IPV4 addresses are private or public
-- NAT allows private IPs to access public networks 
+- NAT allows private IPs to access public networks
 - Without allowing externally initiated connections (IN)
 - With IPv6, all IPS are public meaning internet gateways allows all IPs IN and OUT
 - Egress-only is outbound-only for IPV6 since NAT does not support this
 
 ### VPC Endpoints (Gateway)
+
 - Provide provide private access to public endpoints. At this point for S3 and DynamoDB
 - They allow a private only resource inside a VPC to access S3 and DynamoDB
-- Normally you would need an internet gateway to the VPC 
+- Normally you would need an internet gateway to the VPC
 - Gateway endpoints allow you to access these services without creating a public infrastructure
 - A prefix list is added to route table for these subnets
 - that means any traffic leaving the subnet goes through the gateway endpoint rather than the internet gateway
-- It's HA across all AZs in a region by default 
+- It's HA across all AZs in a region by default
 - Endpoint policy is used to control what it can access e.g. particular s3 buckets
 - Can only access in same region - can't access cross-region services
-- These prevent leaky buckets - s3 can be set to private only by allowing access ONLY from a gateway endpoint. 
-- gateway endpoints are NOT accessible outside the vpc 
-
+- These prevent leaky buckets - s3 can be set to private only by allowing access ONLY from a gateway endpoint.
+- gateway endpoints are NOT accessible outside the vpc
 
 ### VPC Endpoints (Inteface)
+
 - Similar to gateway but the way its done is different
 - Like gateway endpoints, they provide private access to AWS services
 - dynamoDB is still only available using gateway but interface can use s3
@@ -2911,8 +2928,9 @@ Key Concepts:
 - Uses PrivateLink
 
 ### VPC Peering
+
 - A service that lets you create a private encrypted network link between two VPCs
-- One peering connection links two and ONLY two vpcs 
+- One peering connection links two and ONLY two vpcs
 - Works same/cross region and same/cross-account
 - Same region peers can reference peer Security Groups
 - VPC Peering does not support transitive peering e.g. A -> B and B -> C does NOT mean A -> C
@@ -2920,34 +2938,37 @@ Key Concepts:
 ## HYBRID ENVIRONMENTS AND MIGRATION
 
 ### Border Gateway Protocol 101
-- Made up of Autonomous Systems (AS) - Routers controlled by one entity 
+
+- Made up of Autonomous Systems (AS) - Routers controlled by one entity
 - ASN (Autonomous system numbers) are unique and allocated by IANA
 - Reliable and distributed - operates over tcp/179
-- Not automatic - peering is manually configured 
+- Not automatic - peering is manually configured
 - Path-vector protocol - exchanges the best path to a destination between peers. This path is known as the ASPATH
 - iBGP - Internal BGP - routing within AS
 - eBGP - External BGP - routing between AS
 
-
 ### IPSec VPN Fundamentals
+
 - A group of protocols that aim to set up secure tunnels across insecure networks
 - ...between two peers (local and remote)
 - Provides authentication and is encrypted
 - IPSEC has two main phases:
   1. IKE Phase 1 - Internet Key Exchange (slow and heavy)
-    - Authenticate 
-    - Using asymmetric encryption to agree on 
-    - IKE SA created - phase 1 tunnel
+  - Authenticate
+  - Using asymmetric encryption to agree on
+  - IKE SA created - phase 1 tunnel
   2. IKE Phase 2 - (fast and agile)
-    - Uses keys agreed in phase 1
-    - Agreed encryption method used
-    - Created IPSEC SA - phase 2 tunnel 
+  - Uses keys agreed in phase 1
+  - Agreed encryption method used
+  - Created IPSEC SA - phase 2 tunnel
 
 Policy vs route based VPNs:
+
 - Policy - rule sets match traffic - a pair of SAs
 - route based - target matching (prefix) - matches a single pair of SAs
 
 ### AWS Site-to-Site VPN
+
 - Logical connection between a VPC and an on-premiss network - encrypted using IPSEC, running over public internet
 - Fully HA - if you design and implement correctly
 - Quick to provision - less than an hour
@@ -2956,92 +2977,100 @@ Policy vs route based VPNs:
 - VPN connection between VGW and CGW
 
 VPN Consideration:
+
 - Speed limitation 1.25Gbps
 - Latency - inconsistent
 - Cost - AWS hourly cost, GB out cost, data cap (on premises)
-- Speed of setup is quick and usually quicker than other private connection technologies- hours, all software configuration 
-- Can be used as a backup for direct connect (DX) 
+- Speed of setup is quick and usually quicker than other private connection technologies- hours, all software configuration
+- Can be used as a backup for direct connect (DX)
 - Can be used with Direct Connect (DX)
 
 ### Start Direct Connect (DX) Concepts
+
 - A physical connection into an AWS region - 1,10 or 100 Gbps
 - Business premises => DX location => AWS Region
-- You're given a port allocation at DX location 
+- You're given a port allocation at DX location
 - Cost is hourly and outbound data transfer
 - Provisioning time - requires physical cables and there is no resilience as its physical. This could take weeks
 - Low & consistent latency + high speeds
 - Can be used to access AWS Private services - can't be used to access public internet without additional configuration
-- DX location is not owned by AWS but is rented out by it 
+- DX location is not owned by AWS but is rented out by it
 
 ### Direct Connect (DX) Resilience
+
 - Direct connect is not resilient, it's a physical connectivity that needs to be architected to be resilient
 - What could go wrong:
   - DX location could fail e.g. power failure
-  - DX Router 
+  - DX Router
   - Cross Connect - it'sa cable
-  - Customer DX router, 
+  - Customer DX router,
   - Extension
   - Customer premises
   - Customer router
 
 We can add resilience by:
+
 - Separate customer premises buildings - with separate routers
 - Several DX locations
-- Adding separate ports in each DX locations as well as premisses locations 
+- Adding separate ports in each DX locations as well as premisses locations
 
 ### Direct Connect (DX) - Public VIF + VPN (Encryption)
+
 - Using a VPN gives you an encrypted and authenticated tunnel
 - OVer DX you will get low latency & consistency latency
 - This uses a public VIF
 - VPJ is transit agnostic - DX/Public internet
 - Public VIFs+IPSec VPN is a way to provide access to private VPC resources, using an encrypted IPSEC tunnel for transit.
 
-
 ### Transit Gateway
+
 - A network transit hub which connects VPCs to each other and to on premises networks using site to site VPNs and direct connect
 - It's designed to reduce network complexity
 - It's a single network object - HA & Scalable
 - You create attachments to other network types
 - attachments - VPC, Site to site VPN and DX gateway
-- Supports transitive routing 
+- Supports transitive routing
 - Can be used to create global networks
 - Share transit gateways between accounts using AWS RAM
 - you can peer different regions on same or cross accounts
 - It offers much less complexity than without TGW
 
 ### Storage Gateway - Volume
+
 - Runs as a virtual machine on premises (although can be ordered as hardware appliance)
 - presents storage using iSCSI, NFS or SMB
 - Integrates with EBS, s3 and glacier
-- used for migrations, extensions, storage tier-ing, DR and replacement of backup systems 
+- used for migrations, extensions, storage tier-ing, DR and replacement of backup systems
 - When you're using volume storage in volume stored mode everything is stored locally
 - It asynchronously syncs to storage gateway endpoint which stores EBS snapshots in an s3 bucket
 - if you need full disk backups and DR, this is not the right solution
-- Volume cached mode - instead of local storage, it has a local cache but it stores all data in s3. The AWS bucket is an aws managed area so its not available to just look at 
+- Volume cached mode - instead of local storage, it has a local cache but it stores all data in s3. The AWS bucket is an aws managed area so its not available to just look at
 - the main difference between Volume stored vs volume cached is the location of the data
-- volume cache uses aws as the primary location 
-
+- volume cache uses aws as the primary location
 
 ### Storage Gateway - Tape (VTL)
+
 - tapes - LTO - storing to tapes
 - this really only allows write as a whole or read as a whole as editing tapes is not really possible
-  
+
 ### Storage Gateway - File
+
 - File bridges on premises file storage and s3
-- you create mount points (shares) available via NFS or SMB 
+- you create mount points (shares) available via NFS or SMB
 - they map directly onto an S3 bucket
 - files stored into a mount point are visible as objects in an s3 bucket
 - does read/write caching and ensures LAN-like performance
 
+### Snowball / Edge / Snowmobile
 
-### Snowball / Edge / Snowmobile 
 - Designed to move large amounts of data in and out of AWS
 - The devices in this series are big physical storage
-- You can either order them empty, load and return 
-- or order with data, empty and return 
+- You can either order them empty, load and return
+- or order with data, empty and return
 
 Snowball:
-- ordered from AWS 
+
+- ordered from AWS
 - data encrypted using KMS
 - 50tb or 80tb capacity
 - 1GBPS or 10GBPS network
@@ -3050,43 +3079,48 @@ Snowball:
 - only storage is included in the device
 
 Snowball edge:
-- Comes with storage and compute 
+
+- Comes with storage and compute
 - Larger capacity
 - 10gbs, 10/25, 45/50/100 - faster network
-- storage optimized with EC2 
+- storage optimized with EC2
 - Compute optimized variant - for aggressive compute requirements
-- Compute with GPU 
-- Snowball is older, snowball edge is ideal for remote sites where data processing on ingestion is needed 
+- Compute with GPU
+- Snowball is older, snowball edge is ideal for remote sites where data processing on ingestion is needed
 
 Snowmobile:
+
 - Portable data center within a shipping container on a truck
 - ideal for single location when 10+ PB is required
 - up to 100PB per snowmobile
 - It's a single truck - not economical for multi site (unless huge) or sub 10pb
 
 ### Directory Service
+
 directories:
+
 - store objects within a structure (domain/tree)
 - multiple trees can be grouped into a forest
 - Microsoft active directory domain service (AD DS) is a common implementation
-  
 - Directory Service is AWS managed implementation
 - Runs within a VPC
--  Provides HA - deploys within multiple AZs
--  some aws services need a directory e.g. amazon workplaces 
--  can be isolated directory or integrated with existing on-premises 
--  or act as a proxy back to on premises
+- Provides HA - deploys within multiple AZs
+- some aws services need a directory e.g. amazon workplaces
+- can be isolated directory or integrated with existing on-premises
+- or act as a proxy back to on premises
 
 It can function in 3 modes:
+
 - Simple AD - an implementation of Samba 4
 - AWS Managed Microsoft AD - an actual microsoft AD DS implementation
-- AD Connector which proxies requests back to an on premises directory 
+- AD Connector which proxies requests back to an on premises directory
 
 - Start off with simple AD
 - Move to Microsoft AD if applications in AWS need MS DS or you need a trust relationship with AD DS
-- If you need a directory without storing any directory info in the cloud - use AD Connector 
+- If you need a directory without storing any directory info in the cloud - use AD Connector
 
 ### DataSync
+
 - A data transfer service to transfer data into and out of AWS
 - Designed to work at huge scale
 - Keeps metadata (e.g. permissions and timestamps)
@@ -3100,6 +3134,7 @@ It can function in 3 modes:
 - Pay as you use
 
 ### FSx for Windows Servers
+
 - fully managed native windows file servers/shares
 - designed for integration with windows environments
 - can integrate with directory service or self managed AD
@@ -3108,13 +3143,14 @@ It can function in 3 modes:
 - Accessible over VPC, peering, DX
 - Highly performant
 - VSS - User driven restores - unique to Fsx - can do this without a sys admin
-- Native file system accessible over SMB 
+- Native file system accessible over SMB
 - Uses windows permission model
 - Supports DFS
 - Managed - no file server admin
 - can be integrated with DS and your own directory
 
 ### FSx For Lustre
+
 - Managed implementation of Lustre - designed for HPC - Linux clients (POSIX)
 - For machine learning, big data, financial model
 - can scale to 100s GBs throughput and sub millisecond latency
@@ -3124,71 +3160,80 @@ It can function in 3 modes:
 - Available over a VPN or DX
 - Metadata is stored on metadata targets
 - objects are stored on object storage targets
-- baseline performance based on size 
+- baseline performance based on size
 - Use scratch for short term or temp workloads - NO HA, NO REPLICATION
 - persistent has replication but within ONE AZ only
 - Auto heals when hardware failure occurs
 - You can backup to S3 with both
 
 ### AWS Transfer Family
+
 - Provides managed file transfer service - supports transfers to and from s3 and efs
 - provides managed "servers"
-Protocols used:
+  Protocols used:
   - FTP
-  - FTPS 
+  - FTPS
   - SSH (SFTP)
   - AS2 - B2B data
 - Create servers / endpoints:
-  - public - via aws  - SFTP
+  - public - via aws - SFTP
   - VPC - internet - SFTP, FTPS, AS2
-  - VPC - internal - SFTP, FTP, FTPS, AS2 
-- Multi az 
+  - VPC - internal - SFTP, FTP, FTPS, AS2
+- Multi az
 - provisioned server per hour + data transfered
 - FTP and FTPS - directory service or custom IDP only
 - FTP - VPC only (cannot be public)
 - AS2 - VPC internal/internet only
 
 ## SECURITY, DEPLOYMENT & OPERATIONS
+
 ### AWS Secrets Manager
+
 - Shares functionality with parameter store
 - designed specifically for secrets e.g. passwords, api keys
 - Usable via console, cli, api or sdks
-- supports automatic rotation 
+- supports automatic rotation
 - directly integrates with some aws products e.g. rds
 
 ### Application Layer (L7) Firewall
 
 Normal Firewalls (layer 3/4/5):
+
 - layer 3-4 requests to/from are seen as different streams of data
 - with layer 5, using a session, the two requests can be seen as one
 - each of these don't understand anything above the layer they operate at e.g. they cannot see HTTP, they just see general packet data
 - layer 7 fix many of these limitations
 
 Layer 7:
+
 - Layer 7 firewalls are aware of layer 7 protocl e.g. HTTP
 - can identify normal or abnormal requests and attacks
 
 ### Web Application Firewall (WAF), WEBACLs, Rule Groups and Rules
+
 - A web application firewall that helps protect your web applications or APIs against common web exploits and bots
 - Outputs logs
 - A protection pack (web ACL) gives you fine-grained control over all of the HTTP(S) web requests that your protected resource responds to
 
 Web ACL:
+
 - Controls what traffic is allowed or blocked - (ALLOW or BLOCK)
-- Resource type - cloudfront or regional service 
+- Resource type - cloudfront or regional service
 - Have to add rule groups or rules processed in order
 - WCU - acl capacity units - default is 1500 but can be increased via support tickets
 - WebACLS are associated with resources , this can take some time
 - Adjusting an existing WEBACL can take less time than creating a new one
 
 Rule groups:
+
 - rule groups contain rules
 - No default actions - thats defined when added to webacls
 - managed by aws, you, services owned
 - Can be reused by multiple webACLS
-- You have to define the WCU capacity upfront (max 1500*)
+- You have to define the WCU capacity upfront (max 1500\*)
 
 WAF Rules:
+
 - Type, Statement, Action
 - Regular or Rate-based (e.g. x100 in a 5 minute period)
 - Statement: WHAT to match or COUNT
@@ -3201,6 +3246,7 @@ WAF Rules:
 - Captcha, fraud control, marketplace groups extra costs
 
 ### AWS Shield
+
 - Standard and Advance - DDOS Protection
 - Shield is free and advanced has a cost
 - Network volumetric attacks (L3) - Saturate Capacity
@@ -3209,26 +3255,28 @@ WAF Rules:
 - Application Layer Attacks (L7) e.g. web request floods
 
 Standard:
+
 - Free
 - Protection at the perimeter at region/vpc or at AWS edge
 - Common network (L3) or Transport (L4)
-- Best protection using r53, cloudfront, aws global accelerator 
-
+- Best protection using r53, cloudfront, aws global accelerator
 
 Advanced:
+
 - $3000 per month per org - 1 year lock in
 - Protects CF, R53, Accelerator, anything associated with EIPS (ec2), ALBS, CLBs, NLBs
-- not automatic - must be explicitly enabled 
+- not automatic - must be explicitly enabled
 - Cost protection for unmitigated attacks e.g. ec2 scaling
 - Proactive engagement & aws shield response team will contact you when attacks are detected
 - Integrates with WAF
 - Application Layer 7 ddos protection
 - real time visibility of DDOS events and attacks
-- Health based detection 
+- Health based detection
 - Protection groups
 
 ### CloudHSM
-- with KMS its AWS managed. It's a shared service which means other AWS accounts use it 
+
+- with KMS its AWS managed. It's a shared service which means other AWS accounts use it
 - CloudHSM - a true Single Tenant hardware security module (HSM)
 - AWS Provision but its fully customer managed
 - Fully FIPS 140-2 Level 3 compliant (KMS is l3 overall some l3)
@@ -3238,14 +3286,16 @@ Advanced:
 - AWS CloudHSM client needs to be installed on the VPC devices to be accessed
 
 Use cases:
+
 - No native integration e.g. no s3, SSE
 - Offload the SSL/TLS processing for web servers - more economical and efficient than doing on a general purpose ec2 instance
 - enable transparent data encryption (TDE) for oracle databases
 - protect the private keys for an issuing certificate authority (CA)
 
-For anything that requires aws integration then cloudHSM is not suitable 
+For anything that requires aws integration then cloudHSM is not suitable
 
 ### AWS Config
+
 - A service which records config changes over time on resources
 - For auditing of changes, compliance with standards
 - does not prevent changes happening - no protection
@@ -3254,6 +3304,7 @@ For anything that requires aws integration then cloudHSM is not suitable
 - Config rules can be used to evaluate resources and determining whether their non-compliant
 
 ### Amazon Macie
+
 - data security and data privacy service
 - Discover, monitor and protect data stored in S3 buckets
 - Automated discovery of data i.e. PII, PHI, Finance
@@ -3263,20 +3314,23 @@ For anything that requires aws integration then cloudHSM is not suitable
 - Uses a multi account architecture - centrally managed ether via aws ORG or one macie account inviting
 
 Identifiers:
+
 - Managed via AWS:
   - via a growing list of common sensitive data types e.g. credentials, finance, health, personal identifiers
 - Custom - created by you
   - regex
-  - Keywords - optional sequences 
+  - Keywords - optional sequences
   - Maximum match distance
   - ignore words
 
 Findings:
+
 - Policy or sensitive data findings
 - Policy e.g. S3BlockPublicAccessDisabled/EncryptionDIsabled/BucketSharedExternally etc...
 - Sensitive data - S3Object/Credentials, S3Object/CustomIdentifiers, S3Object/Financial etc...
 
 ### Amazon Inspector
+
 - Designed to check EC2 instances and the instances OS
 - Provides report ordered by severity
 - Network assessment (agentless)
@@ -3288,3 +3342,104 @@ Findings:
   - common vulnerabilities and exposures (CVE)
   - Center for internet security (CIS) benchmarks
   - Security best practices for amazon inspector e.g. password complexity checks
+
+## Infrastructure as Code (CloudFormation)
+
+### CloudFormation Physical & Logical Resources
+
+- Begins with a template
+- You focus on the WHAT and clod formation focuses on the how
+- templates are used to create stacks
+- stacks create physical resources from the logical resources
+- if a stack is deleted then the resources are as well
+- You can use one template to create multiple deployments
+
+### CloudFormation Template and Pseudo Parameters
+
+- Template and Pseudo Parameters are two methods to provide input to a template
+- Pseudo parameters get injected by AWS e.g AWS::Region
+
+### CloudFormation Intrinsic Functions
+
+- Allow you to get data at run time e.g. Ref & getAtt, Join and Split, getAZs and Select
+- Ref - can be used to reference the value of a logical resource
+- getAtt can get any attribute associated with a resource
+- GetAzs - will list all the azs in the default vpc if you have one otherwise all azs in that region
+- Join and Split - string functions in arrays
+- base64 accepts normal text and decodes it into base64
+- sub - replacements in variables
+- Cidr - can be used to reference the cidr range and the number of subnets to generate from the input vpc range
+
+### CloudFormation Mappings
+
+- mapping keys to values - improve template portability
+- !FindInMap
+
+### CloudFormation Outputs
+
+- declare outputs that you can import into other stacks
+- this is optional
+
+### CloudFormation Conditions
+
+- Change according to certain conditions
+- Evaluated to be true or false
+- Processed before resources are created
+- E.g. react to the environment we're in
+
+### CloudFormation DependsOn
+
+- Cloudformation tries to do things in parallel
+- tries to determine dependency order
+- Depends on Lets you explicitly define these e.g. Resources B & C depend on A
+- example - elastic IP requires an IGW attached to a vpc in order to work
+
+### CloudFormation Wait Conditions & cfn-signal
+
+- CreationPolicy, WaitConditions and cfn-signal can all be used together to prevent the status if a resource from reaching create complete until AWS CloudFormation receives a specified number of success signals or the timeout period is exceeded
+- Signal - configure CF to hold - wait for X number of success signals or for a timeout
+- If success signals received then it moves into CREATE_COMPLETE
+- If timeout is reached or failure signal received, creation fails
+
+### CloudFormation Nested Stacks
+
+- Nested stacks allow for a hierarchy of related templates to be combined to form a single product
+- Share a life cycle
+- Limits:
+  - 500 resources per stack
+  - Cant easily re-use resources
+  - isolated by default
+  - can only use references in the same stack
+- You will often use multi stack architecture:
+  - Nested stack - root stack which gets created first manually.
+  - overcome the 500 resource limit of one stack
+  - makes installation process easier
+  - use only when everything is lifecycle linked
+
+### CloudFormation Cross-Stack References
+
+- In some cases you want to use a shared component e.g. a shared vpc
+- stacks by default are isolated and self contained
+- outputs are normally not visible from other stacks
+- nested reference can
+- outputs in a template can be exported making them visible from other stacks - they must have unique name in the region
+- Use the FN::IMportValue function instead of ref
+- Nested stacks allow you to re-use templates, cross reference stacks allow you to re-use resources
+
+### CloudFormation Stack Sets
+
+- Allow you to deploy stacks across many accounts and regions
+- StackSets are containers in an admin account
+- contain stack instances which reference stacks
+- Create stack instances and stacks in target accounts
+- Concurrent accounts - how many can be deployed to at any time
+- Failure tolerance - individual stack sets that can fail before
+- retain stacks
+
+### CloudFormation Deletion Policy
+
+- If you delete a logical resource from a template, then the physical resource is deleted
+- this can result in data loss
+- you can put a deletion policy on each resource
+- You can delete, retain or snapshot if supported
+- deletion policy only applies to a delete not a replace
