@@ -1,8 +1,9 @@
 node_modules
-.dendron.*
-build
+public
+.quartz-cache
+.DS_Store
 
-.next
-docs
-
-.backup
+# Obsidian local state (keep the shared config, ignore per-machine state)
+vault/.obsidian/workspace*
+vault/.obsidian/cache
+vault/.obsidian/graph.json

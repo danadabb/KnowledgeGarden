@@ -16,7 +16,7 @@ Some examples of DNS services are Cloudflare DNS, Route 53 (AWS), Google Cloud D
 
 A load balancer is responsible for distributing network requests across servers to ensure optimal resource utilization, reduce latency and maintain high availability. The requirement for a load balancer depends on the scale of the architecture and the requirement for fault tolerance.  AWS Example: Elastic Load Balancer
 
-![Load balancer](/vault/assets/images/load-balancer.png)
+![Load balancer](/assets/images/load-balancer.png)
 [source](https://codeburst.io/load-balancers-an-analogy-cc64d9430db0)
 
 ### API Gateway 

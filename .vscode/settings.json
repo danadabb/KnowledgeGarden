@@ -1,5 +1,4 @@
 {
-  "dendron.rootDir": ".",
   "files.autoSave": "onFocusChange",
   "pasteImage.path": "${currentFileDir}/assets/images",
   "pasteImage.prefix": "/",

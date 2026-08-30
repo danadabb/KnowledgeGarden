@@ -1109,7 +1109,7 @@ Two types of storage in EBS:
 - Have to be attached at launch time - CANNOT be attached after like EBS
 - these are temporary volumes
 
-![alt text](./assets//images/instance-store-volumes.png)
+![alt text](./assets/images/instance-store-volumes.png)
 
 - if you move an instance between hosts, that data is lost. They are given new ephemeral volumes.
 - if a physical volume fails, then the instance would lose that data
