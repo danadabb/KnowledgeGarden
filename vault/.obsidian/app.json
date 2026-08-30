@@ -1,0 +1,9 @@
+{
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "attachmentFolderPath": "assets/images",
+  "showUnsupportedFiles": true,
+  "showFrontmatter": true,
+  "promptDelete": true
+}
