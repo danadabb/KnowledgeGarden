@@ -19,7 +19,7 @@ Three Pillars of optimization according to NextJS:
 
 #### Notes on improving SEO
 - Build a sitemap
-- Use SSR or SSGs - see [[web.frontend.rendering-strategies]]. SPAs usually don't use url paths and loading time is not ideal for a crawler.
+- Use SSR or SSGs - see [[web/frontend/rendering-strategies]]. SPAs usually don't use url paths and loading time is not ideal for a crawler.
 - Use metadata such as `<title>` and `<meta name="description" content="A good description here">` on every page
   -  robot tags are directives search engines will respect e.g. `<meta name="robots" content="noindex,nofollow">` . These meta tags can be produced on demand as opposed to robots.txt
   - canonical tags to prevent the detection of duplicate content

@@ -32,7 +32,7 @@ Re-write using headless CMS and following JAMSTACK princples.
 
 ### Rendering Style
 
-Ref [[web.frontend.rendering-strategies]]
+Ref [[web/frontend/rendering-strategies]]
 
 Options: SSR, SSG, SPA, ISR
 
