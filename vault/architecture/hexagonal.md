@@ -48,7 +48,7 @@ created: 1731454274600
 
 - Driven actors can either be repositories where the application can also receive information from it or a recipient where the information is sent to it as a set and forget. Example of a repository is a database or storage device where as a recipient can be an SMTP server for sending an email, a printer, a text message to a phone etc.
 
-![Driver and Driven side of Hexagonal Architecture](assets/images/hexagon-in-out.png)
+![Driver and Driven side of Hexagonal Architecture](/assets/images/hexagon-in-out.png)
 
 ### Ports
 
@@ -62,7 +62,7 @@ created: 1731454274600
 
 - The purpose of ports is to shift the design by purpose instead of technology and to have technologies be substitutable on all sides by an adapter. Ports are tech agnostic - it's up to adapters to transform data according to a specific actor's technical needs needs.
 
-![ports](assets/images/hexagon-example.png)
+![ports](/assets/images/hexagon-example.png)
 
 ### Adapters
 
@@ -87,7 +87,7 @@ Besides the above, there will be a 'composition root' or Main Component that run
 - creates the application and injects the driven adapters as instances to the applications constructor
 - for each driver port, it chooses the driver adapter that uses the port and creates an instance of the adapter, injecting it into the applications constructor. It then runs the driver adapter instance
 
-![alt text](assets/images/task-assignment-app.png)
+![alt text](/assets/images/task-assignment-app.png)
 
 ### Example implementation references (Repositories)
 

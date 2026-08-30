@@ -29,7 +29,7 @@ Notes attributed to [this course](https://learn.cantrill.io/courses/enrolled/182
 ## Technical fundamentals
 
 Pre-cursor to the concepts covered in this course summarized here:
-[[architecture.tech-fundamentals]]
+[[architecture/tech-fundamentals]]
 
 ## AWS Fundamentals
 
@@ -794,7 +794,7 @@ Legal Hold Locking:
   1. pick how many AZs yours would use - possibly use 4 as a default. This means you need 4 smaller networks
   2. A suggested default is to start with four tiers - Web, application, database and a spare. If you only used 1 az then you would each tier would need it's own subnet so 4 subnets
 
-![VPC Design](./assets/images/vpc-design.png)
+![VPC Design](/assets/images/vpc-design.png)
 
 ### Custom VPCs
 
@@ -923,7 +923,7 @@ baston Host / Jump boxes
 - Can get costly if you have a lot of AZs
 - They are a managed service, you deploy and AWS takes care of them
 
-![NATGW Full resilience](./assets/images/natgw-resilience.png)
+![NATGW Full resilience](/assets/images/natgw-resilience.png)
 
 - A NAT instance is when you make an EC2 instance run as a NAT instance
 - It's much easier and scalable to use a NAT gateway except for when:
@@ -1004,7 +1004,7 @@ Example: "R5dn.8xlarge"
 - the part of the dot - the size "8xlarge" - the instance size
 - the "dn" - additional capability e.g n could mean network optimized
 
-![EC2 Instance Types](./assets/images/ec2-instance-types.png)
+![EC2 Instance Types](/assets/images/ec2-instance-types.png)
 
 ### Storage Refresher
 
@@ -1109,7 +1109,7 @@ Two types of storage in EBS:
 - Have to be attached at launch time - CANNOT be attached after like EBS
 - these are temporary volumes
 
-![alt text](./assets/images/instance-store-volumes.png)
+![alt text](/assets/images/instance-store-volumes.png)
 
 - if you move an instance between hosts, that data is lost. They are given new ephemeral volumes.
 - if a physical volume fails, then the instance would lose that data
@@ -1141,7 +1141,7 @@ REMEMBER these figures:
 - If you need more than 260,000 and you can deal with less resilience or no persistence, then use Instance Store
 
 These figures are important to remember:
-![ec2 instance store vs ebs](./assets/images/instance-store-ebs.png)
+![ec2 instance store vs ebs](/assets/images/instance-store-ebs.png)
 
 ### Snapshots, Restore & Fast Snapshot Restore (FSR)
 
@@ -1154,7 +1154,7 @@ These figures are important to remember:
 - EBS volumes can be blank or based on a restored snapshot
 - Snapshots can be copied between regions
 
-![Ebs Snapshot architecture](./assets/images/EBS-snapshots.png)
+![Ebs Snapshot architecture](/assets/images/EBS-snapshots.png)
 
 Nuances to Snapshot/volume performance:
 
@@ -3443,3 +3443,7 @@ Findings:
 - you can put a deletion policy on each resource
 - You can delete, retain or snapshot if supported
 - deletion policy only applies to a delete not a replace
+
+###  CloudFormation Stack Roles
+
+- everything in AWS requires permissions

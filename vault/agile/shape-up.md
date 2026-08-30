@@ -56,10 +56,10 @@ Work by hand using a couple of prototyping techniques: breadboarding and fat mar
 
 We do the above with words instead of pictures. For example, breadboarding customers turning off auto pay:
 
-![Breadboarding autopay invoice example](./assets/images/breadboarding-invoice.png)
+![Breadboarding autopay invoice example](/assets/images/breadboarding-invoice.png)
 
 **Fat marker sketches** - A sketch made with such broad strokes that adding detail is difficult or impossible. You can do this with a larger tipped sharpie pen on paper or an iPad with a pen size at the largest diameter. Because ideas are sometimes visual, breadboarding would miss the point.
 
-![Fat marker sketch of a todo list](./assets/images/fat-marker-sketch.png)
+![Fat marker sketch of a todo list](/assets/images/fat-marker-sketch.png)
 
 ### Risks and Rabbit Holes
