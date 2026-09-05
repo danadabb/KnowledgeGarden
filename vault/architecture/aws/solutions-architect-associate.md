@@ -3447,3 +3447,22 @@ Findings:
 ###  CloudFormation Stack Roles
 
 - everything in AWS requires permissions
+- allows you to assume a role so it doesn't need resource permissions only "PassRole"
+
+
+## CloudFormation Init (CFN-INIT)
+- a simple configuration management system
+-  allow a desired state configuration management system to be implemented within CloudFormation
+
+
+## CloudFormation cfn-hup
+- A cfn-hup is a helper daemon which can be installed
+- runs configurable actions when change is detected
+
+## CloudFormation ChangeSets
+- Change Sets let you preview changes
+
+## CloudFormation Custom Resources
+- Custom resources enable you to write custom provisioning logic in templates that AWS CloudFormation runs anytime you create, update (if you changed the custom resource), or delete stacks
+- Example: If you add objects to bucket after CFN completes then trying to delete the stack will fail
+- Adding a lamda function into a custom resource could call it whenever its created or deleted
